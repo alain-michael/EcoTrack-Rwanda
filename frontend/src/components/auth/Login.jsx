@@ -1,6 +1,28 @@
 import React from 'react'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import axios from 'axios'
 
 function Login() {
+  const formik = useFormik(
+    {
+      initialValues: {
+        email: '',
+        password: '',
+      },
+      validationSchema: Yup.object(
+        {
+          email: Yup.string().email().required(),
+          password: Yup.string().required(),
+        }
+      ),
+      onSubmit: (values) => {
+        axios.post('http://127.0.0.1:5000/api/login', values)
+        .then(res => console.log(res))
+      }
+    }
+  )
+
     const inputStyle =
       'flex h-9 w-[300px] rounded-md border border-input outline-none bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent ';
   return (
@@ -9,16 +31,20 @@ function Login() {
         <p>
           <span className="text-2xl font-bold">Sign In</span>
         </p>
-        <form className="">
+        <form onSubmit={formik.handleSubmit} className="">
           <div className="grid gap-2">
             <div className="grid gap-1">
               <p>Email:</p>
-              <input className={inputStyle} placeholder="Email Address" />
+              <input className={inputStyle} placeholder="Email Address" name="email" value={formik.values.email} onChange={formik.handleChange} />
+              {formik.errors.email && formik.touched.email ? (<div className="text-red-500">{formik.errors.email}</div>) : null}
               <p>Password :</p>
               <input
                 className={inputStyle}
                 placeholder="Password"
                 type="password"
+                name="password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
               />
             </div>
             <div>
