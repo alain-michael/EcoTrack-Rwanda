@@ -8,6 +8,8 @@ import AuthLayout from './components/auth/AuthLayout';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 import { Route } from 'react-router-dom';
+import RequestsLayout from './components/waste-collection/RequestsLayout';
+import Requests from './components/waste-collection/Requests';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -19,6 +21,14 @@ function App() {
       children: [
         { path: 'register', element: <Register /> },
         { path: 'login', element: <Login /> },
+      ],
+    },
+    {
+      path: '/',
+      element: <RequestsLayout />,
+      children: [
+        { path: 'requests/available', element: <Requests /> },
+       
       ],
     },
   ];
