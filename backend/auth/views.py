@@ -3,7 +3,7 @@ from flask_bcrypt import Bcrypt
 from sqlalchemy import or_, create_engine
 from sqlalchemy.orm import sessionmaker
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from other import User, Base
+from models import User, Base
 
 auth_blueprint = Blueprint('auth', __name__)
 engine = create_engine('sqlite:///database.db') 
@@ -16,6 +16,7 @@ session = Session()
 
 @auth_blueprint.route('/api/register', methods=['POST', 'OPTIONS'])
 def register():
+    """View to handle user registration."""
     if request.method == 'OPTIONS':
         response = make_response()
         response.headers.add("Access-Control-Allow-Origin", "*")
@@ -43,6 +44,7 @@ def register():
 
 @auth_blueprint.route('/api/login', methods=['POST'])
 def login():
+    """View to handle authentication and send back a JWT if user exists."""
     if request.method == 'OPTIONS':
         response = make_response()
         response.headers.add("Access-Control-Allow-Origin", "*")

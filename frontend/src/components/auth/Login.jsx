@@ -18,7 +18,8 @@ function Login() {
       ),
       onSubmit: (values) => {
         axios.post('http://127.0.0.1:5000/api/login', values)
-        .then(res => console.log(res))
+        .then(res => console.log(res.status))
+        .catch(error => console.log(`Error: ${error}`))
       }
     }
   )
