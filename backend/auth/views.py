@@ -40,7 +40,7 @@ def register():
     )
     session.add(new_user)
     session.commit()
-    return jsonify({'message': 'User registered successfully'}), 201
+    return jsonify({'message': 'User registered successfully','status':201}), 201
 
 @auth_blueprint.route('/api/login', methods=['POST'])
 def login():

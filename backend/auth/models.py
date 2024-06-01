@@ -67,3 +67,20 @@ class WasteCollector(Base):
 
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"))
+
+class col_Schedule(Base):
+    """
+    Model representing a col_Schedule.
+
+    Attributes:
+        id (Integer): The primary key and unique identifier of the Collector.
+        user_id (ForeignKey): References base user.
+    """
+    __tablename__ = "col_Schedule"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    collector_id = Column(Integer, ForeignKey("waste_collectors.id") ,default=None)
+    date = Column(DateTime, nullable=False)
+    Address = Column(String, nullable=False)
+    Status = Column(Boolean, default=False)
