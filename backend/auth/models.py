@@ -1,86 +1,92 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime
-from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine
 import datetime as dt
+from backend.auth.app import db, app
 
-Base = declarative_base()
-
-
-class User(Base):
+class User(db.Model):
     """
     Model representing a User.
 
     Attributes:
         id (Integer): The primary key and unique identifier of the user.
-        email (String): The education level of the student.
-        country (String): The country of residence of the student.
-        created_at (String): The date when the student record was created.
+        email (String): The email of the user.
+        name (String): The name of the user.
+        password (String): The password of the user.
+        active (Boolean): Whether the user is active.
+        created_at (DateTime): The date when the user record was created.
     """
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True)
-    email = Column(String(255), unique=True, nullable=False)
-    name = Column(String(255), nullable=False)
-    password = Column(String(255), nullable=False)
-    active = Column(Boolean, default=False, nullable=False)
-    # created_at = Column(DateTime, default=dt.datetime.now())
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    name = db.Column(db.String(255), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    active = db.Column(db.Boolean, default=False, nullable=False)
+    created_at = db.Column(db.DateTime, default=dt.datetime.now, nullable=False)
 
-class HouseholdUser(Base):
+class HouseholdUser(db.Model):
     """
-    Model representing a User.
+    Model representing a Household User.
 
     Attributes:
-        id (Integer): The primary key and unique identifier of the user.
-        user_if (String): The education level of the student.
+        id (Integer): The primary key and unique identifier of the household user.
+        user_id (Integer): Foreign key referencing the User.
     """
     __tablename__ = "household_users"
 
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    # address = Column(String(255), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    addresses = db.relationship("Address", backref="household_user")
 
-class Address(Base):
+class Address(db.Model):
     """
-    Model representing a User.
+    Model representing an Address.
 
     Attributes:
-        id (Integer): The primary key and unique identifier of the user.
-        household_user (ForeignKey): References household user.
-        address (String): Actual address of the user.
+        id (Integer): The primary key and unique identifier of the address.
+        household_user_id (Integer): Foreign key referencing the HouseholdUser.
+        address (String): The actual address.
     """
     __tablename__ = "addresses"
 
-    id = Column(Integer, primary_key=True)
-    household_user = Column(Integer, ForeignKey("household_users.id"))
-    address = Column(String(255), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    household_user_id = db.Column(db.Integer, db.ForeignKey("household_users.id"), nullable=False)
+    address = db.Column(db.String(255), nullable=False)
 
-class WasteCollector(Base):
+class WasteCollector(db.Model):
     """
-    Model representing a User.
+    Model representing a Waste Collector.
 
     Attributes:
-        id (Integer): The primary key and unique identifier of the Collector.
-        user_id (ForeignKey): References base user.
+        id (Integer): The primary key and unique identifier of the waste collector.
+        user_id (Integer): Foreign key referencing the User.
     """
     __tablename__ = "waste_collectors"
 
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
-class col_Schedule(Base):
+class ColSchedule(db.Model):
     """
-    Model representing a col_Schedule.
+    Model representing a Collection Schedule.
 
     Attributes:
-        id (Integer): The primary key and unique identifier of the Collector.
-        user_id (ForeignKey): References base user.
+        id (Integer): The primary key and unique identifier of the collection schedule.
+        user_id (Integer): Foreign key referencing the User.
+        collector_id (Integer): Foreign key referencing the WasteCollector.
+        date (DateTime): The date of the collection.
+        address (String): The address for the collection.
+        status (Boolean): The status of the collection (completed or not).
     """
-    __tablename__ = "col_Schedule"
+    __tablename__ = "col_schedules"
 
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    collector_id = Column(Integer, ForeignKey("waste_collectors.id") ,default=None)
-    date = Column(DateTime, nullable=False)
-    Address = Column(String, nullable=False)
-    Status = Column(Boolean, default=False)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    collector_id = db.Column(db.Integer, db.ForeignKey("waste_collectors.id"), nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
+    address = db.Column(db.String(255), nullable=False)
+    status = db.Column(db.Boolean, default=False, nullable=False)
+
+    user = db.relationship("User", backref="col_schedules")
+    collector = db.relationship("WasteCollector", backref="col_schedules")
+
+with app.app_context():
+    db.create_all()

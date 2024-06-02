@@ -2,7 +2,7 @@ import React from "react";
 
 const Navbar = () => {
   return (
-    <nav className="bg-[#207855] text-white p-1 flex justify-between px-7">
+    <nav className="bg-[#207855] text-white p-1 flex justify-between px-7 h-full w-100%">
       <div className="left flex gap-10 ">
         <a href="/" className="p-2 hover:underline underline-offset-8 " rel="noopener noreferrer">
           Home
