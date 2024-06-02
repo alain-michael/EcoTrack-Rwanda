@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { SideBar } from "./SideBar";
 import { Header } from "./Header";
+import { DashItems } from "./DashItems";
 
 export const MainDashboard = () => {
   const [selectedItem, setSelectedItem] = useState("Schedule");
@@ -45,7 +46,7 @@ export const MainDashboard = () => {
         }`}
       >
         {/** Sidebar Or Body Goes  */}
-        <SideBar  toggleSidebar={toggleSidebar} isOpen={isOpen}/>
+        <SideBar selectedItem={selectedItem} setSelectedItem={setSelectedItem} toggleSidebar={toggleSidebar} isOpen={isOpen}/>
       </div>
       <div className={` w-full ${isOpen ? "ml-0" : "ml-0"} h-screen overflow-auto`}>
         {/** Header Goes Here Or Body Goes  */}
@@ -54,9 +55,7 @@ export const MainDashboard = () => {
         </header>
         <main className="pt-3 px-2">
           {/** Main Data Or Body Goes  */}
-          <div className="bg-white p-3 rounded-lg">
-            adasd
-          </div>
+          <DashItems selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
         </main>
       </div>
     </div>

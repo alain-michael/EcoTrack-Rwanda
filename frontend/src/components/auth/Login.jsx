@@ -6,14 +6,15 @@ import axios from "axios";
 function Login({ viewType, setviewType }) {
   const [ServerError, SetServerError] = useState(null);
 
+  {/* Using Formik to handle form data and validation */}
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().email().required(),
-      password: Yup.string().required(),
+      email: Yup.string().email().required("Required"),
+      password: Yup.string().required("Required"),
     }),
     onSubmit: (values) => {
       axios
@@ -32,7 +33,7 @@ function Login({ viewType, setviewType }) {
         });
     },
   });
-
+  
   const inputStyle =
     "flex h-9 w-[300px] rounded-md border border-input outline-none bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent ";
   return (

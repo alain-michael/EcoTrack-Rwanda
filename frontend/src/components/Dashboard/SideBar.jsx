@@ -8,7 +8,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import CancelIcon from "@mui/icons-material/Cancel";
 
-export const SideBar = ({ isOpen, toggleSidebar }) => {
+export const SideBar = ({ isOpen, toggleSidebar, selectedItem, setSelectedItem }) => {
   const houseHoldSidebarItems = [
     { label: "Schedule", icon: <TodayTime /> },
     { label: "Achievements", icon: <EmojiEventsIcon /> },
@@ -43,7 +43,8 @@ export const SideBar = ({ isOpen, toggleSidebar }) => {
             {houseHoldSidebarItems.map((item, index) => (
               <div
                 key={index}
-                className="flex items-center py-2 px-4 hover:bg-gray-200 cursor-pointer"
+                className={`flex items-center py-2 px-4 hover:bg-gray-200 cursor-pointer ${selectedItem == item.label ? "bg-green-200" : ""}`}
+                onClick={() => setSelectedItem(item.label)}
               >
                 <div className="mr-3">{item.icon}</div>
                 <span>{item.label}</span>
