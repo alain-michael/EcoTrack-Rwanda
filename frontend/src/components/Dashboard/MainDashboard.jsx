@@ -7,7 +7,7 @@ export const MainDashboard = () => {
   return (
     <div className='flex text-[1.4rem]'>
       <SideBar selectedItem={selectedItem} setSelectedItem={setSelectedItem}/>
-      <DashItems />
+      <DashItems selectedItem={selectedItem} setSelectedItem={setSelectedItem}/>
     </div>
   )
 }

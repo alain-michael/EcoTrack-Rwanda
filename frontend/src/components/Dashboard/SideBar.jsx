@@ -13,7 +13,7 @@ const components = {
     'Settings': SettingsIcon,
 }
 
-export const SideBar = () => {
+export const SideBar = ({ selectedItem, setSelectedItem }) => {
     const houseHoldSidebarItems = ['Schedule', 'Achievements', 'Recycle', 'Settings', 'Logout'];
     
     const handleItemClick = (item) => {
