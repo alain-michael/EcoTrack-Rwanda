@@ -27,7 +27,7 @@ function App() {
       path: '/',
       element: <RequestsLayout />,
       children: [
-        { path: 'requests/available', element: <Requests /> },
+        { path: 'requests', element: <Requests /> },
        
       ],
     },
