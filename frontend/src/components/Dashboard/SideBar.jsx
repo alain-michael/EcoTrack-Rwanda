@@ -21,10 +21,10 @@ export const SideBar = ({ isOpen, toggleSidebar, selectedItem, setSelectedItem }
 
   return (
     <>
-      <div className="sticky top-0 bg-[#207855] text-white py-4 px-4 flex items-center justify-between">
-        <h3 className="text-xl font-bold">ECO-TRACK.RW</h3>
+      <div className="sticky top-0 text-white py-4 px-4 flex items-center justify-between">
+        <h3 className="text-xl font-extrabold text-[#207855]">ECO-TRACK.RW</h3>
         <button
-          className="text-white rounded-md focus:outline-none "
+          className="text-[#207855] rounded-md focus:outline-none "
           name="btn"
           id="btn"
           onClick={toggleSidebar}
@@ -36,8 +36,21 @@ export const SideBar = ({ isOpen, toggleSidebar, selectedItem, setSelectedItem }
           )}
         </button>
       </div>
+      <div className="p-2 flex gap-2 items-center justify-between border-b border-t">
+        <div className="flex gap-2">
+          <div className="h-10 w-10 rounded-full bg-black cursor-pointer">
+          <img src="/profile/img1.png" alt="" className='w-full h-full object-cover'/>
+          </div>
+          <div className="">
+            <p className="font-semibold">Christian</p>
+            <small className="text-xs">Admin</small>
+          </div>
+        </div>
+        <MenuOpenIcon className="-rotate-90 cursor-pointer" />
+      </div>
+
       <div className="menu">
-        <div className="py-3">
+        <div className="">
           <h3 className="text-primary p-3 font-semibold">Menu</h3>
           <div className="text-primary">
             {houseHoldSidebarItems.map((item, index) => (
