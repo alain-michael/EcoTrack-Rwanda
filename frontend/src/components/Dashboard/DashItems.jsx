@@ -27,7 +27,11 @@ export const DashItems = ({ selectedItem, setSelectedItem }) => {
             repeating: Yup.number().required("Required"),
         }),
         onSubmit: (values) => {
-            axios.post('http://127.0.0.1:5000/api/schedule', values)
+            axios.post('http://127.0.0.1:5000/api/schedule', values, {
+                headers: {
+                    'Authorization': 'JWT ' + localStorage.getItem('access_token').replace('"', ''),
+                }
+            })
         }
     })
 

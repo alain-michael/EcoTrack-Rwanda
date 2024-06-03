@@ -8,6 +8,7 @@ auth_blueprint = Blueprint('auth', __name__)
 schedule_blueprint = Blueprint('schedule', __name__)
 bcrypt = Bcrypt()
 
+
 def add_cors_headers(response):
     response.headers.add("Access-Control-Allow-Origin", "http://localhost:5173") 
     response.headers.add('Access-Control-Allow-Headers', '*')
@@ -69,7 +70,7 @@ def login():
 
     access_token = create_access_token(identity=user.id)
     refresh_token = create_refresh_token(identity=user.id)
-
+    print(access_token)
     address = None
     if user.household_user and user.household_user[0].addresses:
         address = user.household_user[0].addresses[0].address
