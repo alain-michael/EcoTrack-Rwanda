@@ -32,9 +32,9 @@ export const DashItems = ({ selectedItem, setSelectedItem }) => {
     })
 
     return (
-        <div className="flex flex-col w-[60vw] mx-auto justify-around">
+        <div className="flex flex-col w-full rounded-lg mx-auto justify-around bg-white p-4 text-primary">
             <div className="mb-10">
-                <h1 className="text-[2rem] text-center font-[500]">{selectedItem === 'Schedule' ? "Schedule a collection" : selectedItem}</h1>
+                <h1 className="text-[2rem] text-center ">{selectedItem === 'Schedule' ? "Schedule a collection" : selectedItem}</h1>
             </div>
             {selectedItem == 'Schedule' && 
                 <form onSubmit={formik.handleSubmit} className="schedule-form flex flex-col justify-around h-[70vh]">
