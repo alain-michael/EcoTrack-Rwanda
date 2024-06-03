@@ -36,17 +36,17 @@ export const SideBar = ({ isOpen, toggleSidebar, selectedItem, setSelectedItem }
           )}
         </button>
       </div>
-      <div className="p-2 flex gap-2 items-center justify-between border-b border-t">
+      <div className="p-2 flex gap-2 items-center justify-between border-b bg-[#207855]">
         <div className="flex gap-2">
           <div className="h-10 w-10 rounded-full bg-black cursor-pointer">
           <img src="/profile/img1.png" alt="" className='w-full h-full object-cover'/>
           </div>
           <div className="">
-            <p className="font-semibold">Christian</p>
-            <small className="text-xs">Admin</small>
+            <p className="font-semibold text-green-50">Christian</p>
+            <small className="text-xs text-green-50">Admin</small>
           </div>
         </div>
-        <MenuOpenIcon className="-rotate-90 cursor-pointer" />
+        <MenuOpenIcon className="-rotate-90 cursor-pointer text-green-50" />
       </div>
 
       <div className="menu">
@@ -56,7 +56,7 @@ export const SideBar = ({ isOpen, toggleSidebar, selectedItem, setSelectedItem }
             {houseHoldSidebarItems.map((item, index) => (
               <div
                 key={index}
-                className={`flex items-center py-2 px-4 hover:bg-gray-200 cursor-pointer ${selectedItem == item.label ? "bg-[#207855] text-white" : ""}`}
+                className={`flex items-center py-2 px-4 hover:bg-gray-200 rounded-r-full w-11/12 cursor-pointer ${selectedItem == item.label ? "bg-green-100 border-l-4 border-[#207855] text-[#207855]" : ""}`}
                 onClick={() => setSelectedItem(item.label)}
               >
                 <div className="mr-3">{item.icon}</div>
