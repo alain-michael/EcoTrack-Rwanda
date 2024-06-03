@@ -14,11 +14,11 @@
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.19",
     "@mui/material": "^5.15.19",
-<<<<<<< HEAD
+
     "@mui/x-date-pickers": "^7.6.1",
-=======
+
     "@reduxjs/toolkit": "^2.2.5",
->>>>>>> lscblack_tasks
+
     "axios": "^1.7.2",
     "dayjs": "^1.11.11",
     "formik": "^2.4.6",

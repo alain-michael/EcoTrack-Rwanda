@@ -43,7 +43,7 @@ export const SideBar = ({ isOpen, toggleSidebar, selectedItem, setSelectedItem }
             {houseHoldSidebarItems.map((item, index) => (
               <div
                 key={index}
-                className={`flex items-center py-2 px-4 hover:bg-gray-200 cursor-pointer ${selectedItem == item.label ? "bg-green-200" : ""}`}
+                className={`flex items-center py-2 px-4 hover:bg-gray-200 cursor-pointer ${selectedItem == item.label ? "bg-[#207855] text-white" : ""}`}
                 onClick={() => setSelectedItem(item.label)}
               >
                 <div className="mr-3">{item.icon}</div>
