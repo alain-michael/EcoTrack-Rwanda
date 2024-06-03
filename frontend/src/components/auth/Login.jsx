@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import { useCookies } from 'react-cookie'
 
 function Login({ viewType, setviewType }) {
   const [ServerError, SetServerError] = useState(null);
+  const [cookies, setCookie] = useCookies(['access_token', 'refresh_token'])
+
 
   {/* Using Formik to handle form data and validation */}
   const formik = useFormik({
@@ -21,6 +24,10 @@ function Login({ viewType, setviewType }) {
         .post("http://127.0.0.1:5000/api/login", values)
         .then((res) => {
           if (res.status) {
+            // let expires = new Date()
+            // expires.setTime(expires.getTime() + (response.data.expires_in * 1000))
+            localStorage.setItem('access-token', res.data.access_token)
+            localStorage.setItem('refresh-token', res.data.refresh_token)
             window.location.href = "dashboard";
           }
         })

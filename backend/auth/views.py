@@ -1,5 +1,5 @@
 from flask import request, jsonify, Blueprint, make_response
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, create_refresh_token
 from backend.auth.models import User, ColSchedule, WasteCollector
 from backend.auth.app import db
 from flask_bcrypt import Bcrypt
@@ -7,6 +7,13 @@ from flask_bcrypt import Bcrypt
 auth_blueprint = Blueprint('auth', __name__)
 schedule_blueprint = Blueprint('schedule', __name__)
 bcrypt = Bcrypt()
+
+@auth_blueprint.route('/api/refresh', methods=['POST'])
+@jwt_required(refresh=True)
+def refresh():
+    user = get_jwt_identity()
+    access_token = create_access_token(identity=user)
+    return jsonify({'access_token': access_token}), 200
 
 @auth_blueprint.route('/api/register', methods=['POST', 'OPTIONS'])
 def register():
@@ -52,7 +59,11 @@ def login():
         return jsonify({'error': 'Invalid email or password'}), 401
 
     access_token = create_access_token(identity=user.id)
-    return jsonify({'message': 'Login successful', 'access_token': access_token}), 200
+    refresh_token = create_refresh_token(identity=user.id)
+    response = jsonify({'message': 'Login successful'})
+    response.set_cookie('access_token', access_token, httponly=True, secure=True, samesite='None')
+    response.set_cookie('refresh_token', refresh_token, httponly=True, secure=True, samesite='None')
+    return response
 
 @schedule_blueprint.route('/api/schedule', methods=['POST', 'OPTIONS'])
 @jwt_required()
@@ -62,9 +73,11 @@ def schedule():
         response.headers.add("Access-Control-Allow-Origin", "*")
         response.headers.add('Access-Control-Allow-Headers', "*")
         response.headers.add('Access-Control-Allow-Methods', "*")
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
         return response
     
     schedule_data = request.json
+    print(schedule_data)
     user_id = get_jwt_identity()
     user = db.session.query.get(user_id)
 
