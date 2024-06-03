@@ -5,7 +5,7 @@ import { Routes } from "react-router-dom";
 import { Route } from "react-router-dom";
 import { MainDashboard } from "./components/Dashboard/MainDashboard";
 import AuthLayout from "./components/auth/AuthLayout";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/sharedComponents/Navbar";
 
 function App() {
   return (

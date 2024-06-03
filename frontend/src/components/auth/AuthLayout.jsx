@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Navbar from "../Navbar";
+import Navbar from "../sharedComponents/Navbar";
 import { Outlet } from "react-router-dom";
 import authBg from "../../assets/auth_illustration.svg";
 import Login from "./Login";
