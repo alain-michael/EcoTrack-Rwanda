@@ -35,7 +35,9 @@ class HouseholdUser(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    addresses = db.relationship("Address", backref="household_user")
+    addresses = db.relationship("Address", backref="household_user", cascade="all, delete-orphan")
+
+    user = db.relationship("User", backref="household_user")
 
 class Address(db.Model):
     """
@@ -49,7 +51,7 @@ class Address(db.Model):
     __tablename__ = "addresses"
 
     id = db.Column(db.Integer, primary_key=True)
-    household_user_id = db.Column(db.Integer, db.ForeignKey("household_users.id"), nullable=False)
+    household_user_id = db.Column(db.Integer, db.ForeignKey("household_users.id", ondelete='CASCADE'), nullable=False)
     address = db.Column(db.String(255), nullable=False)
 
 class WasteCollector(db.Model):
@@ -64,6 +66,8 @@ class WasteCollector(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+
+    user = db.relationship("User", backref="waste_collector")
 
 class RepeatScheduleEnum(enum.Enum):
     none = 'None'

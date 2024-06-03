@@ -23,7 +23,7 @@ const DropdownProfile = () => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative z-10">
   
         <div className="h-12 w-12 rounded-full cursor-pointer"  onClick={toggleDropdown}>
             <img src="/profile/img1.png" alt="" className='w-full h-full object-cover'/>

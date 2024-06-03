@@ -1,6 +1,6 @@
 from flask import request, jsonify, Blueprint, make_response
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, create_refresh_token
-from backend.auth.models import User, ColSchedule, WasteCollector
+from backend.auth.models import HouseholdUser, User, ColSchedule, WasteCollector
 from backend.auth.app import db
 from flask_bcrypt import Bcrypt
 
@@ -8,9 +8,21 @@ auth_blueprint = Blueprint('auth', __name__)
 schedule_blueprint = Blueprint('schedule', __name__)
 bcrypt = Bcrypt()
 
+def add_cors_headers(response):
+    response.headers.add("Access-Control-Allow-Origin", "http://localhost:5173") 
+    response.headers.add('Access-Control-Allow-Headers', '*')
+    response.headers.add('Access-Control-Allow-Methods', '*')
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    return response
+
+
 @auth_blueprint.route('/api/refresh', methods=['POST'])
 @jwt_required(refresh=True)
 def refresh():
+    if request.method == 'OPTIONS':
+        response = make_response()
+        return add_cors_headers(response)
+
     user = get_jwt_identity()
     access_token = create_access_token(identity=user)
     return jsonify({'access_token': access_token}), 200
@@ -19,10 +31,7 @@ def refresh():
 def register():
     if request.method == 'OPTIONS':
         response = make_response()
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        response.headers.add('Access-Control-Allow-Headers', "*")
-        response.headers.add('Access-Control-Allow-Methods', "*")
-        return response
+        return add_cors_headers(response)
 
     user_data = request.json
     if 'name' not in user_data or 'email' not in user_data or 'password' not in user_data:
@@ -37,6 +46,9 @@ def register():
         email=user_data['email'],
         password=bcrypt.generate_password_hash(user_data['password']).decode('utf-8'),
     )
+    household_user = HouseholdUser(
+        user=new_user,
+    )
     db.session.add(new_user)
     db.session.commit()
     return jsonify({'message': 'User registered successfully', 'status': 201}), 201
@@ -45,13 +57,10 @@ def register():
 def login():
     if request.method == 'OPTIONS':
         response = make_response()
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        response.headers.add('Access-Control-Allow-Headers', "*")
-        response.headers.add('Access-Control-Allow-Methods', "*")
-        return response
+        return add_cors_headers(response)
 
     user_data = request.json
-    if 'email' not in user_data or 'password' not in user_data:
+    if not all(k in user_data for k in ('email', 'password')):
         return jsonify({'error': 'Missing required fields'}), 400
 
     user = User.query.filter_by(email=user_data['email']).first()
@@ -60,24 +69,32 @@ def login():
 
     access_token = create_access_token(identity=user.id)
     refresh_token = create_refresh_token(identity=user.id)
-    response = jsonify({'message': 'Login successful'})
-    response.set_cookie('access_token', access_token, httponly=True, secure=True, samesite='None')
-    response.set_cookie('refresh_token', refresh_token, httponly=True, secure=True, samesite='None')
+
+    address = None
+    if user.household_user and user.household_user[0].addresses:
+        address = user.household_user[0].addresses[0].address
+
+    response = jsonify({
+        'message': 'Login successful',
+        'access_token': access_token,
+        'refresh_token': refresh_token,
+        'name': user.name,
+        'email': user.email,
+        'address': address,
+        'status': 200
+    })
     return response
+
 
 @schedule_blueprint.route('/api/schedule', methods=['POST', 'OPTIONS'])
 @jwt_required()
 def schedule():
     if request.method == 'OPTIONS':
         response = make_response()
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        response.headers.add('Access-Control-Allow-Headers', "*")
-        response.headers.add('Access-Control-Allow-Methods', "*")
-        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        add_cors_headers(response)
         return response
     
     schedule_data = request.json
-    print(schedule_data)
     user_id = get_jwt_identity()
     user = db.session.query.get(user_id)
 
@@ -86,10 +103,9 @@ def schedule():
     
     schedule = ColSchedule(
         user_id=user.id,
-        collector_id=None,  # Assuming you want to assign a collector later
         date=schedule_data['date'],
-        address=user.household_users[0].addresses[0].address,  # Assuming the user has at least one address
-        status=False
+        address=user.household_users[0].addresses[0].address,
+        status=False,
     )
     db.session.add(schedule)
     db.session.commit()

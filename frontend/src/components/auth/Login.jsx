@@ -26,8 +26,7 @@ function Login({ viewType, setviewType }) {
           if (res.status) {
             // let expires = new Date()
             // expires.setTime(expires.getTime() + (response.data.expires_in * 1000))
-            localStorage.setItem('access-token', res.data.access_token)
-            localStorage.setItem('refresh-token', res.data.refresh_token)
+            console.log(res.data)
             window.location.href = "dashboard";
           }
         })

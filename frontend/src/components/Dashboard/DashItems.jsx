@@ -46,6 +46,7 @@ export const DashItems = ({ selectedItem, setSelectedItem }) => {
                                 name="date"
                                 value={formik.values.date}
                                 onChange={formik.handleChange}
+                                sx={{ width: '30%' }}
                             />
                         </LocalizationProvider>
                     </label>
@@ -56,7 +57,7 @@ export const DashItems = ({ selectedItem, setSelectedItem }) => {
                     <label>
                         Time* :
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <TimePicker name="time" label="Collection Time" value={formik.values.time} onChange={formik.handleChange} />
+                            <TimePicker name="time" label="Collection Time" value={formik.values.time} onChange={formik.handleChange} sx={{ width: '30%' }} />
                         </LocalizationProvider>
                     </label>
                     {formik.errors.time && formik.touched.time ? (
@@ -64,16 +65,8 @@ export const DashItems = ({ selectedItem, setSelectedItem }) => {
                     ) : null}
                     <hr />
                     <label>
-                        Address (Leave blank to use your default address):
-                        <TextField name="address" id="outlined-basic" variant="outlined" value={formik.values.address} onChange={formik.handleChange}/>
-                    </label>
-                    {formik.errors.address && formik.touched.address ? (
-                        <div className="text-red-500">{formik.errors.address}</div>
-                    ) : null}
-                    <hr />
-                    <label>
                         Repetition:
-                        <FormControl sx={{ m: 1, minWidth: 120 }}>
+                        <FormControl sx={{ width: '30%', boxSizing: 'border-box' }}>
                             <InputLabel id="demo-simple-select-filled-label">Repeating</InputLabel>
                             <Select
                             label="Repeating"
