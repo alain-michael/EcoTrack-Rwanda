@@ -145,7 +145,7 @@ toast.success('Job taken successfully');
                 <td className="px-10 py-2">123, Main Street, Lagos</td>
                 <td className="px-10 py-2">10:00 PM</td>
                 <td className="px-10 py-2">
-                  <a href="#" className="">
+                  <a href="/job/id" className="">
                     <button className="w-[80px] h-7 text-sm bg-[#207855] text-white rounded-md  outline-none">
                       Start Job
                     </button>

@@ -8,7 +8,7 @@ function RequestsLayout() {
   const listItemStyle = 'flex gap-2 cursor-pointer';
   return (
     <div className="w-full">
-      <div className="flex ">
+      <div className="flex">
         <div className="relative left-0 top-0 bg-primary-100 h-[100vh] px-10 py-5 max-md:hidden">
           <div>
             <h2 className="text-white font-medium">ECOTRACK</h2>

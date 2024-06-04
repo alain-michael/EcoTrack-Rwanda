@@ -10,6 +10,9 @@ import Login from './components/auth/Login';
 import { Route } from 'react-router-dom';
 import RequestsLayout from './components/waste-collection/RequestsLayout';
 import Requests from './components/waste-collection/Requests';
+import Job from './components/waste-collection/Job';
+import MapLayout from './components/waste-collection/mapContainer/mapLayout';
+import EmptyLayout from './components/waste-collection/EmptyLayout';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -26,10 +29,12 @@ function App() {
     {
       path: '/',
       element: <RequestsLayout />,
-      children: [
-        { path: 'requests', element: <Requests /> },
-       
-      ],
+      children: [{ path: 'requests', element: <Requests /> }],
+    },
+    {
+      path: '/',
+      element: <EmptyLayout />,
+      children: [{ path: 'job/id', element: <Job /> }],
     },
   ];
   const router = (
