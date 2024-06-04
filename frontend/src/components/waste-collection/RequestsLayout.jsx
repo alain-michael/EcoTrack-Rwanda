@@ -3,8 +3,12 @@ import { Outlet } from 'react-router-dom';
 import history from '../../assets/history.svg';
 import requests from '../../assets/requests.svg';
 import settings from '../../assets/settings.svg';
+import { useSelector } from 'react-redux';
+import Requests from './Requests';
+import Job from './Job';
 
 function RequestsLayout() {
+  const viewType = useSelector((state) => state.viewType);
   const listItemStyle = 'flex gap-2 cursor-pointer';
   return (
     <div className="w-full">
@@ -32,7 +36,13 @@ function RequestsLayout() {
         </div>
         <div className="mx-auto">
           <div className="">
-            <Outlet />
+            {viewType == 'requests' && <Requests />}
+            
+            {viewType == 'requests/map' && (
+              <div>
+                <Job />
+              </div>
+            )}
           </div>
         </div>
       </div>

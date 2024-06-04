@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { SideBar } from "./SideBar";
 import { Header } from "./Header";
+import Requests from "../waste-collection/Requests";
 
 export const MainDashboard = () => {
   const [selectedItem, setSelectedItem] = useState("Schedule");
@@ -41,13 +42,15 @@ export const MainDashboard = () => {
       {/* Sidebar */}
       <div
         className={`shadow-sm  bg-white text-primary flex-shrink-0 overflow-y-auto  transition-all duration-300 ease-in-out ${
-          isOpen ? "translate-x-0 w-64" : "-translate-x-64 w-0"
+          isOpen ? 'translate-x-0 w-64' : '-translate-x-64 w-0'
         }`}
       >
         {/** Sidebar Or Body Goes  */}
-        <SideBar  toggleSidebar={toggleSidebar} isOpen={isOpen}/>
+        <SideBar toggleSidebar={toggleSidebar} isOpen={isOpen} />
       </div>
-      <div className={` w-full ${isOpen ? "ml-0" : "ml-0"} h-screen overflow-auto`}>
+      <div
+        className={` w-full ${isOpen ? 'ml-0' : 'ml-0'} h-screen overflow-auto`}
+      >
         {/** Header Goes Here Or Body Goes  */}
         <header className="sticky top-0">
           <Header toggleSidebar={toggleSidebar} isOpen={isOpen} />
@@ -55,7 +58,7 @@ export const MainDashboard = () => {
         <main className="pt-3 px-2">
           {/** Main Data Or Body Goes  */}
           <div className="bg-white p-3 rounded-lg">
-            adasd
+            <Requests />
           </div>
         </main>
       </div>
