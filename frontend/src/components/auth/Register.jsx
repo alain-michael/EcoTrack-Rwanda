@@ -27,10 +27,10 @@ function Register({ viewType, setviewType }) {
     }),
     onSubmit: (values) => {
       axios
-        .post(`${import.meta.env.VITE_AUTHO_REG_LOGIN}/register`, values)
+        .post(`http://127.0.0.1:5000/api/register`, values)
         .then((res) => {
           if (res.data.status == 201) {
-            window.location.href = "/login";
+            setviewType(!viewType)
           } else {
             SetServerError("Error While Registerating please again");
           }

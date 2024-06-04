@@ -2,27 +2,29 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-// import { useCookies } from 'react-cookie'
 
 function Login({ viewType, setviewType }) {
   const [ServerError, SetServerError] = useState(null);
-  // const [cookies, setCookie] = useCookies(['access_token', 'refresh_token'])
 
-
+  {/* Using Formik to handle form data and validation */}
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().email().required(),
-      password: Yup.string().required(),
+      email: Yup.string().email().required("Required"),
+      password: Yup.string().required("Required"),
     }),
     onSubmit: (values) => {
       axios
         .post("http://127.0.0.1:5000/api/login", values)
         .then((res) => {
           if (res.status) {
+            // let expires = new Date()
+            // expires.setTime(expires.getTime() + (response.data.expires_in * 1000))
+            console.log(res.data)
+            localStorage.setItem("access_token", JSON.stringify(res.data.access_token));
             window.location.href = "dashboard";
           }
         })
@@ -35,7 +37,7 @@ function Login({ viewType, setviewType }) {
         });
     },
   });
-
+  
   const inputStyle =
     "flex h-9 w-[300px] rounded-md border border-input outline-none bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent ";
   return (
