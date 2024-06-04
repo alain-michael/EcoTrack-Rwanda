@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractUser
+from django.utils.translation import gettext_lazy as _
+
 
 # Create your models here.
 class UserManager(BaseUserManager):
@@ -41,20 +43,49 @@ class UserRoleChoices(models.TextChoices):
     Enum representing the roles of a user.
 
     Choices:
-        admin (String): The name of the admin role.
+        waste_collector (String): The name of the Waste Collector role.
         user (String): The name of the user role.
     """
-    admin = "Admin"
+    waste_collector = "Waste Collector"
     house_user = "Household User"
 
 class User(AbstractUser):
+    """
+    Model representing a User.
+
+    Attributes:
+        id (Integer): The primary key and unique identifier of the user.
+        email (String): The email of the user.
+        name (String): The name of the user.
+        password (String): The password of the user.
+        user_role (String): The role of the user.
+    """
     username = None
     USERNAME_FIELD = 'email'
     email = models.EmailField(_('email address'), unique=True)
     REQUIRED_FIELDS = []      # No additional required fields
-    user_role = models.CharField(max_length=20, choices=UserRoleChoices, default=UserRoleChoices.house_user)
+    user_role = models.CharField(max_length=20, choices=UserRoleChoices.choices, default=UserRoleChoices.house_user)
 
     objects = UserManager()
+
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='custom_user_set',
+        blank=True,
+        help_text=_(
+            'The groups this user belongs to. A user will get all permissions '
+            'granted to each of their groups.'
+        ),
+        verbose_name=_('groups'),
+    )
+
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='custom_user_set',
+        blank=True,
+        help_text=_('Specific permissions for this user.'),
+        verbose_name=_('user permissions'),
+    )
 
 class Address(models.Model):
     """
@@ -65,7 +96,7 @@ class Address(models.Model):
         household_user (Integer): Foreign key referencing the HouseholdUser.
         address (String): The actual address.
     """
-    household_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    household_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='addresses')
     address = models.CharField(max_length=255)
 
 class RepeatScheduleChoices(models.TextChoices):
@@ -94,9 +125,10 @@ class ColSchedule(models.Model):
         date (DateTime): The date of the collection.
         address (String): The address for the collection.
         status (Boolean): The status of the collection (completed or not).
+        repeat (String): The repeat schedule of the collection.
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    collector = models.ForeignKey(user, on_delete=models.CASCADE, default=None)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='schedule_user')
+    collector = models.ForeignKey(User, on_delete=models.CASCADE, related_name='schedule_collector', default=None)
     date_time = models.DateTimeField()
     address = models.CharField(max_length=255)
     status = models.BooleanField(default=False)
