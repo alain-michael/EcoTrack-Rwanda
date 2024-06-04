@@ -36,13 +36,7 @@ function RequestsLayout() {
         </div>
         <div className="mx-auto">
           <div className="">
-            {viewType == 'requests' && <Requests />}
-            
-            {viewType == 'requests/map' && (
-              <div>
-                <Job />
-              </div>
-            )}
+           
           </div>
         </div>
       </div>

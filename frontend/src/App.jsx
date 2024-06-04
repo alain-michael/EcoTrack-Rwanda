@@ -15,8 +15,7 @@ function App() {
         <Route path="/" element={<Navbar />} />
         <Route path="/auth" element={<AuthLayout />} />
         <Route path="/dashboard" element={<MainDashboard />} />
-        <Route path="/collection" element={<RequestsLayout />} />
-        <Route path="collection/job" element={<RequestsLayout />} />
+        <Route path="/dashboard/job/id" element={<MainDashboard />} />
       </Routes>
     </BrowserRouter>
   );

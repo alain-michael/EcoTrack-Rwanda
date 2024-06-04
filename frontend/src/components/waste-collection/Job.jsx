@@ -17,6 +17,10 @@ function Job() {
     lat: -1.939826787816454,
     lng: 30.0445426438232,
   };
+  const destination = {
+    lat: -1.9365670876910166,
+    lng: 30.13020167024439,
+  };
   const options = useMemo(
     () => ({
       disableDefaultUI: true,
@@ -30,67 +34,50 @@ function Job() {
   });
 
   if (isLoaded) {
-    // const service = new google.maps.DirectionsService();
-    // service.route(
-    //   {
-    //     origin: origin,
-    //     waypoints: [
-    //       {
-    //         location: new google.maps.LatLng(
-    //           -1.9355377074007851,
-    //           30.060163829002217,
-    //         ),
-    //       },
-    //       {
-    //         location: new google.maps.LatLng(
-    //           -1.9358808342336546,
-    //           30.08024820994666,
-    //         ),
-    //       },
-    //       {
-    //         location: new google.maps.LatLng(
-    //           -1.9489196023037583,
-    //           30.092607828989397,
-    //         ),
-    //       },
-    //       {
-    //         location: new google.maps.LatLng(
-    //           -1.9592132952818164,
-    //           30.106684061788073,
-    //         ),
-    //       },
-    //       {
-    //         location: new google.maps.LatLng(
-    //           -1.9487480402200394,
-    //           30.126596781356923,
-    //         ),
-    //       },
-    //     ],
-
-    //     destination: {
-    //       lat: -1.9365670876910166,
-    //       lng: 30.13020167024439,
-    //     },
-    //     travelMode: google.maps.TravelMode.DRIVING,
-    //   },
-    //   (result, status) => {
-    //     if (result) {
-    //       setDirections(result);
-    //     }
-    //   },
-    // );
+    const service = new google.maps.DirectionsService();
+    service.route(
+      {
+        origin: origin,
+        destination: destination,
+        travelMode: google.maps.TravelMode.DRIVING,
+      },
+      (result, status) => {
+        if (result) {
+          setDirections(result);
+        }
+      },
+    );
 
     return (
       <>
-        <div className='w-full h-full border-solid border border-black'>
-
-             <GoogleMap
-          zoom={8}
-          center={center}
-          mapContainerClassName="map-container"
-          options={options}
-          onLoad={onLoad}
-        ></GoogleMap>
+        <div className="">
+          <GoogleMap
+            zoom={8}
+            center={center}
+            mapContainerClassName="map-container"
+            options={options}
+            onLoad={onLoad}
+          >
+            {directions && (
+              <DirectionsRenderer
+                directions={directions}
+                options={{
+                  polylineOptions: {
+                    zIndex: 50,
+                    strokeColor: '#1976D2',
+                    strokeWeight: 5,
+                  },
+                }}
+              />
+            )}
+            <DistanceMatrixService
+              options={{
+                destinations: [destination],
+                origins: [origin],
+                travelMode: google.maps.TravelMode.DRIVING,
+              }}
+            />
+          </GoogleMap>
         </div>
       </>
     );

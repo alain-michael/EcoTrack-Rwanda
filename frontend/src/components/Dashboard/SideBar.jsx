@@ -16,7 +16,7 @@ export const SideBar = ({ isOpen, toggleSidebar }) => {
   const houseHoldSidebarItems = [
     { label: "Schedule", icon: <TodayTime /> },
     { label: "Achievements", icon: <EmojiEventsIcon /> },
-    { label: "Recycle", icon: <RecyclingIcon /> },
+    { label: "Collections", icon: <RecyclingIcon /> },
   ];
   const settings = [
     { label: "Settings", icon: <SettingsIcon /> },

@@ -4,7 +4,14 @@ import requestsBlack from '../../assets/requests_black.svg';
 import toast, { Toaster } from 'react-hot-toast';
 
 import dots from '../../assets/dots.svg';
+import { setSelectedItem } from '../../features/SharedDataSlice/SharedData';
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 function Requests() {
+  const dispatch = useDispatch();
+  const changeView = (item) => {
+    dispatch(setSelectedItem(item));
+  };
   const [showAvailableRequests, setShowAvailableRequests] = useState(true);
   const [showMyRequests, setShowMyRequests] = useState(false);
   const showAvailableRequestsHandler = () => {
@@ -16,8 +23,8 @@ function Requests() {
     setShowAvailableRequests(false);
   };
   const takeJob = () => {
-toast.success('Job taken successfully');
-  }
+    toast.success('Job taken successfully');
+  };
   return (
     <div className="mt-10">
       <div className="flex space-x-46"></div>
@@ -99,7 +106,10 @@ toast.success('Job taken successfully');
                 <td className=" px-10 py-2">Plastic</td>
                 <td className="px-10 py-2">
                   <a href="#" className="">
-                    <button className="w-[80px] h-7 text-sm bg-[#207855] text-white rounded-md  outline-none" onClick={takeJob}>
+                    <button
+                      className="w-[80px] h-7 text-sm bg-[#207855] text-white rounded-md  outline-none"
+                      onClick={takeJob}
+                    >
                       Take Job
                     </button>
                   </a>
@@ -145,11 +155,17 @@ toast.success('Job taken successfully');
                 <td className="px-10 py-2">123, Main Street, Lagos</td>
                 <td className="px-10 py-2">10:00 PM</td>
                 <td className="px-10 py-2">
-                  <a href="/job/id" className="">
+                  <Link
+                    href="/dashboard/job/id"
+                    className=""
+                    onClick={() => {
+                      changeView('Map');
+                    }}
+                  >
                     <button className="w-[80px] h-7 text-sm bg-[#207855] text-white rounded-md  outline-none">
                       Start Job
                     </button>
-                  </a>
+                  </Link>
                 </td>
               </tr>
               <tr className="">
@@ -160,11 +176,17 @@ toast.success('Job taken successfully');
                 <td className="px-10 py-2">123, Main Street, Lagos</td>
                 <td className="px-10 py-2">10:00 PM</td>
                 <td className="px-10 py-2">
-                  <a href="#" className="">
+                  <Link
+                    href="/dashboard/job/id"
+                    className=""
+                    onClick={() => {
+                      changeView('Map');
+                    }}
+                  >
                     <button className="w-[80px] h-7 text-sm bg-[#207855] text-white rounded-md  outline-none">
                       Start Job
                     </button>
-                  </a>
+                  </Link>
                 </td>
               </tr>
             </tbody>
