@@ -2,6 +2,18 @@ import datetime as dt
 import enum
 from backend.auth.app import db, app
 
+class UserRoleEnum(enum.Enum):
+    """
+    Enum representing the roles of a user.
+
+    Attributes:
+        admin (String): The name of the admin role.
+        user (String): The name of the user role.
+    """
+    admin = "Admin"
+    house_user = "Household User"
+    waste_collector = "Waste Collector"
+
 class User(db.Model):
     """
     Model representing a User.
@@ -22,6 +34,7 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     active = db.Column(db.Boolean, default=False, nullable=False)
     created_at = db.Column(db.DateTime, default=dt.datetime.now, nullable=False)
+    user_role = db.Column(db.Enum(UserRoleEnum), default=UserRoleEnum.house_user, nullable=False)
 
 class HouseholdUser(db.Model):
     """
@@ -91,7 +104,7 @@ class ColSchedule(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    collector_id = db.Column(db.Integer, db.ForeignKey("waste_collectors.id"), nullable=False)
+    collector_id = db.Column(db.Integer, db.ForeignKey("waste_collectors.id"), default=None)
     date = db.Column(db.DateTime, nullable=False)
     address = db.Column(db.String(255), nullable=False)
     status = db.Column(db.Boolean, default=False, nullable=False)

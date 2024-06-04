@@ -1,8 +1,9 @@
-from flask import request, jsonify, Blueprint, make_response
+from flask import request, jsonify, Blueprint, make_response, redirect, url_for
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, create_refresh_token
 from backend.auth.models import HouseholdUser, User, ColSchedule, WasteCollector
 from backend.auth.app import db
 from flask_bcrypt import Bcrypt
+from datetime import datetime
 
 auth_blueprint = Blueprint('auth', __name__)
 schedule_blueprint = Blueprint('schedule', __name__)
@@ -97,15 +98,22 @@ def schedule():
     
     schedule_data = request.json
     user_id = get_jwt_identity()
-    user = db.session.query.get(user_id)
+    user = db.session.query(User).get(user_id)
 
     if not user:
         return jsonify({'error': 'User not found'}), 404
     
+    address = None
+    if user.household_user and user.household_user[0].addresses:
+        address = user.household_user[0].addresses[0].address
+
+    if not address:
+        return jsonify({'error': 'Address not found'}), 404
+
     schedule = ColSchedule(
         user_id=user.id,
-        date=schedule_data['date'],
-        address=user.household_users[0].addresses[0].address,
+        date=datetime.strptime(schedule_data['date'], '%Y-%m-%dT%H:%M:%S.%fZ'),
+        address=address,
         status=False,
     )
     db.session.add(schedule)
