@@ -2,12 +2,9 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import { useCookies } from 'react-cookie'
 
 function Login({ viewType, setviewType }) {
   const [ServerError, SetServerError] = useState(null);
-  const [cookies, setCookie] = useCookies(['access_token', 'refresh_token'])
-
 
   {/* Using Formik to handle form data and validation */}
   const formik = useFormik({
