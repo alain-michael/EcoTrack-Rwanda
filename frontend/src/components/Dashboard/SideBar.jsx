@@ -7,8 +7,12 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import HomeIcon from "@mui/icons-material/Home";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import CancelIcon from "@mui/icons-material/Cancel";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedItem } from "../../features/SharedDataSlice/SharedData";
 
-export const SideBar = ({ isOpen, toggleSidebar, selectedItem, setSelectedItem }) => {
+export const SideBar = ({ isOpen, toggleSidebar }) => {
+  const dispatch = useDispatch();
+
   const houseHoldSidebarItems = [
     { label: "Schedule", icon: <TodayTime /> },
     { label: "Achievements", icon: <EmojiEventsIcon /> },
@@ -18,6 +22,10 @@ export const SideBar = ({ isOpen, toggleSidebar, selectedItem, setSelectedItem }
     { label: "Settings", icon: <SettingsIcon /> },
     { label: "Logout", icon: <LogoutIcon /> },
   ];
+  const selectedItem = useSelector(state => state.sharedData.selectedItem);
+  const changeView = (item) => {
+    dispatch(setSelectedItem(item));
+  };
 
   return (
     <>
@@ -39,7 +47,11 @@ export const SideBar = ({ isOpen, toggleSidebar, selectedItem, setSelectedItem }
       <div className="p-2 flex gap-2 items-center justify-between border-b bg-[#207855]">
         <div className="flex gap-2">
           <div className="h-10 w-10 rounded-full bg-black cursor-pointer">
-          <img src="/profile/img1.png" alt="" className='w-full h-full object-cover'/>
+            <img
+              src="/profile/img1.png"
+              alt=""
+              className="w-full h-full object-cover"
+            />
           </div>
           <div className="">
             <p className="font-semibold text-green-50">Christian</p>
@@ -56,8 +68,12 @@ export const SideBar = ({ isOpen, toggleSidebar, selectedItem, setSelectedItem }
             {houseHoldSidebarItems.map((item, index) => (
               <div
                 key={index}
-                className={`flex items-center py-2 px-4 hover:bg-gray-200 rounded-r-full w-11/12 cursor-pointer ${selectedItem == item.label ? "bg-green-100 border-l-4 border-[#207855] text-[#207855]" : ""}`}
-                onClick={() => setSelectedItem(item.label)}
+                className={`flex items-center py-2 px-4 hover:bg-gray-200 rounded-r-full w-11/12 cursor-pointer ${
+                  selectedItem == item.label
+                    ? "bg-green-100 border-l-4 border-[#207855] text-[#207855]"
+                    : ""
+                }`}
+                onClick={() => changeView(item.label)}
               >
                 <div className="mr-3">{item.icon}</div>
                 <span>{item.label}</span>

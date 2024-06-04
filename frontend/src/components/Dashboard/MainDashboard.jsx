@@ -4,7 +4,6 @@ import { Header } from "./Header";
 import { DashItems } from "./DashItems";
 
 export const MainDashboard = () => {
-  const [selectedItem, setSelectedItem] = useState("Schedule");
   const [isOpen, setIsOpen] = useState(true);
 
   const isScreenWidth767 = () => {
@@ -25,13 +24,6 @@ export const MainDashboard = () => {
 
     return () => clearInterval(interval); // Clean up the interval on component unmount
   }, []);
-  const hideSideNormal = () => {
-    if (isScreenWidth767() >= 767) {
-      setIsOpen(true); // Open sidebar if screen width is greater than or equal to 767 pixels
-    } else {
-      setIsOpen(false); // Close sidebar if screen width is less than 767 pixels
-    }
-  };
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
     if (intervalId) clearInterval(intervalId); // Clear the interval when sidebar is opened or closed manually
@@ -46,7 +38,7 @@ export const MainDashboard = () => {
         }`}
       >
         {/** Sidebar Or Body Goes  */}
-        <SideBar selectedItem={selectedItem} setSelectedItem={setSelectedItem} toggleSidebar={toggleSidebar} isOpen={isOpen}/>
+        <SideBar toggleSidebar={toggleSidebar} isOpen={isOpen}/>
       </div>
       <div
         className={` w-full ${isOpen ? 'ml-0' : 'ml-0'} h-screen overflow-auto`}
@@ -57,7 +49,7 @@ export const MainDashboard = () => {
         </header>
         <main className="pt-3 px-2">
           {/** Main Data Or Body Goes  */}
-          <DashItems selectedItem={selectedItem} setSelectedItem={setSelectedItem} />
+          <DashItems />
         </main>
       </div>
     </div>
