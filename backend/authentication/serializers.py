@@ -52,8 +52,8 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ColSchedule
-        fields = ['id', 'date', 'address', 'status', 'repeat', 'collector_name']
-        read_only_fields = ['id', 'status', 'collector_name']
+        fields = ['id', 'date', 'address', 'status', 'repeat', 'collector']
+        read_only_fields = ['id', 'status', 'collector']
 
     def get_collector_name(self, obj):
         if obj.collector:

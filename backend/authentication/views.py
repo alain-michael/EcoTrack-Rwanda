@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 from rest_framework import viewsets
 from datetime import datetime
@@ -88,6 +89,9 @@ def schedule(request, schedule_id=None):
         return(add_cors_headers(response))
     
     if request.method == 'POST':
+        request.data['repeat'] = request.data['repeat'].capitalize()
+        if request.data['repeat'] not in RepeatScheduleChoices:
+            return Response({'error': 'Invalid repeat choice'}, status=400)
         serializer = ScheduleSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             schedule = serializer.save()

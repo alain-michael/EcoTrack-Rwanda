@@ -23,7 +23,7 @@ function Login({ viewType, setviewType }) {
     }),
     onSubmit: (values) => {
       instance
-        .post(values)
+        .post('/register', values)
         .then((res) => {
           if (res.status) {
             console.log(jwtDecode(res.data.access_token));

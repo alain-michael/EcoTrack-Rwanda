@@ -110,9 +110,9 @@ class RepeatScheduleChoices(models.TextChoices):
         two_weeks (String): The name of the two_weeks repeat schedule.
     """
     none = "None"
-    twice = "Twice a week"
+    twice = "Twice"
     weekly = "Weekly"
-    two_weeks = "Every 2 weeks"
+    two_weeks = "Two weeks"
 
 class ColSchedule(models.Model):
     """
