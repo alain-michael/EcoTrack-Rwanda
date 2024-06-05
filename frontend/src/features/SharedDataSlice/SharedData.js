@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 // Default values for shared host
 const initialState = {
-    usersLogin: [],
+    usersLogin: {},
 };
 
 const sharedDataSlice = createSlice({
