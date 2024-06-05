@@ -82,33 +82,18 @@ def login(request):
 
 @api_view(['POST', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
-def schedule(request):
+def schedule(request, schedule_id=None):
     if request.method == 'OPTIONS':
         response = Response()
         return(add_cors_headers(response))
     
-    schedule_data = request.data
-    user = request.user
-
-    if not user:
-        return Response({'error': 'User not found'}, status=404)
-
-    address = None
-    print(user.household_user_set)
-    if user.household_user and user.household_user[0].addresses:
-        address = user.household_user[0].addresses[0].address
-
-    if not address:
-        return Response({'error': 'Address not found'}, status=404)
-
-    schedule = ColSchedule(
-        user_id=user.id,
-        date=datetime.strptime(schedule_data['date'], '%Y-%m-%dT%H:%M:%S.%fZ'),
-        address=address,
-        status=False,
-    )
-    schedule.save()
-    return Response({'message': 'Schedule created successfully', 'status': 201}, status=201)
+    if request.method == 'POST':
+        serializer = ScheduleSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            schedule = serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+    
 
 @api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
@@ -117,14 +102,14 @@ def my_schedules(request):
         response = Response()
         return(add_cors_headers(response))
     
-    user = request.user
-    schedules = ColSchedule.objects.filter(user_id=user.id)
-    return Response([{
-        'id': schedule.id,
-        'date': schedule.date,
-        'address': schedule.address,
-        'status': schedule.status
-    } for schedule in schedules], status=200)
+    if request.method == 'GET':
+        if request.user.user_role == UserRoleChoices.house_user:
+            schedules = ColSchedule.objects.filter(user=request.user)
+            serializer = ScheduleSerializer(schedules, many=True)
+        else:
+            schedules = ColSchedule.objects.filter(collector=request.user)
+            serializer = ScheduleSerializer(schedules, many=True)
+        return Response(serializer.data)
 
 @api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
@@ -138,12 +123,8 @@ def available_jobs(request):
         return Response({'error': 'User is not a waste collector'}, status=403)
     
     schedules = ColSchedule.objects.filter(status=False)
-    return Response([{
-        'id': schedule.id,
-        'date': schedule.date,
-        'address': schedule.address,
-        'status': schedule.status
-    } for schedule in schedules], status=200)
+    return Response(ScheduleSerializer(schedules, many=True).data, status=200)
+
 
 @api_view(['POST', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
@@ -178,12 +159,7 @@ def my_jobs(request):
         return Response({'error': 'User is not a waste collector'}, status=403)
     
     schedules = ColSchedule.objects.filter(collector=user)
-    return Response([{
-        'id': schedule.id,
-        'date': schedule.date,
-        'address': schedule.address,
-        'status': schedule.status
-    } for schedule in schedules], status=200)
+    return Response(ScheduleSerializer(schedules, many=True).data, status=200)
 
 @api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
@@ -196,9 +172,4 @@ def all_users(request):
         return Response({'error': 'User is not an admin'}, status=403)
     
     users = User.objects.all()
-    return Response([{
-        'id': user.id,
-        'name': user.name,
-        'email': user.email,
-        'user_role': user.user_role
-    } for user in users], status=200)
+    return Response(UserSerializer(users, many=True).data, status=200)

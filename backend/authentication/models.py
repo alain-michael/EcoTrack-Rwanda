@@ -128,7 +128,7 @@ class ColSchedule(models.Model):
         repeat (String): The repeat schedule of the collection.
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='schedule_user')
-    collector = models.ForeignKey(User, on_delete=models.CASCADE, related_name='schedule_collector', default=None)
+    collector = models.ForeignKey(User, on_delete=models.CASCADE, related_name='schedule_collector', default=None, null=True, blank=True)
     date_time = models.DateTimeField()
     address = models.CharField(max_length=255)
     status = models.BooleanField(default=False)

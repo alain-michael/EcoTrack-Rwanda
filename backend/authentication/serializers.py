@@ -1,4 +1,6 @@
+from django.utils.timezone import make_aware, get_current_timezone
 from django.contrib.auth import authenticate
+import datetime
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import *
@@ -42,3 +44,58 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         attrs['user'] = user
 
         return super().validate(attrs)
+    
+
+class ScheduleSerializer(serializers.ModelSerializer):
+    date = serializers.DateTimeField(source='date_time', format='%Y-%m-%dT%H:%M:%S.%fZ')
+    address = serializers.CharField(required=False)
+
+    class Meta:
+        model = ColSchedule
+        fields = ['id', 'date', 'address', 'status', 'repeat', 'collector_name']
+        read_only_fields = ['id', 'status', 'collector_name']
+
+    def get_collector_name(self, obj):
+        if obj.collector:
+            return f"{obj.collector.first_name} {obj.collector.last_name}"
+        return None
+
+
+    def validate_date(self, value):
+        if not value.tzinfo:
+            utc = datetime.timezone.utc
+            return make_aware(value, timezone=utc)
+        return value
+
+
+    def validate(self, data):
+        user = self.context['request'].user
+        if not user:
+            raise serializers.ValidationError('User not found')
+
+        if 'address' not in data:
+            if user.user_role == UserRoleChoices.house_user and user.addresses.exists():
+                data['address'] = user.addresses.first().address
+            else:
+                raise serializers.ValidationError('Address not provided and no default address found')
+
+        return data
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        date_time = validated_data.pop('date_time')
+        
+        schedule = ColSchedule(
+            user=user,
+            date_time=date_time,
+            status=False,
+            **validated_data
+        )
+        schedule.save()
+        return schedule
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'email', 'user_role']
