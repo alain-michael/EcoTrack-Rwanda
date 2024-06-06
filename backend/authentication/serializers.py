@@ -21,7 +21,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['full_name'] = f"{user.first_name} {user.last_name}"
         
         if user.user_role == UserRoleChoices.house_user:
-            token['addresses'] = list(user.addresses.values_list('address', flat=True))
+            token['addresses'] = AddressSerializer(user.addresses.first(), many=False).data
 
         return token
 
@@ -45,21 +45,33 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         return super().validate(attrs)
     
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = ['longitude', 'latitude']
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'email', 'user_role']
 
 class ScheduleSerializer(serializers.ModelSerializer):
     date = serializers.DateTimeField(source='date_time', format='%Y-%m-%dT%H:%M:%S.%fZ')
-    address = serializers.CharField(required=False)
+    address = AddressSerializer(write_only=True)
+    longitude = serializers.SerializerMethodField()
+    latitude = serializers.SerializerMethodField()
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = ColSchedule
-        fields = ['id', 'date', 'address', 'status', 'repeat', 'collector']
+        fields = ['id', 'date', 'status', 'address', 'repeat', 'collector', 'longitude', 'latitude', 'user']
         read_only_fields = ['id', 'status', 'collector']
 
-    def get_collector_name(self, obj):
-        if obj.collector:
-            return f"{obj.collector.first_name} {obj.collector.last_name}"
-        return None
+    def get_longitude(self, obj):
+        return obj.address.longitude if obj.address else None
 
+    def get_latitude(self, obj):
+        return obj.address.latitude if obj.address else None
 
     def validate_date(self, value):
         if value < datetime.datetime.now(get_current_timezone()):
@@ -69,7 +81,6 @@ class ScheduleSerializer(serializers.ModelSerializer):
             return make_aware(value, timezone=utc)
         return value
 
-
     def validate(self, data):
         user = self.context['request'].user
         if not user:
@@ -77,7 +88,7 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
         if 'address' not in data:
             if user.user_role == UserRoleChoices.house_user and user.addresses.exists():
-                data['address'] = user.addresses.first().address
+                data['address'] = AddressSerializer(user.addresses.first()).data
             else:
                 raise serializers.ValidationError('Address not provided and no default address found')
 
@@ -86,18 +97,18 @@ class ScheduleSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = self.context['request'].user
         date_time = validated_data.pop('date_time')
-        
+
+        # Extract address data and create address instance
+        address_data = validated_data.pop('address')
+        address = Address.objects.create(**address_data)
+
+        # Create schedule instance with the created address
         schedule = ColSchedule(
             user=user,
             date_time=date_time,
             status=False,
+            address=address,
             **validated_data
         )
         schedule.save()
         return schedule
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'first_name', 'last_name', 'email', 'user_role']
