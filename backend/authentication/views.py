@@ -15,21 +15,9 @@ from .serializers import *
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
-def add_cors_headers(response):
-    response.headers = {
-        'Access-Control-Allow-Origin': 'http://localhost',
-        'Access-Control-Allow-Headers': '*',
-        'Access-Control-Allow-Methods': '*',
-        'Access-Control-Allow-Credentials': 'true'}
-    return response
-
 # Create your views here.
 @api_view(['POST', 'OPTIONS'])
 def register(request):
-    if request.method == 'OPTIONS':
-        response = Response()
-        return(add_cors_headers(response))
-    
     if request.method == 'POST':
         user_data = request.data
         if 'name' not in user_data or 'email' not in user_data or 'password' not in user_data:
@@ -57,37 +45,30 @@ def register(request):
     
 @api_view(['POST', 'OPTIONS'])
 def login(request):
-    if request.method == 'OPTIONS':
-        response = Response()
-        return(add_cors_headers(response))
-    
-    user_data = request.data
-    if not all(k in user_data for k in ('email', 'password')):
-        return Response({'error': 'Missing required fields'}, status=400)
+    if request.method == 'POST':
+        user_data = request.data
+        if not all(k in user_data for k in ('email', 'password')):
+            return Response({'error': 'Missing required fields'}, status=400)
 
-    user = User.objects.filter(email=user_data['email']).first()
-    if not user or not user.check_password(user_data['password']):
-        return Response({'error': 'Invalid email or password'}, status=401)
-    
-    refresh = RefreshToken.for_user(user)
-    return Response({
-        'refresh': refresh,
-        'access': str(refresh.access_token),
-        'user': {
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'email': user.email,
-            'user_role': user.user_role,
-        }
-    })
+        user = User.objects.filter(email=user_data['email']).first()
+        if not user or not user.check_password(user_data['password']):
+            return Response({'error': 'Invalid email or password'}, status=401)
+        
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'refresh': refresh,
+            'access': str(refresh.access_token),
+            'user': {
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'email': user.email,
+                'user_role': user.user_role,
+            }
+        })
 
 @api_view(['POST', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def schedule(request, schedule_id=None):
-    if request.method == 'OPTIONS':
-        response = Response()
-        return(add_cors_headers(response))
-    
     if request.method == 'POST':
         request.data['repeat'] = request.data['repeat'].capitalize()
         if request.data['repeat'] not in RepeatScheduleChoices:
@@ -102,10 +83,6 @@ def schedule(request, schedule_id=None):
 @api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def my_schedules(request):
-    if request.method == 'OPTIONS':
-        response = Response()
-        return(add_cors_headers(response))
-    
     if request.method == 'GET':
         if request.user.user_role == UserRoleChoices.house_user:
             schedules = ColSchedule.objects.filter(user=request.user)
@@ -118,10 +95,6 @@ def my_schedules(request):
 @api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def available_jobs(request):
-    if request.method == 'OPTIONS':
-        response = Response()
-        return(add_cors_headers(response))
-    
     user = request.user
     if user.user_role != UserRoleChoices.waste_collector:
         return Response({'error': 'User is not a waste collector'}, status=403)
@@ -133,10 +106,6 @@ def available_jobs(request):
 @api_view(['POST', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def accept_job(request):
-    if request.method == 'OPTIONS':
-        response = Response()
-        return(add_cors_headers(response))
-    
     schedule_id = request.data['id']
     schedule = ColSchedule.objects.get(id=schedule_id)
     if not schedule:
@@ -154,10 +123,6 @@ def accept_job(request):
 @api_view(['Get', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def my_jobs(request):
-    if request.method == 'OPTIONS':
-        response = Response()
-        return(add_cors_headers(response))
-    
     user = request.user
     if user.user_role != UserRoleChoices.waste_collector:
         return Response({'error': 'User is not a waste collector'}, status=403)
@@ -168,10 +133,6 @@ def my_jobs(request):
 @api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def all_users(request):
-    if request.method == 'OPTIONS':
-        response = Response()
-        return(add_cors_headers(response))
-    
     if not request.user.is_staff:
         return Response({'error': 'User is not an admin'}, status=403)
     

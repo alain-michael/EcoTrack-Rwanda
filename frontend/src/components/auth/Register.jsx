@@ -27,7 +27,7 @@ function Register({ viewType, setviewType }) {
     }),
     onSubmit: (values) => {
       axios
-        .post(`http://127.0.0.1:5000/api/register`, values)
+        .post(`http://127.0.0.1:8000/api/register`, values)
         .then((res) => {
           if (res.data.status == 201) {
             setviewType(!viewType)

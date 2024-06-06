@@ -5,8 +5,10 @@ const state = store.getState();
 const token = state.sharedData.usersLogin.access_token;
 
 export const instance = axios.create({
-    baseURL: `${import.meta.env.BASE_URL}`,
+    baseURL: import.meta.env.VITE_BASE_URL,
     headers: {
-        "Authorization": "Bearer " + token
+        "Authorization": "Bearer " + token,
+        'Content-Type': 'application/json',
     },
+    withCredentials: true,
 })

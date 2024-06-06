@@ -23,19 +23,22 @@ function Login({ viewType, setviewType }) {
     }),
     onSubmit: (values) => {
       instance
-        .post('/register', values)
+        .post('/login', values)
         .then((res) => {
-          if (res.status) {
-            console.log(jwtDecode(res.data.access_token));
-            // dispatch(addUserLogin(jwtDecode(res.data.access_token)));
-            localStorage.setItem("access_token", JSON.stringify(res.data.access_token));
-            // window.location.href = "dashboard";
+          if (res.status == 200) {
+            let user_data = {"access": res.data.access, "refresh": res.data.refresh}
+            Object.keys(jwtDecode(res.data.access)).map((item) => {
+              user_data[item] = jwtDecode(res.data.access)[item]
+            })
+            dispatch(addUserLogin(user_data));
+            window.location.href = "dashboard";
           }
         })
         .catch((error) => {
           if (error.response) {
             SetServerError(`Error: ${error.response.data.error}`);
           } else {
+            console.log(error);
             SetServerError("Unexpected error occured. Try Again Later");
           }
         });

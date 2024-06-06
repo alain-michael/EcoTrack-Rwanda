@@ -62,6 +62,8 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
 
     def validate_date(self, value):
+        if value < datetime.datetime.now(get_current_timezone()):
+            raise serializers.ValidationError('Date cannot be in the past')
         if not value.tzinfo:
             utc = datetime.timezone.utc
             return make_aware(value, timezone=utc)
