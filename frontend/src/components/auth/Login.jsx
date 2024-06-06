@@ -2,9 +2,14 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { addUserLogin } from "../../features/SharedDataSlice/SharedData"
+import { jwtDecode } from "jwt-decode"
+import { instance } from '../../features/AxiosInstance'
 
 function Login({ viewType, setviewType }) {
   const [ServerError, SetServerError] = useState(null);
+  const dispatch = useDispatch();
 
   {/* Using Formik to handle form data and validation */}
   const formik = useFormik({
@@ -17,22 +22,24 @@ function Login({ viewType, setviewType }) {
       password: Yup.string().required("Required"),
     }),
     onSubmit: (values) => {
-      axios
-        .post("http://127.0.0.1:5000/api/login", values)
+      instance
+        .post('/login', values)
         .then((res) => {
-          if (res.status) {
-            // let expires = new Date()
-            // expires.setTime(expires.getTime() + (response.data.expires_in * 1000))
-            console.log(res.data)
-            localStorage.setItem("access_token", JSON.stringify(res.data.access_token));
+          if (res.status == 200) {
+            let user_data = {"access": res.data.access, "refresh": res.data.refresh}
+            Object.keys(jwtDecode(res.data.access)).map((item) => {
+              user_data[item] = jwtDecode(res.data.access)[item]
+            })
+            dispatch(addUserLogin(user_data));
             window.location.href = "dashboard";
           }
         })
         .catch((error) => {
-          if (error.response.data) {
+          if (error.response) {
             SetServerError(`Error: ${error.response.data.error}`);
           } else {
-            SetServerError("unexpected error Occured Try Again Later");
+            console.log(error);
+            SetServerError("Unexpected error occured. Try Again Later");
           }
         });
     },
