@@ -96,8 +96,9 @@ class Address(models.Model):
         household_user (Integer): Foreign key referencing the HouseholdUser.
         address (String): The actual address.
     """
-    household_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='addresses')
-    address = models.CharField(max_length=255)
+    household_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='addresses', default=None, null=True, blank=True)
+    latitude = models.DecimalField(max_digits=10, decimal_places=6)
+    longitude = models.DecimalField(max_digits=10, decimal_places=6)
 
 class RepeatScheduleChoices(models.TextChoices):
     """
@@ -130,7 +131,7 @@ class ColSchedule(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='schedule_user')
     collector = models.ForeignKey(User, on_delete=models.CASCADE, related_name='schedule_collector', default=None, null=True, blank=True)
     date_time = models.DateTimeField()
-    address = models.CharField(max_length=255)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='schedule_address', default=None)
     status = models.BooleanField(default=False)
     repeat = models.CharField(max_length=255, choices=RepeatScheduleChoices.choices, default=RepeatScheduleChoices.none)
 

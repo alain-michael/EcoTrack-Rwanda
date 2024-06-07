@@ -3,12 +3,16 @@ import { Outlet } from 'react-router-dom';
 import history from '../../assets/history.svg';
 import requests from '../../assets/requests.svg';
 import settings from '../../assets/settings.svg';
+import { useSelector } from 'react-redux';
+import Requests from './Requests';
+import Job from './Job';
 
 function RequestsLayout() {
+  const viewType = useSelector((state) => state.viewType);
   const listItemStyle = 'flex gap-2 cursor-pointer';
   return (
     <div className="w-full">
-      <div className="flex ">
+      <div className="flex">
         <div className="relative left-0 top-0 bg-primary-100 h-[100vh] px-10 py-5 max-md:hidden">
           <div>
             <h2 className="text-white font-medium">ECOTRACK</h2>
@@ -32,7 +36,7 @@ function RequestsLayout() {
         </div>
         <div className="mx-auto">
           <div className="">
-            <Outlet />
+           
           </div>
         </div>
       </div>

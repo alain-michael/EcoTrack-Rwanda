@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Archivements } from "./Archivements";
 import { Schedule_form } from "./Schedule_form";
 import { useSelector } from "react-redux";
+import Requests from "../waste-collection/Requests";
+import Job from "../waste-collection/Job";
 
 export const DashItems = () => {
   const [serverError, setServerError] = useState("");
@@ -17,6 +19,8 @@ export const DashItems = () => {
       </div>
       {selectedItem == "Schedule" && <Schedule_form />}
       {selectedItem == "Achievements" && <Archivements />}
+      {selectedItem == "Collections" && <Requests />}
+      {selectedItem == "Map" && <Job />}
     </div>
   );
 };

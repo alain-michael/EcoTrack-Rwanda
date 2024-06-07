@@ -34,13 +34,15 @@ export const MainDashboard = () => {
       {/* Sidebar */}
       <div
         className={`shadow-sm  bg-white text-primary flex-shrink-0 overflow-y-auto  transition-all duration-300 ease-in-out ${
-          isOpen ? "translate-x-0 w-64" : "-translate-x-64 w-0"
+          isOpen ? 'translate-x-0 w-64' : '-translate-x-64 w-0'
         }`}
       >
         {/** Sidebar Or Body Goes  */}
         <SideBar toggleSidebar={toggleSidebar} isOpen={isOpen}/>
       </div>
-      <div className={` w-full ${isOpen ? "ml-0" : "ml-0"} h-screen overflow-auto`}>
+      <div
+        className={` w-full ${isOpen ? 'ml-0' : 'ml-0'} h-screen overflow-auto`}
+      >
         {/** Header Goes Here Or Body Goes  */}
         <header className="sticky top-0">
           <Header toggleSidebar={toggleSidebar} isOpen={isOpen} />
