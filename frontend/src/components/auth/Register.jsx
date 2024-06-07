@@ -26,8 +26,8 @@ function Register({ viewType, setviewType }) {
         .required("Required"),
     }),
     onSubmit: (values) => {
-      axios
-        .post(`http://127.0.0.1:8000/api/register`, values)
+      instance
+        .post(`/register`, values)
         .then((res) => {
           if (res.data.status == 201) {
             setviewType(!viewType)
@@ -39,7 +39,7 @@ function Register({ viewType, setviewType }) {
           if (error.response) {
             SetServerError(error.response.data.error);
           } else {
-            console.log(error);
+            SetServerError("Unexpected error occured. Try Again Later");
           }
         });
     },

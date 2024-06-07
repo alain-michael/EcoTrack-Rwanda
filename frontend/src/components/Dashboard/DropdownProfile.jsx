@@ -1,8 +1,24 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { instance } from '../../features/AxiosInstance';
 
 const DropdownProfile = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const dispatch = useDispatch();
+
+
+  const logout = () => {
+    instance.post('/logout').then((response) => {
+      if (response.status === 200) {
+        window.location.href = '/';
+      }
+    }).catch((error) => {
+      console.log(error);
+      alert(`Error: ${error.response.data.error}`);
+    })
+    dispatch(resetStateToDefault());
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -35,7 +51,7 @@ const DropdownProfile = () => {
             <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
               View Profile
             </a>
-            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+            <a onClick={logout} href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
               Logout
             </a>
             <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
