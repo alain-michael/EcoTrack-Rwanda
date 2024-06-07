@@ -1,14 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import requests from '../../assets/requests.svg';
 import requestsBlack from '../../assets/requests_black.svg';
 import toast, { Toaster } from 'react-hot-toast';
 
 import dots from '../../assets/dots.svg';
-import { setSelectedItem } from '../../features/SharedDataSlice/SharedData';
-import { useDispatch } from 'react-redux';
+import {
+  setSelectedItem,
+  updateTable,
+  setAllCollectionsData,
+  setMyCollectionsData,
+} from '../../features/SharedDataSlice/SharedData';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { instance } from '../../features/AxiosInstance';
 function Requests() {
+  useEffect(() => {
+    fetchAllCollections();
+    fetchAllMyCollections();
+  }, []);
   const dispatch = useDispatch();
+  const availableRequests = useSelector(
+    (state) => state.sharedData.allCollectionsData,
+  );
+  const myRequests = useSelector((state) => state.sharedData.myCollectionsData);
   const changeView = (item) => {
     dispatch(setSelectedItem(item));
   };
@@ -22,8 +37,39 @@ function Requests() {
     setShowMyRequests(true);
     setShowAvailableRequests(false);
   };
-  const takeJob = () => {
-    toast.success('Job taken successfully');
+  const takeJob = (id) => {
+    acceptJob(id);
+  };
+  const fetchAllCollections = async () => {
+    instance
+      .get('/jobs/available-jobs')
+      .then((response) => {
+        dispatch(setAllCollectionsData(response.data));
+        // setAvailableRequests(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const fetchAllMyCollections = async () => {
+    instance
+      .get('/jobs/my-jobs')
+      .then((response) => {
+        dispatch(setMyCollectionsData(response.data));
+        // setMyRequests(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const acceptJob = async (id) => {
+    const body = {
+      id: parseInt(id),
+    };
+    instance.post('/jobs/accept-job', body).then((response) => {
+      dispatch(updateTable(parseInt(id)));
+      toast.success('Job taken successfully');
+    });
   };
   return (
     <div className="mt-10">
@@ -52,7 +98,7 @@ function Requests() {
           <p>My Requests</p>
         </div>
       </div>
-      {showAvailableRequests ? (
+      {showAvailableRequests && availableRequests && myRequests ? (
         <div className="flex">
           <table className="mt-2 border border-gray-100 shadow-md text-sm">
             <thead className="shadow-lg mb-2">
@@ -73,7 +119,7 @@ function Requests() {
                   ADDRESS
                 </th>
                 <th className="text-left text-gray-500 font-medium px-10 py-2">
-                  REQUEST
+                  TIME
                 </th>
                 <th className="text-left text-gray-500 font-medium px-10 py-2">
                   ACTION
@@ -81,40 +127,28 @@ function Requests() {
               </tr>
             </thead>
             <tbody className="text-small">
-              <tr className="bg-gray-200 ">
-                <td className="px-10 py-2">1.</td>
-                <td className="px-10 py-2 ">John Doe</td>
-                <td className="px-10 py-2">johndoe@mail.com</td>
-                <td className="px-10 py-2">1234567890</td>
-                <td className="px-10 py-2">123, Main Street, Lagos</td>
-                <td className="px-10 py-2">Plastic</td>
-                <td className="px-10 py-2">
-                  <button
-                    className="w-[80px] h-7 text-sm bg-[#207855] text-white rounded-md  outline-none"
-                    onClick={takeJob}
-                  >
-                    Take Job
-                  </button>
-                </td>
-              </tr>
-              <tr className="">
-                <td className="  px-10 py-2">2.</td>
-                <td className="  px-10 py-2">John Doe</td>
-                <td className=" px-10 py-2">johndoe@mail.com</td>
-                <td className=" px-10 py-2">1234567890</td>
-                <td className=" px-10 py-2">123, Main Street, Lagos</td>
-                <td className=" px-10 py-2">Plastic</td>
-                <td className="px-10 py-2">
-                  <a href="#" className="">
+              {availableRequests?.map((request, index) => (
+                <tr className="bg-gray-200" key={index}>
+                  <td className="px-10 py-2">{index + 1}.</td>
+                  <td className="px-10 py-2 ">
+                    {request.user.first_name} {request.user.last_name}
+                  </td>
+                  <td className="px-10 py-2">{request.user.email}</td>
+                  <td className="px-10 py-2">1234567890</td>
+                  <td className="px-10 py-2">123, Main Street, Lagos</td>
+                  <td className="px-10 py-2">
+                    {new Date(request.date).toLocaleString()}
+                  </td>
+                  <td className="px-10 py-2">
                     <button
                       className="w-[80px] h-7 text-sm bg-[#207855] text-white rounded-md  outline-none"
-                      onClick={takeJob}
+                      onClick={() => takeJob(request.id)}
                     >
                       Take Job
                     </button>
-                  </a>
-                </td>
-              </tr>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -147,48 +181,33 @@ function Requests() {
               </tr>
             </thead>
             <tbody>
-              <tr className="bg-gray-200 ">
-                <td className="px-10 py-2">1.</td>
-                <td className="px-10 py-2">John Doe</td>
-                <td className="px-10 py-2">johndoe@mail.com</td>
-                <td className="px-10 py-2">1234567890</td>
-                <td className="px-10 py-2">123, Main Street, Lagos</td>
-                <td className="px-10 py-2">10:00 PM</td>
-                <td className="px-10 py-2">
-                  <Link
-                    href="/dashboard/job/id"
-                    className=""
-                    onClick={() => {
-                      changeView('Map');
-                    }}
-                  >
-                    <button className="w-[80px] h-7 text-sm bg-[#207855] text-white rounded-md  outline-none">
-                      Start Job
-                    </button>
-                  </Link>
-                </td>
-              </tr>
-              <tr className="">
-                <td className="px-10 py-2">2.</td>
-                <td className="px-10 py-2">John Doe</td>
-                <td className="px-10 py-2">johndoe@mail.com</td>
-                <td className="px-10 py-2">1234567890</td>
-                <td className="px-10 py-2">123, Main Street, Lagos</td>
-                <td className="px-10 py-2">10:00 PM</td>
-                <td className="px-10 py-2">
-                  <Link
-                    href="/dashboard/job/id"
-                    className=""
-                    onClick={() => {
-                      changeView('Map');
-                    }}
-                  >
-                    <button className="w-[80px] h-7 text-sm bg-[#207855] text-white rounded-md  outline-none">
-                      Start Job
-                    </button>
-                  </Link>
-                </td>
-              </tr>
+              {myRequests?.map((request, index) => (
+                <tr className="bg-gray-200 " key={request.id}>
+                  <td className="px-10 py-2">{index + 1}.</td>
+                  <td className="px-10 py-2">
+                    {request.user.first_name} {request.user.last_name}
+                  </td>
+                  <td className="px-10 py-2">{request.user.email}</td>
+                  <td className="px-10 py-2">1234567890</td>
+                  <td className="px-10 py-2">123, Main Street, Lagos</td>
+                  <td className="px-10 py-2">
+                    {new Date(request.date).toLocaleString()}
+                  </td>
+                  <td className="px-10 py-2">
+                    <Link
+                      to={`/dashboard/job/${request.id}`}
+                      className=""
+                      onClick={() => {
+                        changeView('Map');
+                      }}
+                    >
+                      <button className="w-[80px] h-7 text-sm bg-[#207855] text-white rounded-md  outline-none">
+                        Start Job
+                      </button>
+                    </Link>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
