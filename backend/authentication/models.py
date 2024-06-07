@@ -56,6 +56,7 @@ class User(AbstractUser):
     Attributes:
         id (Integer): The primary key and unique identifier of the user.
         email (String): The email of the user.
+        phone_number (String): The phone number of the user.
         name (String): The name of the user.
         password (String): The password of the user.
         user_role (String): The role of the user.
@@ -63,6 +64,7 @@ class User(AbstractUser):
     username = None
     USERNAME_FIELD = 'email'
     email = models.EmailField(_('email address'), unique=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
     REQUIRED_FIELDS = []      # No additional required fields
     user_role = models.CharField(max_length=20, choices=UserRoleChoices.choices, default=UserRoleChoices.house_user)
 

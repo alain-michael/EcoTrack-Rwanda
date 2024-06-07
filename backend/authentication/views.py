@@ -3,9 +3,9 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from datetime import datetime
 from rest_framework.response import Response
-from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.decorators import action, api_view, permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import *
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -17,6 +17,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 # Create your views here.
 @api_view(['POST', 'OPTIONS'])
+@authentication_classes([])
 def register(request):
     if request.method == 'POST':
         user_data = request.data
@@ -36,7 +37,8 @@ def register(request):
             first_name=' '.join(names[:-1]),
             last_name=names[-1],
             email=user_data['email'],
-            user_role=user_data['userRole']
+            user_role=user_data['userRole'],
+            phone_number=user_data.get('phoneNumber')
         )
         new_user.set_password(user_data['password'])
 
@@ -63,8 +65,24 @@ def login(request):
                 'last_name': user.last_name,
                 'email': user.email,
                 'user_role': user.user_role,
+                'phone_number': user.phone_number
             }
         })
+
+@api_view(['POST', 'OPTIONS'])
+def logout(request):
+    refresh_token = request.data.get('refresh_token')
+
+    if not refresh_token:
+        return Response({'error': 'Refresh token is required.'}, status=400)
+
+    try:
+        token = RefreshToken(refresh_token)
+        token.blacklist() 
+        return Response({'success': 'User successfully logged out.'}, status=200)
+    except Exception as e:
+        return Response({'error': 'Failed to logout user.'}, status=500)
+
 
 @api_view(['POST', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
@@ -138,3 +156,25 @@ def all_users(request):
     
     users = User.objects.all()
     return Response(UserSerializer(users, many=True).data, status=200)
+
+@api_view(['GET', 'OPTIONS'])
+@permission_classes([IsAuthenticated])
+def get_job(request, id):
+    user = request.user
+    if user.user_role != UserRoleChoices.waste_collector:
+        return Response({'error': 'User is not a waste collector'}, status=403)
+    
+    schedule = ColSchedule.objects.filter(id=id)
+    if not schedule:
+        return Response({'error': 'Schedule not found'}, status=404)
+    return Response(ScheduleSerializer(schedule[0]).data, status=200)
+
+@api_view(['GET', 'OPTIONS'])
+@permission_classes([IsAuthenticated])
+def get_job(request, id):
+    user = request.user
+    
+    schedule = ColSchedule.objects.filter(id=id)
+    if not schedule:
+        return Response({'error': 'Schedule not found'}, status=404)
+    return Response(ScheduleSerializer(schedule[0]).data, status=200)

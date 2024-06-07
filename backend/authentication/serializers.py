@@ -20,6 +20,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         token['full_name'] = f"{user.first_name} {user.last_name}"
         
+        
         if user.user_role == UserRoleChoices.house_user:
             token['addresses'] = AddressSerializer(user.addresses.first(), many=False).data
 
@@ -53,7 +54,7 @@ class AddressSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'email', 'user_role']
+        fields = ['id', 'first_name', 'last_name', 'phone_number', 'email', 'user_role']
 
 class ScheduleSerializer(serializers.ModelSerializer):
     date = serializers.DateTimeField(source='date_time', format='%Y-%m-%dT%H:%M:%S.%fZ')

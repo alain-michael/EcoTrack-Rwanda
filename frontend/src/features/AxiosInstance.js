@@ -2,7 +2,7 @@ import axios from "axios";
 import { store } from '../app/store'
 
 const state = store.getState();
-const token = state.sharedData.usersLogin.access_token;
+const token = state.sharedData.usersLogin.access;
 
 export const instance = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,

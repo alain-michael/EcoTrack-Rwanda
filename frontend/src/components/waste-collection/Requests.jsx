@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import requests from '../../assets/requests.svg';
 import requestsBlack from '../../assets/requests_black.svg';
 import toast, { Toaster } from 'react-hot-toast';
+import { instance } from '../../features/AxiosInstance';
 
 import dots from '../../assets/dots.svg';
 import { setSelectedItem } from '../../features/SharedDataSlice/SharedData';
@@ -25,6 +26,14 @@ function Requests() {
   const takeJob = () => {
     toast.success('Job taken successfully');
   };
+  const fetchAllCollections = async () => {
+    instance.get('/jobs/available-jobs').then((response) => {
+      console.log(response.data);
+    });
+  };
+
+  fetchAllCollections();
+
   return (
     <div className="mt-10">
       <div className="flex space-x-46"></div>
