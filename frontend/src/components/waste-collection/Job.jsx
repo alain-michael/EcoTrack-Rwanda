@@ -17,15 +17,23 @@ const Job = () => {
   const [stopName, setStopName] = useState();
   const [directions, setDirections] = useState();
   const [origin, setOrigin] = useState({});
+  const [destination, setDestination] = useState({});
   const mapRef = useRef();
   const center = useMemo(() => ({ lat: origin.lat, lng: origin.lng }), []);
 
-  const getDestination=()=>{
-  }
-  const destination = useMemo(
-    () => ({ lat: -1.939826787816454, lng: 30.0445426438232 }),
-    [],
-  );
+  const getDestination = () => {
+    instance
+      .get(`/jobs/${id}`)
+      .then((response) => {
+        setDestination({
+          lat: response.data.latitude,
+          lng: response.data.longitude,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const getUserLocation = () => {
     navigator.geolocation.getCurrentPosition((position) => {
       const lat = position.coords.latitude;
@@ -35,6 +43,7 @@ const Job = () => {
   };
   useEffect(() => {
     getUserLocation();
+    getDestination();
   }, []);
   const options = useMemo(
     () => ({
@@ -90,6 +99,10 @@ const Job = () => {
               destinations: [destination],
               origins: [origin],
               travelMode: google.maps.TravelMode.DRIVING,
+            }}
+            callback={(response) => {
+              setTime(response.rows[0].elements[0].duration.text);
+              setDistance(response.rows[0].elements[0].distance.text);
             }}
           />
         </GoogleMap>

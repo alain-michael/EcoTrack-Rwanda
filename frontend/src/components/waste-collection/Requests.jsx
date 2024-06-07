@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import requests from '../../assets/requests.svg';
 import requestsBlack from '../../assets/requests_black.svg';
 import toast, { Toaster } from 'react-hot-toast';
-
+import { instance } from '../../features/AxiosInstance';
 import dots from '../../assets/dots.svg';
 import {
   setSelectedItem,
@@ -13,7 +13,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { instance } from '../../features/AxiosInstance';
+
 function Requests() {
   useEffect(() => {
     fetchAllCollections();
@@ -45,7 +45,6 @@ function Requests() {
       .get('/jobs/available-jobs')
       .then((response) => {
         dispatch(setAllCollectionsData(response.data));
-        // setAvailableRequests(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -56,7 +55,6 @@ function Requests() {
       .get('/jobs/my-jobs')
       .then((response) => {
         dispatch(setMyCollectionsData(response.data));
-        // setMyRequests(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -71,6 +69,7 @@ function Requests() {
       toast.success('Job taken successfully');
     });
   };
+
   return (
     <div className="mt-10">
       <div className="flex space-x-46"></div>
