@@ -7,6 +7,7 @@ import Requests from "../waste-collection/Requests";
 import Job from "../waste-collection/Job";
 import WasteCollectorMDash from "./WasteCollectorMDash";
 import ManageAllUser from "./ManageAllUser";
+import AllSchedules from "./AllSchedules";
 
 {/** This page is for layout for all Admin items */}
 export const Admin = () => {
@@ -15,9 +16,9 @@ export const Admin = () => {
     <div className="flex flex-col w-full rounded-lg mx-auto justify-around bg-white p-4 text-primary">
       {selectedItem == "Dashboard" && <WasteCollectorMDash />}
       {selectedItem == "Achievements" && <Archivements />}
-      {selectedItem == "Collections" && <Requests />}
       {selectedItem == "Map" && <Job />}
       {selectedItem == "Manage Users" && <ManageAllUser />}
+      {selectedItem == "All Schedules" && <AllSchedules />}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import json
 from django.shortcuts import render
 from rest_framework import viewsets
-from datetime import datetime
+from datetime import datetime, timedelta
 from rest_framework.response import Response
 from rest_framework.decorators import action, api_view, permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
@@ -121,9 +121,9 @@ def available_jobs(request):
     return Response(ScheduleSerializer(schedules, many=True).data, status=200)
 
 
-@api_view(['POST', 'OPTIONS'])
+@api_view(['POST', 'PATCH', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
-def accept_job(request):
+def manage_job(request):
     schedule_id = request.data['id']
     schedule = ColSchedule.objects.get(id=schedule_id)
     if not schedule:
@@ -133,10 +133,28 @@ def accept_job(request):
     if user.user_role != UserRoleChoices.waste_collector:
         return Response({'error': 'User is not a waste collector'}, status=403)
     
-    schedule.collector = user
-    schedule.status = True
-    schedule.save()
-    return Response({'message': 'Job accepted successfully'}, status=200)
+    if request.method == 'POST':
+        schedule.collector = user
+        schedule.status = True
+        schedule.save()
+        return Response({'message': 'Job accepted successfully'}, status=200)
+
+    if request.method == 'PATCH' and not schedule.completed and schedule.collector == request.user: 
+        schedule.completed = True
+        schedule.save()
+        time_to_next = {RepeatScheduleChoices.weekly: timedelta(days=7), RepeatScheduleChoices.two_weeks: timedelta(days=14)}
+        if schedule.repeat != RepeatScheduleChoices.none:
+            new_schedule = ColSchedule(
+                user=schedule.user,
+                repeat=schedule.repeat,
+                date=schedule.date_time + time_to_next[schedule.repeat],
+            )
+            new_schedule.save()
+            return Response({'message': 'Job marked as completed and new schedule created'}, status=200)
+        return Response({'message': 'Job completed'}, status=200)
+    else:
+        return Response({'error': 'Invalid request'}, status=400)
+
 
 @api_view(['Get', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
@@ -195,3 +213,13 @@ def manage_all_users(request, id):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['GET', 'OPTIONS'])
+@permission_classes([IsAuthenticated])
+def all_schedules(request):
+    user = request.user
+    if user.user_role != UserRoleChoices.admin_user:
+        return Response({'error': 'User is not an admin'}, status=403)
+    
+    schedules = ColSchedule.objects.all()
+    return Response(ScheduleSerializer(schedules, many=True).data, status=200)

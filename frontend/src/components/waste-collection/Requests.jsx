@@ -64,7 +64,7 @@ function Requests() {
         </div>
       </div>
       {showAvailableRequests ? (
-        <div className="flex">
+        <div className="flex w-full overflow-x-auto">
           <table className="mt-2 border border-gray-100 shadow-md text-sm">
             <thead className="shadow-lg mb-2">
               <tr className="">

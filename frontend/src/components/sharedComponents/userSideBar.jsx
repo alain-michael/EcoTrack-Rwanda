@@ -28,7 +28,6 @@ function SiderBar() {
                 { goto: "Dashboard", action: "Dashboard", icon: <GridViewIcon sx={{ marginRight: 1 }} /> },
                 { goto: "User Achievements", action: "User Achievements", icon: <EmojiEventsIcon sx={{ marginRight: 1 }} /> },
                 { goto: "Manage Users", action: "Manage Users", icon: <GroupIcon sx={{ marginRight: 1 }} /> },
-                { goto: "Collections", action: "Collections", icon: <RecyclingIcon sx={{ marginRight: 1 }} /> },
                 { goto: "All Schedules", action: "All Schedules", icon: <AvTimerIcon sx={{ marginRight: 1 }} /> },
             ],
         },

@@ -10,7 +10,7 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import DataProgressLoad from "../Loads/DataProgressLoad";
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 
-const ManageAllUser = () => {
+const AllSchedules = () => {
     const instance = createAxiosInstance();
     const [serverError, setServerError] = useState(null);
     const [PatchServerError, setPatchServerError] = useState(null);
@@ -25,8 +25,8 @@ const ManageAllUser = () => {
     const itemsPerPage = 5;
     //-------------------get all users
 
-    const getAllUser = () => {
-        instance.get('/all-users')
+    const getAllSchedules = () => {
+        instance.get('schedules/all-schedules')
             .then((res) => {
                 setServerError(null);
                 setData(Array.isArray(res.data) ? res.data : []);
@@ -36,7 +36,7 @@ const ManageAllUser = () => {
             });
     }
     useEffect(() => {
-        getAllUser()
+        getAllSchedules()
     }, []);
     //-------------Seacrh
     const handleSearch = (e) => {
@@ -54,22 +54,21 @@ const ManageAllUser = () => {
         setCurrentPage(1);
     };
     //---------------Total Counts
-    const getUserCountsByRole = () => {
+    // const getUserCountsByRole = () => {
+    //     return data.reduce((acc, user) => {
+    //         acc[user.user_role] = (acc[user.user_role] || 0) + 1;
+    //         return acc;
+    //     }, {});
+    // };
+    const getScheduleCountsByStatus = () => {
         return data.reduce((acc, user) => {
-            acc[user.user_role] = (acc[user.user_role] || 0) + 1;
+            acc[user.completed] = (acc[user.completed] || 0) + 1;
             return acc;
         }, {});
-    };
+    }
     //------------------------ fi default
     const filteredData = data
-        .filter((user) => {
-            return (
-                (filterRole ? user.user_role === filterRole : true) &&
-                `${user.first_name} ${user.last_name} ${user.email}`
-                    .toLowerCase()
-                    .includes(search.toLowerCase())
-            );
-        })
+        .filter((schedule) => {return (filterRole === "" || ''+schedule.completed === filterRole) && schedule.user.first_name.toLowerCase().includes(search.toLowerCase())})
         .sort((a, b) => {
             if (a[sortField] < b[sortField]) return sortOrder === "asc" ? -1 : 1;
             if (a[sortField] > b[sortField]) return sortOrder === "asc" ? 1 : -1;
@@ -83,28 +82,28 @@ const ManageAllUser = () => {
         currentPage * itemsPerPage
     );
 
-    const userCounts = getUserCountsByRole();
+    const scheduleCounts = getScheduleCountsByStatus();
     //----------------Delete User
-    const deleteUser = (id) => {
-        instance.delete(`/ManageUser/${id}`,)
-            .then((res) => {
-                if (res)
-                    if (res.status == 204) {
-                        getAllUser()
+    // const deleteUser = (id) => {
+    //     instance.delete(`/ManageUser/${id}`,)
+    //         .then((res) => {
+    //             if (res)
+    //                 if (res.status == 204) {
+    //                     getAllSchedules()
                        
-                        setPatchServerError("Deleted User Well ");
-                        setPatchClassError("success")
-                    } else {
-                        setPatchClassError("error")
-                        setPatchServerError("Error While Deleting User Try Again Later");
-                    }
-            })
-            .catch((error) => {
-                console.log(error)
-                setPatchClassError("error")
-                setPatchServerError(error.response?.data?.detail || "Server error");
-            });
-    }
+    //                     setPatchServerError("Deleted User Well ");
+    //                     setPatchClassError("success")
+    //                 } else {
+    //                     setPatchClassError("error")
+    //                     setPatchServerError("Error While Deleting User Try Again Later");
+    //                 }
+    //         })
+    //         .catch((error) => {
+    //             console.log(error)
+    //             setPatchClassError("error")
+    //             setPatchServerError(error.response?.data?.detail || "Server error");
+    //         });
+    // }
 
     //----------------Update User
     const [load, setLoad] = useState(false)
@@ -113,7 +112,7 @@ const ManageAllUser = () => {
         instance.patch(`/ManageUser/${id}`, newRole)
             .then((res) => {
                 if (res.status == 200) {
-                    getAllUser()
+                    getAllSchedules()
                     setSelectedUser(null)
                     setPatchServerError("Changed User Account Type Well ");
                     setPatchClassError("success")
@@ -137,23 +136,23 @@ const ManageAllUser = () => {
                     {PatchServerError} <HighlightOffIcon />
                 </div>
             }
-            <h2 className="text-xl font-bold text-[#207855] p-3 pl-0">All User From Eco-Rw</h2>
+            <h2 className="text-xl font-bold text-[#207855] p-3 pl-0">All Schedules From Eco-Rw</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                 <div
                     onClick={() => handleFilterRole("")}
-                    className="p-4 bg-gray-100 hover:bg-gray-200 rounded cursor-pointer"
+                    className={`p-4 bg-gray-100 hover:bg-gray-200 rounded cursor-pointer ${filterRole == '' ? "bg-gray-200" : ""}`}
                 >
-                    <h3 className="text-lg font-bold text-primary">All Users</h3>
-                    <p className="text-gray-700">{data.length} users</p>
+                    <h3 className={"text-lg font-bold text-primary"}>All Schedules</h3>
+                    <p className="text-gray-700">{data.length} schedules</p>
                 </div>
-                {Object.keys(userCounts).map((role) => (
+                {Object.keys(scheduleCounts).map((status) => (
                     <div
-                        key={role}
-                        onClick={() => handleFilterRole(role)}
-                        className="p-4 bg-gray-100 hover:bg-gray-200 rounded cursor-pointer"
+                        key={status}
+                        onClick={() => handleFilterRole(status)}
+                        className={`p-4 bg-gray-100 hover:bg-gray-200 rounded cursor-pointer ${filterRole == status ? "bg-gray-200" : ""}`}
                     >
-                        <h3 className="text-lg font-bold text-primary">{role}</h3>
-                        <p className="text-gray-700">{userCounts[role]} users</p>
+                        <h3 className="text-lg font-bold text-primary">{status === 'true' ? "Completed" : "Incomplete"}</h3>
+                        <p className="text-gray-700">{scheduleCounts[status]} users</p>
                     </div>
                 ))}
             </div>
@@ -169,11 +168,12 @@ const ManageAllUser = () => {
                     <thead>
                         <tr className="shadow-lg mb-2">
                             <th className="text-left text-gray-500 font-medium  px-10 py-2 text-nowrap">#</th>
-                            <th onClick={() => handleSort("first_name")} className="text-left text-gray-500 font-medium cursor-pointer px-10 py-2 text-nowrap">First Name {sortField === "first_name" && <SwapVertIcon />}</th>
-                            <th onClick={() => handleSort("last_name")} className="text-left text-gray-500 font-medium cursor-pointer px-10 py-2 text-nowrap">Last Name {sortField === "last_name" && <SwapVertIcon />}</th>
-                            <th onClick={() => handleSort("email")} className="text-left text-gray-500 font-medium cursor-pointer px-10 py-2 text-nowrap">Email {sortField === "email" && <SwapVertIcon />}</th>
-                            <th onClick={() => handleSort("user_role")} className="text-left text-gray-500 font-medium cursor-pointer px-10 py-2 text-nowrap">Role {sortField === "user_role" && <SwapVertIcon />}</th>
-                            <th className="text-primary p-3">Actions</th>
+                            <th onClick={() => handleSort("user")} className="text-left text-gray-500 font-medium cursor-pointer px-10 py-2 text-nowrap">Household User {sortField === "user" && <SwapVertIcon />}</th>
+                            <th onClick={() => handleSort("date")} className="text-left text-gray-500 font-medium cursor-pointer px-10 py-2 text-nowrap">Date {sortField === "date" && <SwapVertIcon />}</th>
+                            <th onClick={() => handleSort("repeat")} className="text-left text-gray-500 font-medium cursor-pointer px-10 py-2 text-nowrap">Repetition {sortField === "repeat" && <SwapVertIcon />}</th>
+                            <th onClick={() => handleSort("collector_name")} className="text-left text-gray-500 font-medium cursor-pointer px-10 py-2 text-nowrap">Collector Name {sortField === "collector_name" && <SwapVertIcon />}</th>
+                            <th onClick={() => handleSort("completed")} className="text-left text-gray-500 font-medium cursor-pointer px-10 py-2 text-nowrap">Completed {sortField === "completed" && <SwapVertIcon />}</th>
+                            {/* <th className="text-primary p-3">Actions</th> */}
                         </tr>
                     </thead>
                     <tbody>
@@ -182,39 +182,31 @@ const ManageAllUser = () => {
                                 <td colSpan="5" className="text-red-500 p-2 text-center">{serverError}</td>
                             </tr>
                         )}
-                        {!serverError && paginatedData.map((user, index) => (
+                        {!serverError && paginatedData.map((schedule, index) => {
+                            const date = new Date(schedule.date);
+                            const formattedDate = date.toLocaleDateString('en-GB', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric'
+                            });
+                            const formattedTime = date.toLocaleTimeString('en-GB', {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            });                        
+                            return (
                             <>
-                                    <tr key={user.id} className={`${index & 1 ? "bg-slate-200" : "bg-slate-50"} text-primary cursor-pointer hover:bg-gray-100`}>
+                                    <tr key={schedule.id} className={`${index & 1 ? "bg-slate-200" : "bg-slate-50"} text-primary hover:bg-gray-100`}>
                                         <td className="border-b px-4 py-2">{index + 1}</td>
-                                        <td className="border-b px-4 py-2">{user.first_name}</td>
-                                        <td className="border-b px-4 py-2">{user.last_name}</td>
-                                        <td className="border-b px-4 py-2">{user.email}</td>
-                                        <td className="border-b px-4 py-2">{user.user_role}</td>
+                                        <td className="border-b px-4 py-2">{schedule.user.first_name} {schedule.user.last_name}</td>
+                                        <td className="border-b px-4 py-2">{formattedDate} {formattedTime}</td>
+                                        <td className="border-b px-4 py-2">{schedule.repeat}</td>
+                                        <td onClick={() => setSelectedUser(schedule.collector)} className={`border-b px-4 py-2 cursor-pointer ${schedule.collector_name? "text-blue-400" : "text-yellow-500"}`}>{schedule.collector_name ? schedule.collector_name : "pending"}</td>
+                                        <td className="border-b px-4 py-2">{schedule.completed ? "Completed" : "Incomplete"}</td>
                                         <td className="border-b px-4 py-2 flex gap-3 justify-center">
-                                {user.user_role !== "admin" &&
-                                            <>
-                                            <button
-                                                title="View More User Info"
-                                                onClick={() => setSelectedUser(user)}
-                                                className="text-green-500 bg-green-100 p-1 rounded-lg"
-                                            >
-                                                <ManageAccountsIcon />
-                                            </button>
-                                            <button
-                                                title="Delete User"
-                                                onClick={() => deleteUser(user.id)}
-                                                className="text-red-500 bg-red-100 p-1 rounded-lg"
-                                            >
-                                                <PersonRemoveIcon />
-                                            </button>
-                                            </>
-                                        }
-                                        {user.user_role === "admin" &&
-                                            "No actions allowed."}
                                         </td>
                                     </tr>
                             </>
-                        ))}
+                        )})}
                     </tbody>
                 </table>
             </div>
@@ -297,4 +289,4 @@ const ManageAllUser = () => {
     );
 };
 
-export default ManageAllUser;
+export default AllSchedules;
