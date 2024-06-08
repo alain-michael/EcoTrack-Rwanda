@@ -184,7 +184,7 @@ const ManageAllUser = () => {
                         {!serverError && paginatedData.map((user, index) => (
                             <>
                                 {user.user_role !== "admin" &&
-                                    <tr key={user.id} className={`${index / 2 == 0 ? "bg-slate-200" : "bg-slate-50"} text-primary cursor-pointer hover:bg-gray-100`}>
+                                    <tr key={user.id} className={`${index & 1 ? "bg-slate-200" : "bg-slate-50"} text-primary cursor-pointer hover:bg-gray-100`}>
                                         <td className="border-b px-4 py-2">{index + 1}</td>
                                         <td className="border-b px-4 py-2">{user.first_name}</td>
                                         <td className="border-b px-4 py-2">{user.last_name}</td>
