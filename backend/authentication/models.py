@@ -48,6 +48,8 @@ class UserRoleChoices(models.TextChoices):
     """
     waste_collector = "Waste Collector"
     house_user = "Household User"
+    admin_user = "admin"
+    
 
 class User(AbstractUser):
     """
@@ -113,7 +115,6 @@ class RepeatScheduleChoices(models.TextChoices):
         two_weeks (String): The name of the two_weeks repeat schedule.
     """
     none = "None"
-    twice = "Twice"
     weekly = "Weekly"
     two_weeks = "Two weeks"
 
@@ -133,9 +134,10 @@ class ColSchedule(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='schedule_user')
     collector = models.ForeignKey(User, on_delete=models.CASCADE, related_name='schedule_collector', default=None, null=True, blank=True)
     date_time = models.DateTimeField()
-    address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='schedule_address', default=None)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='schedule_address')
     status = models.BooleanField(default=False)
     repeat = models.CharField(max_length=255, choices=RepeatScheduleChoices.choices, default=RepeatScheduleChoices.none)
+    completed = models.BooleanField(default=False)
 
     def __str__(self): 
         return self.address

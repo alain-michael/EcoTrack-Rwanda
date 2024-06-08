@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import axios from "axios";
 import * as Yup from "yup";
+import createAxiosInstance from "../../features/AxiosInstance";
 
 function Register({ viewType, setviewType }) {
+  const instance = createAxiosInstance();
   const [ServerError, SetServerError] = useState(null);
   const formik = useFormik({
     initialValues: {
@@ -124,7 +126,7 @@ function Register({ viewType, setviewType }) {
               ) : null}
             </div>
             <div>
-              <button className="w-[300px] h-9 bg-[#207855] text-white rounded-md mt-4">
+              <button type="submit" className="w-[300px] h-9 bg-[#207855] text-white rounded-md mt-4">
                 Get started
               </button>
             </div>
