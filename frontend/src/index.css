@@ -5,6 +5,35 @@
 .text-primary{
     color: rgb(82, 84, 109);
 }
+:root {
+    --primary: #207855;
+  }
+  
+
+*::-webkit-scrollbar {
+    /* Target Webkit scrollbar */
+    width: 3px;
+    height: 3px;
+    /* Set desired width */
+  }
+  
+  *::-webkit-scrollbar-track {
+    /* Style the scrollbar track */
+    background: var(--primary);
+    /* Set background color */
+    border-radius: 0px;
+    /* Add rounded corners */
+  }
+  
+  *::-webkit-scrollbar-thumb {
+    /* Style the scrollbar thumb */
+    background-color: var(--primary);
+    /* Set thumb color */
+    border-radius: 0px;
+    /* Add rounded corners */
+    border: 3px solid var(--primary);
+    /* Optional: Add border */
+  }
 /*-----------------------------------Load Css --------------------*/
 @keyframes ldio-yzaezf3dcmj {
     0% {

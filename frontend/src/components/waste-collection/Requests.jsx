@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import requests from '../../assets/requests.svg';
 import requestsBlack from '../../assets/requests_black.svg';
 import toast, { Toaster } from 'react-hot-toast';
-import { instance } from '../../features/AxiosInstance';
+
 
 import dots from '../../assets/dots.svg';
 import { setSelectedItem } from '../../features/SharedDataSlice/SharedData';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import createAxiosInstance from '../../features/AxiosInstance';
 function Requests() {
+  const instance = createAxiosInstance();
   const dispatch = useDispatch();
   const changeView = (item) => {
     dispatch(setSelectedItem(item));

@@ -16,9 +16,9 @@ export const SideBar = ({ isOpen, toggleSidebar }) => {
   const changeView = (item) => {
     dispatch(setSelectedItem(item));
   };
-  // const userRole = userInfo.user_role;
+  const userRole = userInfo.user_role;
   // const userRole = "Waste Collector";
-  const userRole = "admin";
+  // const userRole = "admin";
   const defaultUserType = useSelector((state) => state.sharedData.defaultUserType);
   const ChangeUserType = () => {
     if (userRole !== defaultUserType) {

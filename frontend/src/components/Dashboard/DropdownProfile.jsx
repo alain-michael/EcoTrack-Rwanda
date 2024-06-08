@@ -1,16 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { instance } from '../../features/AxiosInstance';
+
 import { resetStateToDefault } from '../../features/SharedDataSlice/SharedData';
+import createAxiosInstance from '../../features/AxiosInstance';
 
 const DropdownProfile = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const dispatch = useDispatch();
-
+  const instance = createAxiosInstance();
 
   const logout = () => {
-    // instance.post('/logout').then((response) => {
+    // instance().post('/logout').then((response) => {
     //   if (response.status === 200) {
     //   }
     // }).catch((error) => {

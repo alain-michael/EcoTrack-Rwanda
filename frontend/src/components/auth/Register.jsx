@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import axios from "axios";
 import * as Yup from "yup";
-import { instance } from '../../features/AxiosInstance'
+import createAxiosInstance from "../../features/AxiosInstance";
 
 function Register({ viewType, setviewType }) {
+  const instance = createAxiosInstance();
   const [ServerError, SetServerError] = useState(null);
   const formik = useFormik({
     initialValues: {

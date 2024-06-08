@@ -10,7 +10,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from .models import *
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import *
-
+from rest_framework import status
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -166,3 +166,32 @@ def get_job(request, id):
     if not schedule:
         return Response({'error': 'Schedule not found'}, status=404)
     return Response(ScheduleSerializer(schedule[0]).data, status=200)
+
+
+@api_view(['DELETE', 'PATCH', 'GET', 'OPTIONS'])
+@permission_classes([IsAuthenticated])
+def manage_all_users(request, id):
+    if not request.user.is_staff:
+        return Response({'error': 'User is not an admin'}, status=403)
+    
+    try:
+        user = User.objects.get(pk=id)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method == "GET":
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    
+    elif request.method == "PATCH":
+        serializer = UserSerializer(user, data=request.data, partial=True)  # Allow partial updates
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == "DELETE":
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)

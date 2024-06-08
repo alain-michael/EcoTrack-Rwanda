@@ -5,15 +5,15 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addUserLogin } from "../../features/SharedDataSlice/SharedData"
 import { jwtDecode } from "jwt-decode"
-import { instance } from '../../features/AxiosInstance'
 import { useNavigate } from "react-router-dom";
 import DataProgressLoad from "../Loads/DataProgressLoad";
+import createAxiosInstance from "../../features/AxiosInstance";
 function Login({ viewType, setviewType }) {
   const [ServerError, SetServerError] = useState(null);
   const [load, setLoad] = useState(false)
   const dispatch = useDispatch();
   const goto = useNavigate()
-
+  const instance = createAxiosInstance();
   {/* Using Formik to handle form data and validation */ }
   const formik = useFormik({
     initialValues: {

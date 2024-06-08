@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import Requests from "../waste-collection/Requests";
 import Job from "../waste-collection/Job";
 import WasteCollectorMDash from "./WasteCollectorMDash";
+import ManageAllUser from "./ManageAllUser";
+
 {/** This page is for layout for all Admin items */}
 export const Admin = () => {
   const selectedItem = useSelector(state => state.sharedData.selectedItem);
@@ -15,6 +17,7 @@ export const Admin = () => {
       {selectedItem == "Achievements" && <Archivements />}
       {selectedItem == "Collections" && <Requests />}
       {selectedItem == "Map" && <Job />}
+      {selectedItem == "Manage Users" && <ManageAllUser />}
     </div>
   );
 };
