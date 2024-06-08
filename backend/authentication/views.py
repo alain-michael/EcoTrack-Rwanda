@@ -161,18 +161,6 @@ def all_users(request):
 @permission_classes([IsAuthenticated])
 def get_job(request, id):
     user = request.user
-    if user.user_role != UserRoleChoices.waste_collector:
-        return Response({'error': 'User is not a waste collector'}, status=403)
-    
-    schedule = ColSchedule.objects.filter(id=id)
-    if not schedule:
-        return Response({'error': 'Schedule not found'}, status=404)
-    return Response(ScheduleSerializer(schedule[0]).data, status=200)
-
-@api_view(['GET', 'OPTIONS'])
-@permission_classes([IsAuthenticated])
-def get_job(request, id):
-    user = request.user
     
     schedule = ColSchedule.objects.filter(id=id)
     if not schedule:

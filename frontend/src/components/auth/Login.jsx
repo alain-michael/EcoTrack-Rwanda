@@ -6,12 +6,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { addUserLogin } from "../../features/SharedDataSlice/SharedData"
 import { jwtDecode } from "jwt-decode"
 import { instance } from '../../features/AxiosInstance'
-
+import { useNavigate } from "react-router-dom";
+import DataProgressLoad from "../Loads/DataProgressLoad";
 function Login({ viewType, setviewType }) {
   const [ServerError, SetServerError] = useState(null);
+  const [load, setLoad] = useState(false)
   const dispatch = useDispatch();
+  const goto = useNavigate()
 
-  {/* Using Formik to handle form data and validation */}
+  {/* Using Formik to handle form data and validation */ }
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -22,19 +25,23 @@ function Login({ viewType, setviewType }) {
       password: Yup.string().required("Required"),
     }),
     onSubmit: (values) => {
+      setLoad(true)
       instance
         .post('/login', values)
         .then((res) => {
           if (res.status == 200) {
-            let user_data = {"access": res.data.access, "refresh": res.data.refresh}
+            let user_data = { "access": res.data.access, "refresh": res.data.refresh }
             Object.keys(jwtDecode(res.data.access)).map((item) => {
               user_data[item] = jwtDecode(res.data.access)[item]
             })
-            dispatch(addUserLogin(user_data));
-            window.location.href = "dashboard";
+            if (dispatch(addUserLogin(user_data))) {
+              setLoad(false)
+              goto("/dashboard");
+            }
           }
         })
         .catch((error) => {
+          setLoad(false)
           if (error.response) {
             SetServerError(`Error: ${error.response.data.error}`);
           } else {
@@ -44,7 +51,7 @@ function Login({ viewType, setviewType }) {
         });
     },
   });
-  
+
   const inputStyle =
     "flex h-9 w-[300px] rounded-md border border-input outline-none bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent ";
   return (
@@ -88,9 +95,17 @@ function Login({ viewType, setviewType }) {
               />
             </div>
             <div>
-              <button className="w-[300px] h-9 bg-[#207855] text-white rounded-md mt-4 outline-none">
-                Sign In
-              </button>
+              {!load &&
+                <button type="submit" className="w-[300px] h-9 bg-[#207855] text-white rounded-md mt-4 outline-none">
+                  Sign In
+                </button>
+              }
+              {load &&
+                <button type="button" className="w-[300px] h-9 bg-green-200 text-[#207855] flex justify-center items-center px-2 rounded-md mt-4 outline-none">
+                  <DataProgressLoad />
+                  Loggin....
+                </button>
+              }
             </div>
           </div>
         </form>
@@ -102,7 +117,7 @@ function Login({ viewType, setviewType }) {
         <div>
           <p className="text-center cursor-pointer">
             Don't have an account?&nbsp;
-            <a onClick={()=>setviewType(!viewType)} className="text-[#207855]">
+            <a onClick={() => setviewType(!viewType)} className="text-[#207855]">
               Sign Up
             </a>
           </p>

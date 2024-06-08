@@ -48,6 +48,8 @@ class UserRoleChoices(models.TextChoices):
     """
     waste_collector = "Waste Collector"
     house_user = "Household User"
+    admin_user = "admin"
+    
 
 class User(AbstractUser):
     """
