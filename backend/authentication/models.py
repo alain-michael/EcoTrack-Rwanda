@@ -91,6 +91,21 @@ class User(AbstractUser):
         verbose_name=_('user permissions'),
     )
 
+
+class Notification(models.Model):
+    """
+    Model representing a Notification.
+
+    Attributes:
+        id (Integer): The primary key and unique identifier of the notification.
+        user (Relationship): Foreign key referencing the User.
+        message (String): The message of the notification.
+        seen (Boolean): The status of the notification (seen or not).
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notification_user')
+    message = models.TextField()
+    seen = models.BooleanField(default=False)
+
 class Address(models.Model):
     """
     Model representing an Address.

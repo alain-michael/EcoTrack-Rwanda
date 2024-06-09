@@ -82,5 +82,6 @@ urlpatterns = [
     path('api/login', views.MyTokenObtainPairView.as_view(), name="get_token"),
     path('api/token/refresh', TokenRefreshSlidingView.as_view(), name="refresh_token"),
     path('', include('authentication.urls')),
+    path('', include('messaging.urls')),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
