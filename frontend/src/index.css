@@ -2,146 +2,148 @@
 @tailwind components;
 @tailwind utilities;
 
-.text-primary{
-    color: rgb(82, 84, 109);
+.text-primary {
+  color: rgb(82, 84, 109);
 }
 :root {
-    --primary: #207855;
-  }
-  
+  --primary: #207855;
+}
 
 *::-webkit-scrollbar {
-    /* Target Webkit scrollbar */
-    width: 3px;
-    height: 3px;
-    /* Set desired width */
-  }
-  
-  *::-webkit-scrollbar-track {
-    /* Style the scrollbar track */
-    background: var(--primary);
-    /* Set background color */
-    border-radius: 0px;
-    /* Add rounded corners */
-  }
-  
-  *::-webkit-scrollbar-thumb {
-    /* Style the scrollbar thumb */
-    background-color: var(--primary);
-    /* Set thumb color */
-    border-radius: 0px;
-    /* Add rounded corners */
-    border: 3px solid var(--primary);
-    /* Optional: Add border */
-  }
+  /* Target Webkit scrollbar */
+  width: 3px;
+  height: 3px;
+  /* Set desired width */
+}
+
+*::-webkit-scrollbar-track {
+  /* Style the scrollbar track */
+  background: var(--primary);
+  /* Set background color */
+  border-radius: 0px;
+  /* Add rounded corners */
+}
+
+*::-webkit-scrollbar-thumb {
+  /* Style the scrollbar thumb */
+  background-color: var(--primary);
+  /* Set thumb color */
+  border-radius: 0px;
+  /* Add rounded corners */
+  border: 3px solid var(--primary);
+  /* Optional: Add border */
+}
 /*-----------------------------------Load Css --------------------*/
 @keyframes ldio-yzaezf3dcmj {
-    0% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 .ldio-yzaezf3dcmj div {
-    left: 14px;
-    top: 12px;
-    position: absolute;
-    animation: ldio-yzaezf3dcmj linear 1s infinite;
-    background: #207855;
-    width: 6px;
-    height: 12px;
-    border-radius: 3px / 6px;
-    transform-origin: 1px 3px;
+  left: 14px;
+  top: 12px;
+  position: absolute;
+  animation: ldio-yzaezf3dcmj linear 1s infinite;
+  background: #207855;
+  width: 6px;
+  height: 12px;
+  border-radius: 3px / 6px;
+  transform-origin: 1px 3px;
 }
 
 .ldio-yzaezf3dcmj div:nth-child(1) {
-    transform: rotate(0deg);
-    animation-delay: -0.9166666666666666s;
-    background: #207855;
+  transform: rotate(0deg);
+  animation-delay: -0.9166666666666666s;
+  background: #207855;
 }
 
 .ldio-yzaezf3dcmj div:nth-child(2) {
-    transform: rotate(30deg);
-    animation-delay: -0.8333333333333334s;
-    background: #207855;
+  transform: rotate(30deg);
+  animation-delay: -0.8333333333333334s;
+  background: #207855;
 }
 
 .ldio-yzaezf3dcmj div:nth-child(3) {
-    transform: rotate(60deg);
-    animation-delay: -0.75s;
-    background: #207855;
+  transform: rotate(60deg);
+  animation-delay: -0.75s;
+  background: #207855;
 }
 
 .ldio-yzaezf3dcmj div:nth-child(4) {
-    transform: rotate(90deg);
-    animation-delay: -0.6666666666666666s;
-    background: #207855;
+  transform: rotate(90deg);
+  animation-delay: -0.6666666666666666s;
+  background: #207855;
 }
 
 .ldio-yzaezf3dcmj div:nth-child(5) {
-    transform: rotate(120deg);
-    animation-delay: -0.5833333333333334s;
-    background: #207855;
+  transform: rotate(120deg);
+  animation-delay: -0.5833333333333334s;
+  background: #207855;
 }
 
 .ldio-yzaezf3dcmj div:nth-child(6) {
-    transform: rotate(150deg);
-    animation-delay: -0.5s;
-    background: #207855;
+  transform: rotate(150deg);
+  animation-delay: -0.5s;
+  background: #207855;
 }
 
 .ldio-yzaezf3dcmj div:nth-child(7) {
-    transform: rotate(180deg);
-    animation-delay: -0.4166666666666667s;
-    background: #207855;
+  transform: rotate(180deg);
+  animation-delay: -0.4166666666666667s;
+  background: #207855;
 }
 
 .ldio-yzaezf3dcmj div:nth-child(8) {
-    transform: rotate(210deg);
-    animation-delay: -0.3333333333333333s;
-    background: #207855;
+  transform: rotate(210deg);
+  animation-delay: -0.3333333333333333s;
+  background: #207855;
 }
 
 .ldio-yzaezf3dcmj div:nth-child(9) {
-    transform: rotate(240deg);
-    animation-delay: -0.25s;
-    background: #317459;
+  transform: rotate(240deg);
+  animation-delay: -0.25s;
+  background: #317459;
 }
 
 .ldio-yzaezf3dcmj div:nth-child(10) {
-    transform: rotate(270deg);
-    animation-delay: -0.16666666666666666s;
-    background: #207855;
+  transform: rotate(270deg);
+  animation-delay: -0.16666666666666666s;
+  background: #207855;
 }
 
 .ldio-yzaezf3dcmj div:nth-child(11) {
-    transform: rotate(300deg);
-    animation-delay: -0.08333333333333333s;
-    background: #0b4b31;
+  transform: rotate(300deg);
+  animation-delay: -0.08333333333333333s;
+  background: #0b4b31;
 }
 
 .ldio-yzaezf3dcmj div:nth-child(12) {
-    transform: rotate(330deg);
-    animation-delay: 0s;
-    background: #076e45;
+  transform: rotate(330deg);
+  animation-delay: 0s;
+  background: #076e45;
 }
 
 .loadingio-spinner-spinner-2by998twmg8 {
-    width: 30px;
-    height: 30px;
-    display: inline-block;
-    overflow: hidden;
-
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  overflow: hidden;
 }
 
 .ldio-yzaezf3dcmj {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    transform: translateZ(0) scale(1);
-    backface-visibility: hidden;
-    transform-origin: 0 0;
-    /* see note above */
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform: translateZ(0) scale(1);
+  backface-visibility: hidden;
+  transform-origin: 0 0;
+  /* see note above */
+}
+
+body {
+  font-family: "Poppins", Verdana, Geneva, Tahoma, sans-serif;
 }

@@ -7,7 +7,7 @@ import cloudinary.uploader
 from .utils import upload_to_cloudinary
 
 class AchievementViewSet(viewsets.ModelViewSet):
-    queryset = Achievement.objects.all()
+    queryset = Achievement.objects.select_related('preceding')
     serializer_class = AchievementSerializer
 
     def create(self, request, *args, **kwargs):
@@ -42,24 +42,25 @@ class AchievementViewSet(viewsets.ModelViewSet):
         uploaded_file = request.FILES.get('image')
         instance = self.get_object()
         image_url = request.data.get('image')
+        data = request.data.copy()
 
         if uploaded_file:
             try:
                 image_url = upload_to_cloudinary(uploaded_file)
-                request.data['image'] = image_url
+                data['image'] = image_url
             except Exception as e:
                 return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
         elif not image_url:
-            request.data['image'] = instance.image
+            data['image'] = instance.image
 
         if instance.type == 'REGISTER':
-            request.data['frequency'] = 1
-            request.data['preceding'] = None
-            request.data['is_earned_once'] = True
+            data['frequency'] = 1
+            data['preceding'] = None
+            data['is_earned_once'] = True
 
         partial = kwargs.pop('partial', False)
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer = self.get_serializer(instance, data=data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
@@ -69,7 +70,7 @@ class AchievementViewSet(viewsets.ModelViewSet):
         if data['type'] == 'REGISTER':
             existing_achievement = Achievement.objects.filter(type='REGISTER').first()
             if existing_achievement:
-                raise serializers.ValidationError("An achievement for registering already exists.")
+                return Response({'error': 'An achievement for registering already exists.', 'data': existing_achievement}, status=status.HTTP_400_BAD_REQUEST)
 
             data['frequency'] = 1
             data['preceding'] = None
