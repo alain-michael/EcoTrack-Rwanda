@@ -1,7 +1,10 @@
+import random
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractUser
 from django.utils.translation import gettext_lazy as _
 
+def generate_sharecode():
+    return ''.join([str(random.randint(0, 9)) for _ in range(4)])
 
 # Create your models here.
 class UserManager(BaseUserManager):
@@ -23,12 +26,16 @@ class UserManager(BaseUserManager):
         """Create and save a regular User with the given email and password."""
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
+        extra_fields.setdefault('sharecode', generate_sharecode())
+        extra_fields.setdefault('totalPoints', 0)
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email, password, **extra_fields):
         """Create and save a SuperUser with the given email and password."""
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('sharecode', generate_sharecode())
+        extra_fields.setdefault('totalPoints', 0)
 
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff=True.')
@@ -69,6 +76,9 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     REQUIRED_FIELDS = []      # No additional required fields
     user_role = models.CharField(max_length=20, choices=UserRoleChoices.choices, default=UserRoleChoices.house_user)
+    sharecode = models.CharField(max_length=4, unique=True, default=generate_sharecode)
+    totalPoints = models.IntegerField(default=0)
+    canShare = models.BooleanField(default=True)
 
     objects = UserManager()
 

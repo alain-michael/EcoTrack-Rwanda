@@ -11,3 +11,22 @@ class Achievement(models.Model):
 
     def __str__(self):
         return self.name
+
+class UserAchievement(models.Model):
+    user = models.ForeignKey('authentication.User', on_delete=models.CASCADE)
+    achievement = models.ForeignKey('Achievement', on_delete=models.CASCADE)
+    frequency = models.IntegerField()
+    startDate = models.DateTimeField(auto_now_add=True)
+    completedDate = models.DateTimeField(null=True, blank=True)
+    lastActionDate = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.achievement.name}"
+
+class Logging(models.Model):
+    user = models.ForeignKey('authentication.User', on_delete=models.CASCADE)
+    earned = models.BooleanField(default=False)
+    text = models.TextField()
+
+    def __str__(self):
+        return f"Log by {self.user.username} - {'Earned' if self.earned else 'Not Earned'}"
