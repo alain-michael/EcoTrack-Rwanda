@@ -4,6 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   usersLogin: [],
   selectedItem: 'Dashboard',
+  defaultUserType: 'Household User',
 };
 
 const sharedDataSlice = createSlice({
@@ -27,27 +28,34 @@ const sharedDataSlice = createSlice({
     },
     updateTable: (state, action) => {
       const id = action.payload;
-       const removedRequest = state.allCollectionsData.find(
-         (request) => request.id === id,
-       );
+      const removedRequest = state.allCollectionsData.find(
+        (request) => request.id === id,
+      );
       state.allCollectionsData = state.allCollectionsData.filter(
         (request) => request.id !== id,
       );
       // add removed request to my collections at the top
       state.myCollectionsData.unshift(removedRequest);
-      console.log(state.myCollectionsData)
+      console.log(state.myCollectionsData);
     },
+    setdefaultUserType: (state, action) => {
+      state.defaultUserType = action.payload;
+    },
+
     resetStateToDefault: (state, action) => {
       // Reset state to initial values
       // Object.assign(state, initialState);
       state.usersLogin = [];
       state.selectedItem = 'Dashboard';
+      state.defaultUserType = 'Household User';
     },
   },
 });
 
 export const {
   addUserLogin,
+  setdefaultUserType,
+  resetStateToDefault,
   setSelectedItem,
   setAllCollectionsData,
   updateTable,

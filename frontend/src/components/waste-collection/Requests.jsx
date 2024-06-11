@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import requests from '../../assets/requests.svg';
 import requestsBlack from '../../assets/requests_black.svg';
 import toast, { Toaster } from 'react-hot-toast';
-import { instance } from '../../features/AxiosInstance';
+
+
 import dots from '../../assets/dots.svg';
 import {
   setSelectedItem,
@@ -12,13 +13,9 @@ import {
 } from '../../features/SharedDataSlice/SharedData';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
-
+import createAxiosInstance from '../../features/AxiosInstance';
 function Requests() {
-  useEffect(() => {
-    fetchAllCollections();
-    fetchAllMyCollections();
-  }, []);
+  const instance = createAxiosInstance();
   const dispatch = useDispatch();
   const availableRequests = useSelector(
     (state) => state.sharedData.allCollectionsData,
@@ -97,8 +94,8 @@ function Requests() {
           <p>My Requests</p>
         </div>
       </div>
-      {showAvailableRequests && availableRequests && myRequests ? (
-        <div className="flex">
+      {showAvailableRequests ? (
+        <div className="flex w-full overflow-x-auto">
           <table className="mt-2 border border-gray-100 shadow-md text-sm">
             <thead className="shadow-lg mb-2">
               <tr className="">

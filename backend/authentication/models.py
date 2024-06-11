@@ -1,7 +1,10 @@
+import random
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractUser
 from django.utils.translation import gettext_lazy as _
 
+def generate_sharecode():
+    return ''.join([str(random.randint(0, 9)) for _ in range(4)])
 
 # Create your models here.
 class UserManager(BaseUserManager):
@@ -23,12 +26,16 @@ class UserManager(BaseUserManager):
         """Create and save a regular User with the given email and password."""
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
+        extra_fields.setdefault('sharecode', generate_sharecode())
+        extra_fields.setdefault('totalPoints', 0)
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email, password, **extra_fields):
         """Create and save a SuperUser with the given email and password."""
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('sharecode', generate_sharecode())
+        extra_fields.setdefault('totalPoints', 0)
 
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff=True.')
@@ -48,6 +55,8 @@ class UserRoleChoices(models.TextChoices):
     """
     waste_collector = "Waste Collector"
     house_user = "Household User"
+    admin_user = "admin"
+    
 
 class User(AbstractUser):
     """
@@ -67,6 +76,9 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     REQUIRED_FIELDS = []      # No additional required fields
     user_role = models.CharField(max_length=20, choices=UserRoleChoices.choices, default=UserRoleChoices.house_user)
+    sharecode = models.CharField(max_length=4, unique=True, default=generate_sharecode)
+    totalPoints = models.IntegerField(default=0)
+    canShare = models.BooleanField(default=True)
 
     objects = UserManager()
 
@@ -88,6 +100,21 @@ class User(AbstractUser):
         help_text=_('Specific permissions for this user.'),
         verbose_name=_('user permissions'),
     )
+
+
+class Notification(models.Model):
+    """
+    Model representing a Notification.
+
+    Attributes:
+        id (Integer): The primary key and unique identifier of the notification.
+        user (Relationship): Foreign key referencing the User.
+        message (String): The message of the notification.
+        seen (Boolean): The status of the notification (seen or not).
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notification_user')
+    message = models.TextField()
+    seen = models.BooleanField(default=False)
 
 class Address(models.Model):
     """
@@ -113,7 +140,6 @@ class RepeatScheduleChoices(models.TextChoices):
         two_weeks (String): The name of the two_weeks repeat schedule.
     """
     none = "None"
-    twice = "Twice"
     weekly = "Weekly"
     two_weeks = "Two weeks"
 
@@ -133,9 +159,10 @@ class ColSchedule(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='schedule_user')
     collector = models.ForeignKey(User, on_delete=models.CASCADE, related_name='schedule_collector', default=None, null=True, blank=True)
     date_time = models.DateTimeField()
-    address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='schedule_address', default=None)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='schedule_address')
     status = models.BooleanField(default=False)
     repeat = models.CharField(max_length=255, choices=RepeatScheduleChoices.choices, default=RepeatScheduleChoices.none)
+    completed = models.BooleanField(default=False)
 
     def __str__(self): 
         return self.address

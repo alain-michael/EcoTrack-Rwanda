@@ -62,17 +62,22 @@ class ScheduleSerializer(serializers.ModelSerializer):
     longitude = serializers.SerializerMethodField()
     latitude = serializers.SerializerMethodField()
     user = UserSerializer(read_only=True)
+    collector = UserSerializer(read_only=True)
+    collector_name = serializers.SerializerMethodField()
 
     class Meta:
         model = ColSchedule
-        fields = ['id', 'date', 'status', 'address', 'repeat', 'collector', 'longitude', 'latitude', 'user']
-        read_only_fields = ['id', 'status', 'collector']
+        fields = ['id', 'date', 'status', 'address', 'repeat', 'collector', 'longitude', 'latitude', 'user', 'completed', 'collector_name']
+        read_only_fields = ['id', 'status', 'collector', 'completed', 'collector_name']
 
     def get_longitude(self, obj):
         return obj.address.longitude if obj.address else None
 
     def get_latitude(self, obj):
         return obj.address.latitude if obj.address else None
+    
+    def get_collector_name(self, obj):
+        return obj.collector.first_name + ' ' + obj.collector.last_name if obj.collector else None
 
     def validate_date(self, value):
         if value < datetime.datetime.now(get_current_timezone()):

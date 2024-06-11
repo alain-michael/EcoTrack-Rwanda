@@ -2,10 +2,15 @@ import React, { useEffect, useState } from "react";
 import { SideBar } from "./SideBar";
 import { Header } from "./Header";
 import { DashItems } from "./DashItems";
+import { useSelector } from "react-redux";
+import { WasteCollector } from "./WasteCollector";
+import { Admin } from "./Admin";
 
 export const MainDashboard = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const userInfo = useSelector((state) => state.sharedData.usersLogin);
+  const defaultUserType = useSelector((state) => state.sharedData.defaultUserType);
 
+  const [isOpen, setIsOpen] = useState(true);
   const isScreenWidth767 = () => {
     return window.innerWidth;
   };
@@ -33,12 +38,11 @@ export const MainDashboard = () => {
     <div className="flex h-screen bg-gray-100 ">
       {/* Sidebar */}
       <div
-        className={`shadow-sm  bg-white text-primary flex-shrink-0 overflow-y-auto  transition-all duration-300 ease-in-out ${
-          isOpen ? 'translate-x-0 w-64' : '-translate-x-64 w-0'
-        }`}
+        className={`shadow-sm  bg-white text-primary flex-shrink-0 overflow-y-auto  transition-all duration-300 ease-in-out ${isOpen ? 'translate-x-0 w-64' : '-translate-x-64 w-0'
+          }`}
       >
         {/** Sidebar Or Body Goes  */}
-        <SideBar toggleSidebar={toggleSidebar} isOpen={isOpen}/>
+        <SideBar toggleSidebar={toggleSidebar} isOpen={isOpen} />
       </div>
       <div
         className={` w-full ${isOpen ? 'ml-0' : 'ml-0'} h-screen overflow-auto`}
@@ -49,7 +53,9 @@ export const MainDashboard = () => {
         </header>
         <main className="pt-3 px-2">
           {/** Main Data Or Body Goes  */}
-          <DashItems />
+          {defaultUserType == "Household User" && <DashItems />}
+          {defaultUserType == "Waste Collector" && <WasteCollector />}
+          {defaultUserType == "admin" && <Admin />}
         </main>
       </div>
     </div>
