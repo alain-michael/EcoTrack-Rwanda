@@ -7,6 +7,7 @@ import RecyclingIcon from '@mui/icons-material/Recycling';
 import GroupIcon from '@mui/icons-material/Group';
 import GridViewIcon from '@mui/icons-material/GridView';
 import AvTimerIcon from '@mui/icons-material/AvTimer';
+import ForumIcon from '@mui/icons-material/Forum';
 function SiderBar() {
     const houseHoldSidebarItems = {
         "Household User": {
@@ -14,6 +15,7 @@ function SiderBar() {
                 { goto: "Dashboard", action: "Dashboard", icon: <GridViewIcon sx={{ marginRight: 1 }} /> },
                 { goto: "Schedule", action: "Schedule", icon: <TodayIcon sx={{ marginRight: 1 }} /> },
                 { goto: "Achievements", action: "Achievements", icon: <EmojiEventsIcon sx={{ marginRight: 1 }} /> },
+                { goto: "Messages", action: "Messages", icon: <ForumIcon sx={{ marginRight: 1 }} /> },
             ],
         },
         "Waste Collector": {

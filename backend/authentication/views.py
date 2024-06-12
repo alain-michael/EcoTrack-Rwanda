@@ -20,7 +20,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 @authentication_classes([])
 def register(request):
     if request.method == 'POST':
-        user_data = request.data
+        user_data = request.data.copy()
         if 'name' not in user_data or 'email' not in user_data or 'password' not in user_data:
             return Response({'error': 'Missing required fields'}, status=400)
         
@@ -88,10 +88,13 @@ def logout(request):
 @permission_classes([IsAuthenticated])
 def schedule(request, schedule_id=None):
     if request.method == 'POST':
-        request.data['repeat'] = request.data['repeat'].capitalize()
-        if request.data['repeat'] not in RepeatScheduleChoices:
+        data = request.data.copy()
+        if 'repeat' not in data:
+            return Response({'error': 'Repeat is required'}, status=400)
+        data['repeat'] = data['repeat'].capitalize()
+        if data['repeat'] not in RepeatScheduleChoices:
             return Response({'error': 'Invalid repeat choice'}, status=400)
-        serializer = ScheduleSerializer(data=request.data, context={'request': request})
+        serializer = ScheduleSerializer(data=data, context={'request': request})
         if serializer.is_valid():
             schedule = serializer.save()
             return Response(serializer.data, status=201)

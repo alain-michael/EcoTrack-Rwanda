@@ -8,6 +8,7 @@ import Job from "../waste-collection/Job";
 import WasteCollectorMDash from "./WasteCollectorMDash";
 import ManageAllUser from "./ManageAllUser";
 import AllSchedules from "./AllSchedules";
+import { Messages } from "./Messages";
 
 {/** This page is for layout for all Admin items */}
 export const Admin = () => {
@@ -19,6 +20,8 @@ export const Admin = () => {
       {selectedItem == "Map" && <Job />}
       {selectedItem == "Manage Users" && <ManageAllUser />}
       {selectedItem == "All Schedules" && <AllSchedules />}
+      {selectedItem == "Messaging" && <Messages />}
+
     </div>
   );
 };
