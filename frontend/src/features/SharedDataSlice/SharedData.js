@@ -5,6 +5,7 @@ const initialState = {
   usersLogin: [],
   selectedItem: "Dashboard",
   defaultUserType: "Household User",
+  currentChat: null,
 };
 
 const sharedDataSlice = createSlice({
@@ -17,6 +18,9 @@ const sharedDataSlice = createSlice({
     },
     setSelectedItem: (state, action) => {
       state.selectedItem = action.payload;
+    },
+    setCurrentChat: (state, action) => {
+      state.currentChat = action.payload;
     },
     setdefaultUserType: (state, action) => {
       state.defaultUserType = action.payload;
@@ -32,6 +36,6 @@ const sharedDataSlice = createSlice({
   },
 });
 
-export const { addUserLogin, setdefaultUserType, resetStateToDefault, setSelectedItem } = sharedDataSlice.actions;
+export const { addUserLogin, setdefaultUserType, resetStateToDefault, setSelectedItem, setCurrentChat } = sharedDataSlice.actions;
 
 export default sharedDataSlice.reducer;

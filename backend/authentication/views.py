@@ -226,3 +226,14 @@ def all_schedules(request):
     
     schedules = ColSchedule.objects.all()
     return Response(ScheduleSerializer(schedules, many=True).data, status=200)
+
+@api_view(['GET', 'OPTIONS'])
+@permission_classes([IsAuthenticated])
+def get_user(request, id):    
+    try:
+        user = User.objects.get(pk=id)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = UserSerializer(user)
+    return Response(serializer.data)
