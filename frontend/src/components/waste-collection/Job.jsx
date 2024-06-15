@@ -7,9 +7,11 @@ import {
 } from '@react-google-maps/api';
 import PopUp from './popup';
 import { useParams } from 'react-router-dom';
-import { instance } from '../../features/AxiosInstance';
+import createAxiosInstance from '../../features/AxiosInstance';
+
 
 const Job = () => {
+  const instance = createAxiosInstance();
   const { id } = useParams();
   const [currentStop, setCurrentStop] = useState(0);
   const [time, setTime] = useState();

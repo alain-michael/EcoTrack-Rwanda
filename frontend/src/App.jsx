@@ -4,20 +4,11 @@ import { Routes } from 'react-router-dom';
 import { Route } from 'react-router-dom';
 import { MainDashboard } from './components/Dashboard/MainDashboard';
 import AuthLayout from './components/auth/AuthLayout';
-import Navbar from './components/sharedComponents/Navbar';
-import RequestsLayout from './components/waste-collection/RequestsLayout';
 import "./App.css";
-import { BrowserRouter } from "react-router-dom";
-import { Routes } from "react-router-dom";
-import { Route } from "react-router-dom";
-import { MainDashboard } from "./components/Dashboard/MainDashboard";
-import AuthLayout from "./components/auth/AuthLayout";
-import RequestsLayout from "./components/waste-collection/RequestsLayout";
-import { useSelector } from "react-redux";
-
 import NotFound from "./components/serverError/NotFound";
 import MainPage from "./components/LandingPage/MainPage";
 import { Toaster } from "react-hot-toast";
+import { useSelector } from 'react-redux';
 
 function App() {
   // handel login sessions for register

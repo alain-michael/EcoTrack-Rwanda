@@ -1,16 +1,44 @@
-import axios from 'axios';
-import { store } from '../app/store';
+import axios, { AxiosError } from 'axios';
+import { useSelector } from 'react-redux';
+import toast, { Toaster } from 'react-hot-toast';
 
-const state = store.getState();
-const token = state.sharedData.usersLogin.access;
+function createAxiosInstance() {
+  const info = localStorage.getItem('persist:root');
+  let token =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcxODUzOTUzOCwiaWF0IjoxNzE4NDUzMTM4LCJqdGkiOiJjZjI5MmY4ZmI1NGI0ODY3YmFjOTBiMTNlNzE1MTVjYSIsInVzZXJfaWQiOjIsImVtYWlsIjoiZGVhbmRhcnlsN0BnbWFpbC5jb20iLCJ1c2VyX3JvbGUiOiJIb3VzZWhvbGQgVXNlciIsImlzX2FjdGl2ZSI6dHJ1ZSwiaXNfc3RhZmYiOmZhbHNlLCJmdWxsX25hbWUiOiIgZGVhbiIsImFkZHJlc3NlcyI6eyJsb25naXR1ZGUiOm51bGwsImxhdGl0dWRlIjpudWxsfX0.oNrg2wIbdNjxiolx65icPcdzqUDsJfH6sfUKs1a_k7k';
+  if (info) {
+    const userInfo = JSON.parse(JSON.parse(info).usersLogin);
+    token = userInfo.access;
+  }
+  const instance = axios.create({
+    baseURL: import.meta.env.VITE_BASE_URL,
+    headers: {
+      Authorization: 'Bearer ' + token,
+      'Content-Type': 'application/json',
+    },
+    withCredentials: true,
+  });
 
-export const instance = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL,
-  headers: {
-    Authorization:
-      'Bearer ' +
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE4Mzk5NjY5LCJpYXQiOjE3MTc3OTQ4NjksImp0aSI6IjNjYjgyY2MwNzg4MzRhMzQ4NzAyZTYyM2M1NzJmYTVmIiwidXNlcl9pZCI6MSwiZW1haWwiOiJtYXJ5amFuZUBtYWlsLmNvbSIsInVzZXJfcm9sZSI6Ildhc3RlIENvbGxlY3RvciIsImlzX2FjdGl2ZSI6dHJ1ZSwiaXNfc3RhZmYiOmZhbHNlLCJmdWxsX25hbWUiOiIgZGVhbiJ9.j_WVFw4a9mLc-nP2V5FR0W2X-wPb3Ej-PoXUD4H2h3I',
-    'Content-Type': 'application/json',
-  },
-  withCredentials: true,
-});
+  instance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      const errorObj = error;
+      if (errorObj.response?.status == 401) {
+        window.location.href = '/auth';
+      } else {
+        const errorData = errorObj.response?.data;
+        const errorMessage = errorData
+          ? errorData.message || errorData.error || errorObj.message
+          : 'Failed';
+        toast.error(errorMessage);
+      }
+      return Promise.reject(error);
+    },
+  );
+
+  return instance;
+}
+
+export const api = () => createAxiosInstance();
+
+export default createAxiosInstance;
