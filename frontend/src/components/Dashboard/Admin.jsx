@@ -24,7 +24,8 @@ export const Admin = () => {
       {selectedItem == "Map" && <Job />}
       {selectedItem == "Manage Users" && <ManageAllUser />}
       {selectedItem == "All Schedules" && <AllSchedules />}
-      {selectedItem == "Messaging" && <Messages />}
+      {selectedItem == "Messages" && <Messages />}
+      {selectedItem == "Chatroom" && <ChatRoom />}
 
     </div>
   );

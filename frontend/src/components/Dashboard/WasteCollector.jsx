@@ -15,6 +15,9 @@ export const WasteCollector = () => {
       {selectedItem == "Achievements" && <Archivements />}
       {selectedItem == "Collections" && <Requests />}
       {selectedItem == "Map" && <Job />}
+      {selectedItem == "Messages" && <Messages />}
+      {selectedItem == "Chatroom" && <ChatRoom />}
+
     </div>
   );
 };
