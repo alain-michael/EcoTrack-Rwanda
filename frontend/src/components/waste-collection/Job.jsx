@@ -5,34 +5,47 @@ import {
   useJsApiLoader,
   DistanceMatrixService,
 } from '@react-google-maps/api';
+import PopUp from './popup';
+import { useParams } from 'react-router-dom';
+import createAxiosInstance from '../../features/AxiosInstance';
+
 
 const Job = () => {
+  const instance = createAxiosInstance();
+  const { id } = useParams();
   const [currentStop, setCurrentStop] = useState(0);
   const [time, setTime] = useState();
   const [distance, setDistance] = useState();
   const [stopName, setStopName] = useState();
   const [directions, setDirections] = useState();
   const [origin, setOrigin] = useState({});
+  const [destination, setDestination] = useState({});
   const mapRef = useRef();
-  const center = useMemo(
-    () => ({ lat: -1.939826787816454, lng: 30.0445426438232 }),
-    [],
-  );
+  const center = useMemo(() => ({ lat: origin.lat, lng: origin.lng }), []);
 
-  const destination = useMemo(
-    () => ({ lat: -1.939826787816454, lng: 30.0445426438232 }),
-    [],
-  );
+  const getDestination = () => {
+    instance
+      .get(`/jobs/${id}`)
+      .then((response) => {
+        setDestination({
+          lat: response.data.latitude,
+          lng: response.data.longitude,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const getUserLocation = () => {
     navigator.geolocation.getCurrentPosition((position) => {
       const lat = position.coords.latitude;
       const lng = position.coords.longitude;
-      console.log(lat, lng);
       setOrigin({ lat, lng });
     });
   };
   useEffect(() => {
     getUserLocation();
+    getDestination();
   }, []);
   const options = useMemo(
     () => ({
@@ -63,6 +76,7 @@ const Job = () => {
 
     return (
       <>
+        <PopUp time={time} distance={distance} />
         <GoogleMap
           zoom={8}
           center={center}
@@ -82,49 +96,17 @@ const Job = () => {
               }}
             />
           )}
-          {/* <DistanceMatrixService
+          <DistanceMatrixService
             options={{
-              destinations: [
-                {
-                  location: new google.maps.LatLng(
-                    -1.9355377074007851,
-                    30.060163829002217,
-                  ),
-                },
-                {
-                  location: new google.maps.LatLng(
-                    -1.9358808342336546,
-                    30.08024820994666,
-                  ),
-                },
-                {
-                  location: new google.maps.LatLng(
-                    -1.9489196023037583,
-                    30.092607828989397,
-                  ),
-                },
-                {
-                  location: new google.maps.LatLng(
-                    -1.9592132952818164,
-                    30.106684061788073,
-                  ),
-                },
-                {
-                  location: new google.maps.LatLng(
-                    -1.9487480402200394,
-                    30.126596781356923,
-                  ),
-                },
-                {
-                  lat: -1.9365670876910166,
-                  lng: 30.13020167024439,
-                },
-              ],
+              destinations: [destination],
               origins: [origin],
               travelMode: google.maps.TravelMode.DRIVING,
             }}
-            
-          /> */}
+            callback={(response) => {
+              setTime(response.rows[0].elements[0].duration.text);
+              setDistance(response.rows[0].elements[0].distance.text);
+            }}
+          />
         </GoogleMap>
       </>
     );
