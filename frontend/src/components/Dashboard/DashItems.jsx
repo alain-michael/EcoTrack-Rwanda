@@ -7,6 +7,8 @@ import { useSelector } from "react-redux";
 import Requests from "../waste-collection/Requests";
 import Job from "../waste-collection/Job";
 import WasteCollectorMDash from "./WasteCollectorMDash";
+import { Messages } from "./Messages";
+import { ChatRoom } from "./ChatRoom";
 
 export const DashItems = () => {
   const [serverError, setServerError] = useState("");
@@ -21,7 +23,8 @@ export const DashItems = () => {
       {selectedItem == "Dashboard" && <WasteCollectorMDash />}
       {selectedItem == "Schedule" && <Schedule_form />}
       {selectedItem == "Achievements" && <Archivements />}
-
+      {selectedItem == "Messages" && <Messages />}
+      {selectedItem == "Chatroom" && <ChatRoom />}
     </div>
   );
 };

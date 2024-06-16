@@ -3,8 +3,9 @@ import { createSlice } from '@reduxjs/toolkit';
 // Default values for shared host
 const initialState = {
   usersLogin: [],
-  selectedItem: 'Dashboard',
-  defaultUserType: 'Household User',
+  selectedItem: "Dashboard",
+  defaultUserType: "Household User",
+  currentChat: null,
 };
 
 const sharedDataSlice = createSlice({
@@ -17,6 +18,9 @@ const sharedDataSlice = createSlice({
     },
     setSelectedItem: (state, action) => {
       state.selectedItem = action.payload;
+    },
+    setCurrentChat: (state, action) => {
+      state.currentChat = action.payload;
     },
     setAllCollectionsData: (state, action) => {
       // Set table data
@@ -60,6 +64,7 @@ export const {
   setAllCollectionsData,
   updateTable,
   setMyCollectionsData,
+  setCurrentChat,
 } = sharedDataSlice.actions;
 
 export default sharedDataSlice.reducer;

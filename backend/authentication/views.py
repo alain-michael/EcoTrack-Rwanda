@@ -20,7 +20,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 @authentication_classes([])
 def register(request):
     if request.method == 'POST':
-        user_data = request.data
+        user_data = request.data.copy()
         if 'name' not in user_data or 'email' not in user_data or 'password' not in user_data:
             return Response({'error': 'Missing required fields'}, status=400)
         
@@ -88,10 +88,13 @@ def logout(request):
 @permission_classes([IsAuthenticated])
 def schedule(request, schedule_id=None):
     if request.method == 'POST':
-        request.data['repeat'] = request.data['repeat'].capitalize()
-        if request.data['repeat'] not in RepeatScheduleChoices:
+        data = request.data.copy()
+        if 'repeat' not in data:
+            return Response({'error': 'Repeat is required'}, status=400)
+        data['repeat'] = data['repeat'].capitalize()
+        if data['repeat'] not in RepeatScheduleChoices:
             return Response({'error': 'Invalid repeat choice'}, status=400)
-        serializer = ScheduleSerializer(data=request.data, context={'request': request})
+        serializer = ScheduleSerializer(data=data, context={'request': request})
         if serializer.is_valid():
             schedule = serializer.save()
             return Response(serializer.data, status=201)
@@ -223,3 +226,14 @@ def all_schedules(request):
     
     schedules = ColSchedule.objects.all()
     return Response(ScheduleSerializer(schedules, many=True).data, status=200)
+
+@api_view(['GET', 'OPTIONS'])
+@permission_classes([IsAuthenticated])
+def get_user(request, id):    
+    try:
+        user = User.objects.get(pk=id)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = UserSerializer(user)
+    return Response(serializer.data)

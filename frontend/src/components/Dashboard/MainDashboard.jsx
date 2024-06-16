@@ -48,7 +48,7 @@ export const MainDashboard = () => {
         className={` w-full ${isOpen ? 'ml-0' : 'ml-0'} h-screen overflow-auto`}
       >
         {/** Header Goes Here Or Body Goes  */}
-        <header className="sticky top-0">
+        <header className="sticky z-10 top-0">
           <Header toggleSidebar={toggleSidebar} isOpen={isOpen} />
         </header>
         <main className="pt-3 px-2">
