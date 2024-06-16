@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 // Default values for shared host
 const initialState = {
@@ -9,7 +9,7 @@ const initialState = {
 };
 
 const sharedDataSlice = createSlice({
-  name: "Eco_rw",
+  name: 'Eco_rw',
   initialState,
   reducers: {
     addUserLogin: (state, action) => {
@@ -22,6 +22,26 @@ const sharedDataSlice = createSlice({
     setCurrentChat: (state, action) => {
       state.currentChat = action.payload;
     },
+    setAllCollectionsData: (state, action) => {
+      // Set table data
+      state.allCollectionsData = action.payload;
+    },
+    setMyCollectionsData: (state, action) => {
+      // Set table data
+      state.myCollectionsData = action.payload;
+    },
+    updateTable: (state, action) => {
+      const id = action.payload;
+      const removedRequest = state.allCollectionsData.find(
+        (request) => request.id === id,
+      );
+      state.allCollectionsData = state.allCollectionsData.filter(
+        (request) => request.id !== id,
+      );
+      // add removed request to my collections at the top
+      state.myCollectionsData.unshift(removedRequest);
+      console.log(state.myCollectionsData);
+    },
     setdefaultUserType: (state, action) => {
       state.defaultUserType = action.payload;
     },
@@ -30,12 +50,21 @@ const sharedDataSlice = createSlice({
       // Reset state to initial values
       // Object.assign(state, initialState);
       state.usersLogin = [];
-      state.selectedItem = "Dashboard";
-      state.defaultUserType = "Household User";
+      state.selectedItem = 'Dashboard';
+      state.defaultUserType = 'Household User';
     },
   },
 });
 
-export const { addUserLogin, setdefaultUserType, resetStateToDefault, setSelectedItem, setCurrentChat } = sharedDataSlice.actions;
+export const {
+  addUserLogin,
+  setdefaultUserType,
+  resetStateToDefault,
+  setSelectedItem,
+  setAllCollectionsData,
+  updateTable,
+  setMyCollectionsData,
+  setCurrentChat,
+} = sharedDataSlice.actions;
 
 export default sharedDataSlice.reducer;
