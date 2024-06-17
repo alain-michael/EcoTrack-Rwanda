@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 class Achievement(models.Model):
     name = models.CharField(max_length=255)
@@ -27,6 +28,7 @@ class Logging(models.Model):
     user = models.ForeignKey('authentication.User', on_delete=models.CASCADE)
     earned = models.BooleanField(default=False)
     text = models.TextField()
+    date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"Log by {self.user.username} - {'Earned' if self.earned else 'Not Earned'}"

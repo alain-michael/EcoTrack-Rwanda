@@ -13,6 +13,7 @@ function Register({ viewType, setviewType }) {
       email: "",
       password: "",
       confirmPassword: "",
+      sharecode: "",
     },
 
     validationSchema: Yup.object({
@@ -32,7 +33,7 @@ function Register({ viewType, setviewType }) {
         .post(`/register`, values)
         .then((res) => {
           if (res.data.status == 201) {
-            setviewType(!viewType)
+            setviewType(!viewType);
           } else {
             SetServerError("Error While Registerating please again");
           }
@@ -124,9 +125,25 @@ function Register({ viewType, setviewType }) {
                   {formik.errors.confirmPassword}
                 </div>
               ) : null}
+              <p>Referral code :</p>
+              <input
+                className={inputStyle}
+                placeholder="4-digits"
+                type="number"
+                name="sharecode"
+                maxLength={4}
+                value={formik.values.sharecode}
+                onChange={formik.handleChange}
+              />
+              {formik.errors.sharecode && formik.touched.sharecode ? (
+                <div className="text-red-500">{formik.errors.sharecode}</div>
+              ) : null}
             </div>
             <div>
-              <button type="submit" className="w-[300px] h-9 bg-[#207855] text-white rounded-md mt-4">
+              <button
+                type="submit"
+                className="w-[300px] h-9 bg-[#207855] text-white rounded-md mt-4"
+              >
                 Get started
               </button>
             </div>
@@ -140,7 +157,10 @@ function Register({ viewType, setviewType }) {
         <div>
           <p className="text-center cursor-pointer">
             Already have an account?{" "}
-            <a onClick={()=>setviewType(!viewType)} className="text-[#207855]">
+            <a
+              onClick={() => setviewType(!viewType)}
+              className="text-[#207855]"
+            >
               Log in
             </a>
           </p>

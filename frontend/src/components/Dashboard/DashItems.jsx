@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useState } from "react";
-import { Archivements } from "./Archivements";
+import { Achievements } from "./Achievements";
 import { Schedule_form } from "./Schedule_form";
 import { useSelector } from "react-redux";
 import Requests from "../waste-collection/Requests";
@@ -12,7 +12,7 @@ import { ChatRoom } from "./ChatRoom";
 
 export const DashItems = () => {
   const [serverError, setServerError] = useState("");
-  const selectedItem = useSelector(state => state.sharedData.selectedItem);
+  const selectedItem = useSelector((state) => state.sharedData.selectedItem);
   return (
     <div className="flex flex-col w-full rounded-lg mx-auto justify-around bg-white p-4 text-primary">
       {/* <div className="mb-10">
@@ -22,7 +22,7 @@ export const DashItems = () => {
       </div> */}
       {selectedItem == "Dashboard" && <WasteCollectorMDash />}
       {selectedItem == "Schedule" && <Schedule_form />}
-      {selectedItem == "Achievements" && <Archivements />}
+      {selectedItem == "Achievements" && <Achievements />}
       {selectedItem == "Messages" && <Messages />}
       {selectedItem == "Chatroom" && <ChatRoom />}
     </div>
