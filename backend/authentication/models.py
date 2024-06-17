@@ -79,6 +79,7 @@ class User(AbstractUser):
     sharecode = models.CharField(max_length=4, default=generate_sharecode)
     totalPoints = models.IntegerField(default=0)
     canShare = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     objects = UserManager()
 
