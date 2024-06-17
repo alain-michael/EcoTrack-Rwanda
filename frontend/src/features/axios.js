@@ -1,5 +1,7 @@
 import axios, { AxiosError } from "axios";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { resetStateToDefault } from "../features/SharedDataSlice/SharedData";
+import { store } from "../app/store";
 
 function createAxiosInstance() {
   const info = localStorage.getItem("persist:root");
@@ -22,6 +24,7 @@ function createAxiosInstance() {
     (error) => {
       const errorObj = error;
       if (errorObj.response?.status == 401) {
+        store.dispatch(resetStateToDefault());
         window.location.href = "/auth";
       } else {
         const errorData = errorObj.response?.data;
