@@ -11,6 +11,7 @@ from .models import *
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import *
 from rest_framework import status
+from achievements.utils import save_achievement
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -42,7 +43,22 @@ def register(request):
         )
         new_user.set_password(user_data['password'])
 
+        # Check if sharecode exists and is 4 digits
+        sharecode = user_data.get('sharecode')
+        if sharecode:
+            user_with_sharecode = User.objects.filter(sharecode=sharecode).first()
+            if user_with_sharecode:
+                # Log that a new user has joined using the share code
+                log_text = f"{new_user.first_name} {new_user.last_name} has joined using your share code"
+                Logging.objects.create(user=user_with_sharecode, earned=False, text=log_text)
+
+                # Call save_achievement for the user with sharecode
+                save_achievement(user_with_sharecode.id, 'SHARE', frequency=1)
+
         new_user.save()
+
+        save_achievement(new_user.id, 'REGISTER', frequency=1)
+
         return Response({'message': 'User registered successfully', 'status': 201}, status=201)
     
 @api_view(['POST', 'OPTIONS'])
@@ -65,7 +81,10 @@ def login(request):
                 'last_name': user.last_name,
                 'email': user.email,
                 'user_role': user.user_role,
-                'phone_number': user.phone_number
+                'phone_number': user.phone_number,
+                'sharecode': user.sharecode,
+                'canShare': user.canShare,
+                'totalPoints': user.totalPoints
             }
         })
 
@@ -97,6 +116,8 @@ def schedule(request, schedule_id=None):
         serializer = ScheduleSerializer(data=data, context={'request': request})
         if serializer.is_valid():
             schedule = serializer.save()
+            save_achievement(request.user.id, 'SCHEDULE', frequency=1)
+
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
     
@@ -252,3 +273,18 @@ def change_password(request):
     user.set_password(new_password)
     user.save()
     return Response({'message': 'Password changed successfully'}, status=200)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_detail(request, id):
+    try:
+        user = User.objects.get(pk=id)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    if not user.sharecode:
+        user.sharecode = generate_sharecode()
+        user.save()
+
+    serializer = UserDetailSerializer(user)
+    return Response(serializer.data, status=status.HTTP_200_OK)

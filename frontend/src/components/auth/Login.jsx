@@ -3,18 +3,20 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { addUserLogin } from "../../features/SharedDataSlice/SharedData"
-import { jwtDecode } from "jwt-decode"
+import { addUserLogin } from "../../features/SharedDataSlice/SharedData";
+import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import DataProgressLoad from "../Loads/DataProgressLoad";
 import createAxiosInstance from "../../features/AxiosInstance";
 function Login({ viewType, setviewType }) {
   const [ServerError, SetServerError] = useState(null);
-  const [load, setLoad] = useState(false)
+  const [load, setLoad] = useState(false);
   const dispatch = useDispatch();
-  const goto = useNavigate()
+  const goto = useNavigate();
   const instance = createAxiosInstance();
-  {/* Using Formik to handle form data and validation */ }
+  {
+    /* Using Formik to handle form data and validation */
+  }
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -25,23 +27,26 @@ function Login({ viewType, setviewType }) {
       password: Yup.string().required("Required"),
     }),
     onSubmit: (values) => {
-      setLoad(true)
+      setLoad(true);
       instance
-        .post('/login', values)
+        .post("/login", values)
         .then((res) => {
           if (res.status == 200) {
-            let user_data = { "access": res.data.access, "refresh": res.data.refresh }
+            let user_data = {
+              access: res.data.access,
+              refresh: res.data.refresh,
+            };
             Object.keys(jwtDecode(res.data.access)).map((item) => {
-              user_data[item] = jwtDecode(res.data.access)[item]
-            })
+              user_data[item] = jwtDecode(res.data.access)[item];
+            });
             if (dispatch(addUserLogin(user_data))) {
-              setLoad(false)
+              setLoad(false);
               goto("/dashboard");
             }
           }
         })
         .catch((error) => {
-          setLoad(false)
+          setLoad(false);
           if (error.response) {
             SetServerError(`Error: ${error.response.data.error}`);
           } else {
@@ -70,7 +75,7 @@ function Login({ viewType, setviewType }) {
             </div>
           </>
         )}
-        <form onSubmit={formik.handleSubmit} >
+        <form onSubmit={formik.handleSubmit}>
           <div className="grid gap-2">
             <div className="grid gap-1">
               <p>Email:</p>
@@ -95,17 +100,23 @@ function Login({ viewType, setviewType }) {
               />
             </div>
             <div>
-              {!load &&
-                <button type="submit" className="w-[300px] h-9 bg-[#207855] text-white rounded-md mt-4 outline-none">
+              {!load && (
+                <button
+                  type="submit"
+                  className="w-[300px] h-9 bg-[#207855] text-white rounded-md mt-4 outline-none"
+                >
                   Sign In
                 </button>
-              }
-              {load &&
-                <button type="button" className="w-[300px] h-9 bg-green-200 text-[#207855] flex justify-center items-center px-2 rounded-md mt-4 outline-none">
+              )}
+              {load && (
+                <button
+                  type="button"
+                  className="w-[300px] h-9 bg-green-200 text-[#207855] flex justify-center items-center px-2 rounded-md mt-4 outline-none"
+                >
                   <DataProgressLoad />
                   Loggin....
                 </button>
-              }
+              )}
             </div>
           </div>
         </form>
@@ -117,7 +128,10 @@ function Login({ viewType, setviewType }) {
         <div>
           <p className="text-center cursor-pointer">
             Don't have an account?&nbsp;
-            <a onClick={() => setviewType(!viewType)} className="text-[#207855]">
+            <a
+              onClick={() => setviewType(!viewType)}
+              className="text-[#207855]"
+            >
               Sign Up
             </a>
           </p>

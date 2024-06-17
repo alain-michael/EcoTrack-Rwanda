@@ -1,11 +1,11 @@
 from django.db import models
+from django.utils import timezone
 
 class Achievement(models.Model):
     name = models.CharField(max_length=255)
     points = models.IntegerField()
     image = models.CharField(max_length=255)
     preceding = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL)
-    is_earned_once = models.BooleanField(default=False)
     frequency = models.IntegerField()
     type = models.CharField(max_length=20, choices=[('REGISTER', 'REGISTER'), ('SHARE', 'SHARE'), ('SCHEDULE', 'SCHEDULE')])
 
@@ -21,12 +21,13 @@ class UserAchievement(models.Model):
     lastActionDate = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.achievement.name}"
+        return f"{self.user.first_name} {self.user.last_name} - {self.achievement.name}"
 
 class Logging(models.Model):
     user = models.ForeignKey('authentication.User', on_delete=models.CASCADE)
     earned = models.BooleanField(default=False)
     text = models.TextField()
+    date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"Log by {self.user.username} - {'Earned' if self.earned else 'Not Earned'}"
+        return f"Log by {self.user.first_name} {self.user.last_name} - {'Earned' if self.earned else 'Not Earned'}"

@@ -133,17 +133,18 @@ const UserAchievements = () => {
 
       <table className="w-full bg-white border-separate border-spacing-y-6">
         <thead>
-          <tr className="">
-            <th className="text-left text-gray-500 font-medium px-10 py-2 text-nowrap"></th>
+          <tr className="uppercase font-bold">
+            <th className="text-left text-gray-500 px-10 py-2 text-nowrap"></th>
 
-            <th className="text-left text-gray-500 font-medium cursor-pointer px-10 py-2 text-nowrap"></th>
-            <th className="text-left text-gray-500 font-medium cursor-pointer px-10 py-2 text-nowrap">
-              Frequency
-            </th>
-            <th className="text-left text-gray-500 font-medium cursor-pointer px-10 py-2 text-nowrap">
+            <th className="text-left text-gray-500 cursor-pointer px-10 py-2 text-nowrap"></th>
+
+            <th className="text-left text-gray-500 cursor-pointer px-10 py-2 text-nowrap">
               Points
             </th>
-            <th className="text-left text-gray-500 font-medium cursor-pointer px-10 py-2 text-nowrap">
+            <th className="text-left text-gray-500 cursor-pointer px-10 py-2 text-nowrap">
+              Frequency
+            </th>
+            <th className="text-left text-gray-500 cursor-pointer px-10 py-2 text-nowrap">
               Preceding
             </th>
             <th className="text-primary p-3">Actions</th>

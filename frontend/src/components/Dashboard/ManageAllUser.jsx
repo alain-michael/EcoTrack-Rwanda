@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
-import StarIcon from "@mui/icons-material/Star";
-import MedalIcon from "@mui/icons-material/MilitaryTech";
-import TrophyIcon from "@mui/icons-material/EmojiEvents";
-import AchievementIcon from "@mui/icons-material/WorkspacePremium";
+
 import createAxiosInstance from "../../features/AxiosInstance";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import DataProgressLoad from "../Loads/DataProgressLoad";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
+import toast from "react-hot-toast";
+import Modal from "../sharedComponents/Modal";
+import UserDetails from "../users/UserDetails";
 
 const ManageAllUser = () => {
   const instance = createAxiosInstance();
@@ -29,11 +29,10 @@ const ManageAllUser = () => {
     instance
       .get("/all-users")
       .then((res) => {
-        setServerError(null);
         setData(Array.isArray(res.data) ? res.data : []);
       })
       .catch((error) => {
-        setServerError(error.response?.data?.detail || "Server error");
+        toast.error("Server error");
       });
   };
   useEffect(() => {
@@ -94,17 +93,13 @@ const ManageAllUser = () => {
           if (res.status == 204) {
             getAllUser();
 
-            setPatchServerError("Deleted User Well ");
-            setPatchClassError("success");
+            toast.success("User deleted");
           } else {
-            setPatchClassError("error");
-            setPatchServerError("Error While Deleting User Try Again Later");
+            toast.error("Error While Deleting User Try Again Later");
           }
       })
       .catch((error) => {
-        console.log(error);
-        setPatchClassError("error");
-        setPatchServerError(error.response?.data?.detail || "Server error");
+        toast.error(error.response?.data?.detail || "Server error");
       });
   };
 
@@ -118,21 +113,15 @@ const ManageAllUser = () => {
         if (res.status == 200) {
           getAllUser();
           setSelectedUser(null);
-          setPatchServerError("Changed User Account Type Well ");
-          setPatchClassError("success");
+          toast.success("Changed User Account Type Well ");
         } else {
-          setPatchServerError(
-            "Error While Changing User Account Type Try Later "
-          );
-          setPatchClassError("error");
+          toast.error("Error While Changing User Account Type Try Later ");
         }
         setLoad(false);
       })
       .catch((error) => {
         setLoad(false);
-        console.log(error);
-        setPatchClassError("error");
-        setPatchServerError(
+        toast.error(
           error.response?.data?.detail || "Server Is Down Try Again Later"
         );
       });
@@ -181,40 +170,43 @@ const ManageAllUser = () => {
         className="mb-4 p-2 border border-gray-300 outline-none rounded"
       />
       <div className="w-full overflow-auto">
-        <table className="w-full bg-white">
+        <table className="w-full bg-white border">
           <thead>
-            <tr className="shadow-lg mb-2">
-              <th className="text-left text-gray-500 font-medium  px-10 py-2 text-nowrap">
-                #
-              </th>
+            <tr className="shadow-lg mb-2 uppercase text-gray-900 font-bold">
+              <th className="text-left border-b   px-4 py-2 text-nowrap">#</th>
               <th
                 onClick={() => handleSort("first_name")}
-                className="text-left text-gray-500 font-medium cursor-pointer px-10 py-2 text-nowrap"
+                className="text-left border-b  cursor-pointer px-4 py-2 text-nowrap"
               >
-                First Name {sortField === "first_name" && <SwapVertIcon />}
+                First Name{" "}
+                {sortField === "first_name" && <SwapVertIcon fontSize="sm" />}
               </th>
               <th
                 onClick={() => handleSort("last_name")}
-                className="text-left text-gray-500 font-medium cursor-pointer px-10 py-2 text-nowrap"
+                className="text-left border-b  cursor-pointer px-4 py-2 text-nowrap"
               >
-                Last Name {sortField === "last_name" && <SwapVertIcon />}
+                Last Name{" "}
+                {sortField === "last_name" && <SwapVertIcon fontSize="sm" />}
               </th>
               <th
                 onClick={() => handleSort("email")}
-                className="text-left text-gray-500 font-medium cursor-pointer px-10 py-2 text-nowrap"
+                className="text-left border-b  cursor-pointer px-4 py-2 text-nowrap"
               >
-                Email {sortField === "email" && <SwapVertIcon />}
+                Email {sortField === "email" && <SwapVertIcon fontSize="sm" />}
               </th>
               <th
                 onClick={() => handleSort("user_role")}
-                className="text-left text-gray-500 font-medium cursor-pointer px-10 py-2 text-nowrap"
+                className="text-left border-b  cursor-pointer px-4 py-2 text-nowrap"
               >
-                Role {sortField === "user_role" && <SwapVertIcon />}
+                Role{" "}
+                {sortField === "user_role" && <SwapVertIcon fontSize="sm" />}
               </th>
-              <th className="text-primary p-3">Actions</th>
+              <th className="text-center border-b px-4 py-2 text-nowrap">
+                Actions
+              </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="text-sm">
             {serverError && (
               <tr>
                 <td colSpan="5" className="text-red-500 p-2 text-center">
@@ -224,41 +216,36 @@ const ManageAllUser = () => {
             )}
             {!serverError &&
               paginatedData.map((user, index) => (
-                <>
-                  <tr
-                    key={user.id}
-                    className={`${
-                      index & 1 ? "bg-slate-200" : "bg-slate-50"
-                    } text-primary cursor-pointer hover:bg-gray-100`}
-                  >
-                    <td className="border-b px-4 py-2">{index + 1}</td>
-                    <td className="border-b px-4 py-2">{user.first_name}</td>
-                    <td className="border-b px-4 py-2">{user.last_name}</td>
-                    <td className="border-b px-4 py-2">{user.email}</td>
-                    <td className="border-b px-4 py-2">{user.user_role}</td>
-                    <td className="border-b px-4 py-2 flex gap-3 justify-center">
+                <tr key={index} className={`bg-white hover:bg-gray-50`}>
+                  <td className="border-b px-4 py-2">{index + 1}</td>
+                  <td className="border-b px-4 py-2">{user.first_name}</td>
+                  <td className="border-b px-4 py-2">{user.last_name}</td>
+                  <td className="border-b px-4 py-2">{user.email}</td>
+                  <td className="border-b px-4 py-2">{user.user_role}</td>
+                  <td className="border-b px-4 py-2">
+                    <div className="flex gap-3 justify-end">
                       {user.user_role !== "admin" && (
                         <>
                           <button
                             title="View More User Info"
                             onClick={() => setSelectedUser(user)}
-                            className="text-green-500 bg-green-100 p-1 rounded-lg"
+                            className="text-green-700 bg-green-50 p-1 rounded-lg"
                           >
                             <ManageAccountsIcon />
                           </button>
                           <button
                             title="Delete User"
                             onClick={() => deleteUser(user.id)}
-                            className="text-red-500 bg-red-100 p-1 rounded-lg"
+                            className="text-red-700 bg-red-50 p-1 rounded-lg"
                           >
                             <PersonRemoveIcon />
                           </button>
                         </>
                       )}
                       {user.user_role === "admin" && "No actions allowed."}
-                    </td>
-                  </tr>
-                </>
+                    </div>
+                  </td>
+                </tr>
               ))}
           </tbody>
         </table>
@@ -286,77 +273,18 @@ const ManageAllUser = () => {
       </div>
 
       {selectedUser && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-4 rounded w-5/6 max-md:w-11/12 m-auto mt-10">
-            <h2 className="text-xl mb-2 font-bold">User Details</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-              <p>
-                <strong>First Name:</strong> {selectedUser.first_name}
-              </p>
-              <p>
-                <strong>Last Name:</strong> {selectedUser.last_name}
-              </p>
-              <p>
-                <strong>Email:</strong> {selectedUser.email}
-              </p>
-              <div className="flex gap-2">
-                <strong>Role:</strong>
-                <select
-                  onChange={(e) =>
-                    UpdateUser(selectedUser.id, { user_role: e.target.value })
-                  }
-                  className="p-1 rounded-md cursor-pointer outline-none"
-                >
-                  <option value={selectedUser.user_role}>
-                    {selectedUser.user_role}
-                  </option>
-                  <option value="Waste Collector">Waste Collector</option>
-                  <option value="Household User">Household User</option>
-                </select>
-                {load && <DataProgressLoad />}
-              </div>
-            </div>
-            <h2 className="text-primary text-xl mt-2 mb-2 font-bold">
-              Archivements
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
-              <div className="p-4 bg-blue-100 rounded flex items-center text-sm">
-                <StarIcon className="text-blue-500 mr-2 " />
-                <div>
-                  <h4 className="font-bold">Achievement 1</h4>
-                  <p>Description for achievement 1.</p>
-                </div>
-              </div>
-              <div className="p-4 bg-green-100 rounded flex items-center text-sm">
-                <MedalIcon className="text-green-500 mr-2 " />
-                <div>
-                  <h4 className="font-bold">Achievement 2</h4>
-                  <p>Description for achievement 2.</p>
-                </div>
-              </div>
-              <div className="p-4 bg-yellow-100 rounded flex items-center text-sm">
-                <TrophyIcon className="text-yellow-500 mr-2 " />
-                <div>
-                  <h4 className="font-bold">Achievement 3</h4>
-                  <p>Description for achievement 3.</p>
-                </div>
-              </div>
-              <div className="p-4 bg-red-100 rounded flex items-center text-sm">
-                <AchievementIcon className="text-red-500 mr-2 " />
-                <div>
-                  <h4 className="font-bold">Achievement 4</h4>
-                  <p>Description for achievement 4.</p>
-                </div>
-              </div>
-            </div>
-            <button
-              onClick={() => setSelectedUser(null)}
-              className="mt-4 text-red-500 bg-red-100 p-2 rounded-lg text-sm"
-            >
-              Close
-            </button>
-          </div>
-        </div>
+        <Modal
+          title={`${selectedUser.first_name} ${selectedUser.last_name}`}
+          big={true}
+          isOpen={true}
+          onClose={() => setSelectedUser(null)}
+        >
+          <UserDetails
+            selectedUser={selectedUser}
+            setSelectedUser={setSelectedUser}
+            UpdateUser={UpdateUser}
+          />
+        </Modal>
       )}
     </div>
   );
