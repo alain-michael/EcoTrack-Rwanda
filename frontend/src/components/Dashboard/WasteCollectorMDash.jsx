@@ -1,22 +1,30 @@
 // wasteCollectorMDash.js
 
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React from "react";
+import { useSelector } from "react-redux";
 
 const WasteCollectorMDash = () => {
-  const defaultUserType = useSelector((state) => state.sharedData.defaultUserType);
+  const defaultUserType = useSelector(
+    (state) => state.sharedData.defaultUserType
+  );
   const userInfo = useSelector((state) => state.sharedData.usersLogin);
+  console.log(userInfo);
   return (
     <div className="p-6">
       <header className="mb-4 text-primary">
         <h1 className="text-2xl font-bold text-gray-600">Dashboard</h1>
-        <p className="text-gray-600">{userInfo.full_name}{" "}Welcome to your dashboard. Here you will find an overview of your activity and notifications.</p>
+        <p className="text-gray-600">
+          {userInfo.full_name} Welcome to your dashboard. Here you will find an
+          overview of your activity and notifications.
+        </p>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-4 bg-blue-100  cursor-pointer hover:bg-blue-200 rounded-lg">
           <h2 className="text-xl font-semibold text-blue-800">Overview</h2>
-          <p className="text-blue-800 text-sm">Summary of your recent activities.</p>
+          <p className="text-blue-800 text-sm">
+            Summary of your recent activities.
+          </p>
         </div>
         <div className="p-4 bg-red-100  cursor-pointer hover:bg-red-200 rounded-lg">
           <h2 className="text-xl font-semibold text-red-800">Notifications</h2>
@@ -33,6 +41,6 @@ const WasteCollectorMDash = () => {
       </div>
     </div>
   );
-}
+};
 
 export default WasteCollectorMDash;

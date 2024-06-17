@@ -65,7 +65,10 @@ def login(request):
                 'last_name': user.last_name,
                 'email': user.email,
                 'user_role': user.user_role,
-                'phone_number': user.phone_number
+                'phone_number': user.phone_number,
+                'sharecode': user.sharecode,
+                'canShare': user.canShare,
+                'totalPoints': user.totalPoints
             }
         })
 
