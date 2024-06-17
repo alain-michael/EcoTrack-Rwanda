@@ -21,7 +21,6 @@ class AchievementViewSet(viewsets.ModelViewSet):
             # Ensure frequency is 1 and preceding is null for REGISTER type
             request.data['frequency'] = 1
             request.data['preceding'] = None
-            request.data['is_earned_once'] = True
 
         uploaded_file = request.FILES.get('image')
         image_url = request.data.get('image')
@@ -57,7 +56,6 @@ class AchievementViewSet(viewsets.ModelViewSet):
         if instance.type == 'REGISTER':
             data['frequency'] = 1
             data['preceding'] = None
-            data['is_earned_once'] = True
 
         partial = kwargs.pop('partial', False)
         serializer = self.get_serializer(instance, data=data, partial=partial)
@@ -74,7 +72,6 @@ class AchievementViewSet(viewsets.ModelViewSet):
 
             data['frequency'] = 1
             data['preceding'] = None
-            data['is_earned_once'] = True
 
     def perform_create(self, serializer):
         self.validate_register_achievement(serializer.validated_data)

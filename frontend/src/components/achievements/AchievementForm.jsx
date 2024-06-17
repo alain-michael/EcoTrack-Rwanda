@@ -23,7 +23,6 @@ const AchievementForm = (props) => {
       points: achievement?.points || "",
       image: null, // Changing to null to represent file upload
       preceding: achievement?.preceding || "",
-      is_earned_once: achievement?.is_earned_once || false,
       frequency: achievement?.frequency || "",
       type: achievement?.type || "",
     },
@@ -42,7 +41,6 @@ const AchievementForm = (props) => {
       formData.append("points", values.points);
       if (values.image != null) formData.append("image", values.image[0]);
       formData.append("preceding", values.preceding);
-      formData.append("is_earned_once", values.is_earned_once);
       formData.append("frequency", values.frequency);
       formData.append("type", values.type);
 
@@ -156,47 +154,28 @@ const AchievementForm = (props) => {
           </FormControl>
         </div>
         <div className="w-full">
-          <InputLabel htmlFor="is_earned_once" className="label">
-            Is Earned Once
+          <InputLabel htmlFor="type" className="label">
+            Preceeding
           </InputLabel>
           <FormControl className="w-full">
             <Select
               className="w-full select-input"
-              id="is_earned_once"
-              name="is_earned_once"
-              value={formik.values.is_earned_once}
+              id="preceding"
+              name="preceding"
+              value={formik.values.preceding}
               onChange={formik.handleChange}
               error={
-                formik.touched.is_earned_once &&
-                Boolean(formik.errors.is_earned_once)
+                formik.touched.preceding && Boolean(formik.errors.preceding)
               }
             >
-              <MenuItem value={true}>Yes</MenuItem>
-              <MenuItem value={false}>No</MenuItem>
+              {achievements.map((achievement) => (
+                <MenuItem key={achievement.id} value={achievement.id}>
+                  {achievement.name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </div>
-      </div>
-      <div className="w-full">
-        <InputLabel htmlFor="type" className="label">
-          Preceeding
-        </InputLabel>
-        <FormControl className="w-full">
-          <Select
-            className="w-full select-input"
-            id="preceding"
-            name="preceding"
-            value={formik.values.preceding}
-            onChange={formik.handleChange}
-            error={formik.touched.preceding && Boolean(formik.errors.preceding)}
-          >
-            {achievements.map((achievement) => (
-              <MenuItem key={achievement.id} value={achievement.id}>
-                {achievement.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
       </div>
 
       <div className="w-full">

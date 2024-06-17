@@ -4,6 +4,7 @@ import datetime
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import *
+from achievements.models import UserAchievement, Logging
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     username_field = 'email'
@@ -118,3 +119,33 @@ class ScheduleSerializer(serializers.ModelSerializer):
         )
         schedule.save()
         return schedule
+
+class UserAchievementSerializer(serializers.ModelSerializer):
+    achievement_name = serializers.CharField(source='achievement.name')
+    achievement_img = serializers.CharField(source='achievement.image')
+    achievement_frequency = serializers.CharField(source='achievement.frequency')
+
+    class Meta:
+        model = UserAchievement
+        fields = ['achievement_name', 'achievement_img', 'achievement_frequency', 'frequency', 'startDate', 'completedDate', 'lastActionDate']
+
+class LoggingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Logging
+        fields = ['text', 'earned', 'date']
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    achievements = serializers.SerializerMethodField()
+    logs = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'email', 'phone_number', 'user_role', 'sharecode', 'totalPoints', 'canShare', 'achievements', 'logs']
+
+    def get_achievements(self, obj):
+        achievements = UserAchievement.objects.filter(user=obj).order_by('-startDate')
+        return UserAchievementSerializer(achievements, many=True).data
+
+    def get_logs(self, obj):
+        logs = Logging.objects.filter(user=obj).order_by('-date')
+        return LoggingSerializer(logs, many=True).data

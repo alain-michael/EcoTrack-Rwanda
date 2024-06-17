@@ -76,7 +76,7 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     REQUIRED_FIELDS = []      # No additional required fields
     user_role = models.CharField(max_length=20, choices=UserRoleChoices.choices, default=UserRoleChoices.house_user)
-    sharecode = models.CharField(max_length=4, unique=True, default=generate_sharecode)
+    sharecode = models.CharField(max_length=4, default=generate_sharecode)
     totalPoints = models.IntegerField(default=0)
     canShare = models.BooleanField(default=True)
 

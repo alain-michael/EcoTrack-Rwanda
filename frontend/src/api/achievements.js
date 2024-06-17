@@ -1,6 +1,4 @@
-import createAxiosInstance from "../features/AxiosInstance";
-
-const api = createAxiosInstance();
+import api from "../features/axios";
 
 export const createAchievement = async (data) => {
   return (

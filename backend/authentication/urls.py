@@ -13,5 +13,6 @@ urlpatterns = [
     path('api/all-users', views.all_users, name="all_users"),
     path('api/logout', views.logout, name="logout"),
     path('api/schedules/all-schedules', views.all_schedules, name="all_schedules"),
-    path('api/users/<int:id>', views.get_user, name="get_user")
+    path('api/users/<int:id>', views.get_user, name="get_user"),
+     path('api/user/<int:id>/', views.user_detail, name='user_detail')
 ]
