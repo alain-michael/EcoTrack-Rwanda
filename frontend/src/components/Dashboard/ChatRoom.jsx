@@ -33,6 +33,7 @@ export const ChatRoom = () => {
                 }));
 
                 setMessages(prevMessages => append ? [...messagesData, ...prevMessages] : messagesData);
+                console.log(messagesData)
                 setRoomInfo(roomData);
                 setLoading(false); // Set loading to false after data is fetched
                 scrollToBottom();
@@ -94,6 +95,7 @@ export const ChatRoom = () => {
                 {messages.map((message, index) => (
                     <div key={index} className={`message w-1/2 p-2 rounded-lg ${message.isMine ? 'bg-green-200 ml-auto' : 'bg-gray-200'}`}>
                         {message.content}
+                        <sub className='text-xs'>{message.created}</sub>
                     </div>
                 ))}
                 <div ref={messagesEndRef}></div>

@@ -55,7 +55,7 @@ class AddressSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'phone_number', 'email', 'user_role']
+        fields = ['id', 'first_name', 'last_name', 'phone_number', 'email', 'user_role', 'created_at']
 
 class ScheduleSerializer(serializers.ModelSerializer):
     date = serializers.DateTimeField(source='date_time', format='%Y-%m-%dT%H:%M:%S.%fZ')
