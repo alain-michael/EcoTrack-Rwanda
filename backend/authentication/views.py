@@ -7,6 +7,9 @@ from rest_framework.decorators import action, api_view, permission_classes, auth
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
+
+from achievements.models import Achievement
+from achievements.serializers import AchievementSerializer
 from .models import *
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import *
@@ -54,6 +57,8 @@ def register(request):
 
                 # Call save_achievement for the user with sharecode
                 save_achievement(user_with_sharecode.id, 'SHARE', frequency=1)
+            else:
+                return Response({'error': 'Invalid sharecode'}, status=400)
 
         new_user.save()
 
@@ -288,3 +293,19 @@ def user_detail(request, id):
 
     serializer = UserDetailSerializer(user)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET', 'OPTIONS'])
+@permission_classes([IsAuthenticated])
+def achievement_data(request):
+    user = request.user
+    if user.user_role != UserRoleChoices.admin_user:
+        return Response({'error': 'User is not an admin'}, status=403)
+    
+    achievements = Achievement.objects.all()
+    response = []
+
+    for achievement in achievements:
+        num_of_users = achievement.user_achievement_set.count()
+        response.append({'id': achievement.id, 'name': achievement.name, 'num_of_users': num_of_users, 'type': achievement.type})
+
+    return Response(response, status=200)
