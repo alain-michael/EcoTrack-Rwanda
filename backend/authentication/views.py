@@ -305,7 +305,7 @@ def achievement_data(request):
     response = []
 
     for achievement in achievements:
-        num_of_users = achievement.user_achievement_set.count()
+        num_of_users = achievement.userachievement_set.count()
         response.append({'id': achievement.id, 'name': achievement.name, 'num_of_users': num_of_users, 'type': achievement.type})
 
     return Response(response, status=200)
