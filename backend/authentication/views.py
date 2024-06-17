@@ -116,6 +116,8 @@ def schedule(request, schedule_id=None):
         serializer = ScheduleSerializer(data=data, context={'request': request})
         if serializer.is_valid():
             schedule = serializer.save()
+            save_achievement(request.user.id, 'SCHEDULE', frequency=1)
+
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
     
