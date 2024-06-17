@@ -55,7 +55,6 @@ def get_room(request, chatroom_id):
     messages_qs = room.messages.select_related('sender', 'receiver').order_by('-created')
     result_page = paginator.paginate_queryset(messages_qs, request)
 
-    # Bulk update read status for messages in the current page
     unread_message_ids = [message.id for message in result_page if message.receiver == user and not message.read]
     if unread_message_ids:
         Message.objects.filter(id__in=unread_message_ids).update(read=True)
@@ -100,12 +99,15 @@ def rooms(request):
 @permission_classes([IsAuthenticated])
 def create_room(request):
     user = request.user
+    print(request.data)
     if request.data['user_role'] == 'Admin':
         other_user = User.objects.filter(user_role='admin')
     else:
-        if 'recipient_email' not in request.data:
+        if 'email' not in request.data:
             return Response({'error': 'Recipient email not provided'}, status=400)
-        other_user = User.objects.filter(email=request.data['recipient_email'])
+        if request.data['email'] == user.email:
+            return Response({'error': 'Cannot send messages to yourself'}, status=400)
+        other_user = User.objects.filter(email=request.data['email'])
     if not other_user or not user:
         return Response({'error': 'User not found'}, status=404)
     else:
