@@ -7,21 +7,13 @@ const chartSetting = {
       label: 'Number of users',
     },
   ],
-  width: 500,
+
   height: 400,
+  colors: ['#0096ff'],
   margin: { left: 100, right: 50, top: 50, bottom: 50 }, // Adjust margins to avoid cropping
 };
 
-const dataset = [
-  {
-    total: 349,
-    achivement: 'ECO-CHAMPION',
-  },
-  {
-    total: 249,
-    achivement: 'ECO-MEMBER',
-  }
-];
+
 
 const colors = {
   'ECO-CHAMPION': '#FF6384',
@@ -30,7 +22,7 @@ const colors = {
 
 const valueFormatter = (value) => `${value}`;
 
-export default function HorizontalBars() {
+export default function HorizontalBars({dataset, title}) {
   return (
     <BarChart
       dataset={dataset}
@@ -38,9 +30,8 @@ export default function HorizontalBars() {
       series={[
         {
           dataKey: 'total',
-          label: 'Total User Achievements',
+          label: title,
           valueFormatter,
-          colorAccessor: (datum) => colors[datum.achivement], // Assigning colors based on achievement
         },
       ]}
       layout="horizontal"

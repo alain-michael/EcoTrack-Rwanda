@@ -11,6 +11,7 @@ import AllSchedules from "./AllSchedules";
 import { Messages } from "./Messages";
 import UserAchievements from "../../pages/achievements/UserAchievements";
 import SimpleCharts from "./AdminAnna";
+import { ChatRoom } from "./ChatRoom";
 
 {
   /** This page is for layout for all Admin items */
@@ -26,7 +27,7 @@ export const Admin = () => {
       {selectedItem == "Manage Users" && <ManageAllUser />}
       {selectedItem == "All Schedules" && <AllSchedules />}
       {selectedItem == "Messages" && <Messages />}
-{/*       {selectedItem == "Chatroom" && <ChatRoom />} */}
+      {selectedItem == "Chatroom" && <ChatRoom />}
     </div>
   );
 };
