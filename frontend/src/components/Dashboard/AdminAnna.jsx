@@ -6,6 +6,7 @@ import createAxiosInstance from '../../features/AxiosInstance';
 const AdminAnna = () => {
     const instance = createAxiosInstance();
     const [data, setData] = useState([]);
+    const [Achv, setAchv] = useState([]);
 
     const getAllUser = () => {
         instance
@@ -17,8 +18,22 @@ const AdminAnna = () => {
                 toast.error("Server error");
             });
     };
+    const AllAchivements = () => {
+        instance
+            .get("/achievement-data")
+            .then((res) => {
+                res.data.map((data, index) => {
+                    setAchv(prevAchv => [...prevAchv, { "achivement": data.name, "total": data.num_of_users }]);
+                });
+
+            })
+            .catch((error) => {
+                toast.error("Server error");
+            });
+    };
     useEffect(() => {
         getAllUser();
+        AllAchivements();
     }, []);
     const getUserCountsByRole = () => {
         return data.reduce((acc, user) => {
@@ -58,27 +73,15 @@ const AdminAnna = () => {
     ];
     const primaryPalette = ['#FF6384', '#36A2EB', '#FFCE56'];
     const secondaryPalette = ['#87CEEB', '#ADD8E6', '#90EE90'];
+
     //--------------------------bar chart
-    const dataset = [
-        {
-            total: 349,
-            achivement: 'ECO-CHAMPION',
-        },
-        {
-            total: 549,
-            achivement: 'SHARER',
-        },
-        {
-            total: 249,
-            achivement: 'ECO-MEMBER',
-        }
-    ];
+    console.log(Achv)
     return (
         <>
-        
+
             <div className="flex gap-2 max-xl:flex-wrap max-xl:text-xs">
                 <div className="w-full">
-                    <Combining dataset={dataset} title={"Total User Achievements"}></Combining>
+                    <Combining dataset={Achv} title={"Total User Achievements"}></Combining>
                 </div>
                 <div className="w-full">
                     <PieActiveArc data={Newdata} palette={primaryPalette} title={"Today Eco-Track Users Analysis"}></PieActiveArc>
