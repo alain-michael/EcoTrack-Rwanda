@@ -147,3 +147,26 @@
 body {
   font-family: "Poppins", Verdana, Geneva, Tahoma, sans-serif;
 }
+
+body,
+html,
+#root {
+  height: 100%;
+}
+
+.landing-page .bg {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-image: url("/Rwanda.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center center;
+  opacity: 0.05;
+  max-width: 1000px;
+  max-height: 700px;
+}
+
+.splide__arrows {
+  display: none;
+}

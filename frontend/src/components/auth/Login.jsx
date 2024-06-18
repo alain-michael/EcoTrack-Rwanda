@@ -8,6 +8,7 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import DataProgressLoad from "../Loads/DataProgressLoad";
 import createAxiosInstance from "../../features/AxiosInstance";
+import toast from "react-hot-toast";
 function Login({ viewType, setviewType }) {
   const [ServerError, SetServerError] = useState(null);
   const [load, setLoad] = useState(false);
@@ -48,6 +49,7 @@ function Login({ viewType, setviewType }) {
         .catch((error) => {
           setLoad(false);
           if (error.response) {
+            toast.error(`Error: ${error.response.data.error}`);
             SetServerError(`Error: ${error.response.data.error}`);
           } else {
             console.log(error);
@@ -58,27 +60,16 @@ function Login({ viewType, setviewType }) {
   });
 
   const inputStyle =
-    "flex h-9 w-[300px] rounded-md border border-input outline-none bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent ";
+    "flex w-full rounded-md outline-none p-4 text-white px-5 bg-gray-50 bg-opacity-10 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent ";
   return (
-    <div className="">
-      <div className="grid gap-6 ">
-        <h2 className="text-2xl font-bold">Sign In</h2>
-        {ServerError && (
-          <>
-            <div className="w-full relative flex justify-center">
-              <p
-                onClick={() => SetServerError(null)}
-                className="text-red-500 bg-red-100 p-3  fixed top-3   rounded-md"
-              >
-                {ServerError}
-              </p>
-            </div>
-          </>
-        )}
-        <form onSubmit={formik.handleSubmit}>
-          <div className="grid gap-2">
-            <div className="grid gap-1">
-              <p>Email:</p>
+    <div className="w-full">
+      <div className="grid gap-6 w-[400px] w-full ">
+        <h2 className="text-2xl font-bold text-center text-white">Sign In</h2>
+        <p className="mb-12 text-gray-200 text-center"></p>
+
+        <form className="w-full" onSubmit={formik.handleSubmit}>
+          <div className="grid gap-2 w-full">
+            <div className="flex flex-col max-w-[400px] w-full">
               <input
                 className={inputStyle}
                 placeholder="Email Address"
@@ -89,7 +80,7 @@ function Login({ viewType, setviewType }) {
               {formik.errors.email && formik.touched.email ? (
                 <div className="text-red-500">{formik.errors.email}</div>
               ) : null}
-              <p>Password :</p>
+              <div className="mt-5"></div>
               <input
                 className={inputStyle}
                 placeholder="Password"
@@ -99,11 +90,11 @@ function Login({ viewType, setviewType }) {
                 onChange={formik.handleChange}
               />
             </div>
-            <div>
+            <div className="w-full mt-4">
               {!load && (
                 <button
                   type="submit"
-                  className="w-[300px] h-9 bg-[#207855] text-white rounded-md mt-4 outline-none"
+                  className="w-full  bg-green-200 text-green-900 font-bold  flex justify-center items-center p-4 px-5 rounded-md mt-4 outline-none"
                 >
                   Sign In
                 </button>
@@ -111,7 +102,7 @@ function Login({ viewType, setviewType }) {
               {load && (
                 <button
                   type="button"
-                  className="w-[300px] h-9 bg-green-200 text-[#207855] flex justify-center items-center px-2 rounded-md mt-4 outline-none"
+                  className="w-full  bg-white text-green-900 font-bold  flex justify-center items-center p-4 px-5 rounded-md mt-4 outline-none"
                 >
                   <DataProgressLoad />
                   Loggin....
@@ -120,18 +111,11 @@ function Login({ viewType, setviewType }) {
             </div>
           </div>
         </form>
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-          </div>
-        </div>
+        <div className="relative mt-8"></div>
         <div>
-          <p className="text-center cursor-pointer">
-            Don't have an account?&nbsp;
-            <a
-              onClick={() => setviewType(!viewType)}
-              className="text-[#207855]"
-            >
+          <p className="text-center cursor-pointer text-gray-400 flex justify-between">
+            <span>Don't have an account?&nbsp;</span>
+            <a onClick={() => setviewType(!viewType)} className="text-white">
               Sign Up
             </a>
           </p>

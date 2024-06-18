@@ -16,5 +16,6 @@ urlpatterns = [
     path('api/users/<int:id>', views.get_user, name="get_user"),
     path('api/user/<int:id>/', views.user_detail, name='user_detail'),
     path('api/achievement-data', views.achievement_data, name="achievement_data"),
+    path('api/count-stats/', views.count_stats, name='count-stats'),
     path('api/github-webhook', views.github_webhook, name="github_webhook"),
 ]

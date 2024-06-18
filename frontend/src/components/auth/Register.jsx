@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import axios from "axios";
 import * as Yup from "yup";
 import createAxiosInstance from "../../features/AxiosInstance";
+import toast from "react-hot-toast";
 
 function Register({ viewType, setviewType }) {
   const instance = createAxiosInstance();
@@ -35,11 +36,15 @@ function Register({ viewType, setviewType }) {
           if (res.data.status == 201) {
             setviewType(!viewType);
           } else {
+            toast.error("Error While Registerating please again");
+
             SetServerError("Error While Registerating please again");
           }
         })
         .catch((error) => {
           if (error.response) {
+            toast.error(`Error: ${error.response.data.error}`);
+
             SetServerError(error.response.data.error);
           } else {
             SetServerError("Unexpected error occured. Try Again Later");
@@ -49,34 +54,18 @@ function Register({ viewType, setviewType }) {
   });
 
   const inputStyle =
-    "flex h-9 w-[300px] rounded-md border border-input outline-none bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent ";
+    "flex w-full rounded-md outline-none p-4 text-white px-5 bg-gray-50 bg-opacity-10 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent ";
   return (
     <div>
       <div className="grid gap-6 ">
         <div>
-          <h2 className="text-2xl font-bold p-3 pl-0">Sign Up</h2>
+          <h2 className="text-2xl font-bold text-center text-white">Sign Up</h2>
 
-          <div className="text-sm text-gray-500">
-            Start your amazing journey
-          </div>
-
-          {ServerError && (
-            <>
-              <div className="w-full relative flex justify-center">
-                <p
-                  onClick={() => SetServerError(null)}
-                  className="text-red-500 bg-red-100 p-3  fixed top-3   rounded-md"
-                >
-                  {ServerError}
-                </p>
-              </div>
-            </>
-          )}
+          <p className="mb-12 text-gray-200 text-center"></p>
         </div>
         <form onSubmit={formik.handleSubmit} className="">
           <div className="grid gap-2">
-            <div className="grid gap-1">
-              <p>Name:</p>
+            <div className="flex flex-col max-w-[400px] w-full">
               <input
                 className={inputStyle}
                 name="name"
@@ -85,9 +74,10 @@ function Register({ viewType, setviewType }) {
                 onChange={formik.handleChange}
               />
               {formik.errors.name && formik.touched.name ? (
-                <div className="text-red-500">{formik.errors.name}</div>
+                <div className="text-orange-500">{formik.errors.name}</div>
               ) : null}
-              <p>Email:</p>
+              <div className="mt-5"></div>
+
               <input
                 className={inputStyle}
                 name="email"
@@ -96,71 +86,72 @@ function Register({ viewType, setviewType }) {
                 onChange={formik.handleChange}
               />
               {formik.errors.email && formik.touched.email ? (
-                <div className="text-red-500">{formik.errors.email}</div>
+                <div className="text-orange-500">{formik.errors.email}</div>
               ) : null}
-              <p>Password :</p>
-              <input
-                className={inputStyle}
-                placeholder="Create a password"
-                type="password"
-                name="password"
-                value={formik.values.password}
-                onChange={formik.handleChange}
-              />
-              {formik.errors.password && formik.touched.password ? (
-                <div className="text-red-500">{formik.errors.password}</div>
-              ) : null}
-              <p>Confirm password :</p>
-              <input
-                className={inputStyle}
-                placeholder="Confirm your password"
-                type="password"
-                name="confirmPassword"
-                value={formik.values.confirmPassword}
-                onChange={formik.handleChange}
-              />
-              {formik.errors.confirmPassword &&
-              formik.touched.confirmPassword ? (
-                <div className="text-red-500">
-                  {formik.errors.confirmPassword}
+              <div className="mt-5"></div>
+              <div className="grid grid-cols-2 gap-3 w-full ">
+                <div>
+                  <input
+                    className={inputStyle}
+                    placeholder="Create a password"
+                    type="password"
+                    name="password"
+                    value={formik.values.password}
+                    onChange={formik.handleChange}
+                  />
+                  {formik.errors.password && formik.touched.password ? (
+                    <div className="text-orange-500">
+                      {formik.errors.password}
+                    </div>
+                  ) : null}
                 </div>
-              ) : null}
-              <p>Referral code :</p>
+                <div>
+                  <input
+                    className={inputStyle}
+                    placeholder="Confirm your password"
+                    type="password"
+                    name="confirmPassword"
+                    value={formik.values.confirmPassword}
+                    onChange={formik.handleChange}
+                  />
+                  {formik.errors.confirmPassword &&
+                  formik.touched.confirmPassword ? (
+                    <div className="text-orange-500">
+                      {formik.errors.confirmPassword}
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+
+              <div className="mt-5"></div>
+
               <input
                 className={inputStyle}
-                placeholder="4-digits"
+                placeholder="Referral code 4-digits"
                 type="number"
                 name="sharecode"
                 maxLength={4}
                 value={formik.values.sharecode}
                 onChange={formik.handleChange}
               />
-              {formik.errors.sharecode && formik.touched.sharecode ? (
-                <div className="text-red-500">{formik.errors.sharecode}</div>
-              ) : null}
-            </div>
-            <div>
-              <button
-                type="submit"
-                className="w-[300px] h-9 bg-[#207855] text-white rounded-md mt-4"
-              >
-                Get started
-              </button>
+
+              <div className="w-full mt-4">
+                <button
+                  type="submit"
+                  className="w-full  bg-green-200 text-green-900 font-bold  flex justify-center items-center p-4 px-5 rounded-md mt-4 outline-none"
+                >
+                  Get started
+                </button>
+              </div>
             </div>
           </div>
         </form>
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-          </div>
-        </div>
+        <div className="relative mt-8"></div>
+
         <div>
-          <p className="text-center cursor-pointer">
-            Already have an account?{" "}
-            <a
-              onClick={() => setviewType(!viewType)}
-              className="text-[#207855]"
-            >
+          <p className="text-center cursor-pointer text-gray-400 flex justify-between">
+            <span>Already have an account? </span>
+            <a onClick={() => setviewType(!viewType)} className="text-white">
               Log in
             </a>
           </p>

@@ -324,6 +324,23 @@ def achievement_data(request):
 
     return Response(response, status=200)
 
+@api_view(['GET'])
+@authentication_classes([])
+
+def count_stats(request):
+    try:
+        total_users = User.objects.count()
+        total_collectors = User.objects.filter(user_role=UserRoleChoices.waste_collector).count()
+        total_schedules = ColSchedule.objects.count()
+
+        return Response({
+            'total_users': total_users,
+            'total_collectors': total_collectors,
+            'total_schedules': total_schedules
+        }, status=200)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
+
 @csrf_exempt
 def github_webhook(request):
     if request.method == 'POST':
@@ -334,4 +351,3 @@ def github_webhook(request):
         os.system('touch /var/www/ecotrackrw_pythonanywhere_com_wsgi.py')
         return HttpResponse(status=200)
     else:
-        return HttpResponse(status=400)
