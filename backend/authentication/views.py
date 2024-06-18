@@ -153,7 +153,7 @@ def my_schedules(request):
 def available_jobs(request):
     user = request.user
     if user.user_role != UserRoleChoices.waste_collector:
-        return Response({'error': 'User is not a waste collector'}, status=403)
+        return Response({'error': 'User is not a waste collector.'}, status=403)
     
     schedules = ColSchedule.objects.filter(status=False)
     return Response(ScheduleSerializer(schedules, many=True).data, status=200)
