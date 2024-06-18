@@ -80,7 +80,7 @@ export const Messages = () => {
     instance
       .get("/rooms")
       .then((res) => {
-        console.log("User:", user);
+        // console.log("User:", user);
         const updatedRooms = res.data.map((room) => {
           const read_receipts =
             user.email === room.latest_message_receiver &&
@@ -110,8 +110,8 @@ export const Messages = () => {
       instance
         .post("http://localhost:8000/api/rooms/create", values)
         .then((res) => {
-          console.log(res);
-          goto(`/chat/${res.data.chatroom_id}`);
+          dispatch(setSelectedItem("Chatroom")),
+          dispatch(setCurrentChat(res.data.chatroom_id));
         });
     },
   });

@@ -8,6 +8,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+import git
+import os
+
 from achievements.models import Achievement
 from achievements.serializers import AchievementSerializer
 from .models import *
@@ -30,7 +35,7 @@ def register(request):
         
         user = User.objects.filter(email=user_data['email']).first()
         if user:
-            return Response({'error': 'User already exists'}, status=409)
+            return Response({'error': 'User already exists.'}, status=409)
         
         if not user_data.get('userRole'):
             user_data['userRole'] = UserRoleChoices.house_user
@@ -122,7 +127,11 @@ def schedule(request, schedule_id=None):
         if serializer.is_valid():
             schedule = serializer.save()
             save_achievement(request.user.id, 'SCHEDULE', frequency=1)
-
+            date = datetime.datetime.strftime(data['date_time'], "%d-%m-%Y")
+            notification = Notification(
+                user=request.user,
+                text=f"{request.user.first_name} {request.user.last_name} has scheduled a {data['repeat']} repeat waste collection to start on {date}."
+            )
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
     
@@ -144,7 +153,7 @@ def my_schedules(request):
 def available_jobs(request):
     user = request.user
     if user.user_role != UserRoleChoices.waste_collector:
-        return Response({'error': 'User is not a waste collector'}, status=403)
+        return Response({'error': 'User is not a waste collector.'}, status=403)
     
     schedules = ColSchedule.objects.filter(status=False)
     return Response(ScheduleSerializer(schedules, many=True).data, status=200)
@@ -156,7 +165,7 @@ def manage_job(request):
     schedule_id = request.data['id']
     schedule = ColSchedule.objects.get(id=schedule_id)
     if not schedule:
-        return Response({'error': 'Schedule not found'}, status=404)
+        return Response({'error': 'Schedule not found.'}, status=404)
     
     user = request.user
     if user.user_role != UserRoleChoices.waste_collector:
@@ -166,12 +175,16 @@ def manage_job(request):
         schedule.collector = user
         schedule.status = True
         schedule.save()
+        notification = Notification(user=schedule.user, message=f'{user.first_name} {user.last_name} has accepted your collection request.')
+        notification.save()
         return Response({'message': 'Job accepted successfully'}, status=200)
 
     if request.method == 'PATCH' and not schedule.completed and schedule.collector == request.user: 
         schedule.completed = True
         schedule.save()
         time_to_next = {RepeatScheduleChoices.weekly: timedelta(days=7), RepeatScheduleChoices.two_weeks: timedelta(days=14)}
+        notification = Notification(user=schedule.user, message=f'{user.first_name} {user.last_name} has completed your collection request.')
+        notification.save()
         if schedule.repeat != RepeatScheduleChoices.none:
             new_schedule = ColSchedule(
                 user=schedule.user,
@@ -179,6 +192,7 @@ def manage_job(request):
                 date=schedule.date_time + time_to_next[schedule.repeat],
             )
             new_schedule.save()
+            notification = Notification(user=schedule.user, message=f'New collection has been set to the {datetime.strftime(new_schedule.date_time, "%d-%m-%Y")}.')
             return Response({'message': 'Job marked as completed and new schedule created'}, status=200)
         return Response({'message': 'Job completed'}, status=200)
     else:
@@ -211,7 +225,7 @@ def get_job(request, id):
     
     schedule = ColSchedule.objects.filter(id=id)
     if not schedule:
-        return Response({'error': 'Schedule not found'}, status=404)
+        return Response({'error': 'Schedule not found.'}, status=404)
     return Response(ScheduleSerializer(schedule[0]).data, status=200)
 
 
@@ -305,7 +319,7 @@ def achievement_data(request):
     response = []
 
     for achievement in achievements:
-        num_of_users = achievement.userachievement_set.count()
+        num_of_users = achievement.userachievement_set.filter(completedDate__isnull=False).count()
         response.append({'id': achievement.id, 'name': achievement.name, 'num_of_users': num_of_users, 'type': achievement.type})
 
     return Response(response, status=200)
@@ -326,3 +340,14 @@ def count_stats(request):
         }, status=200)
     except Exception as e:
         return Response({'error': str(e)}, status=500)
+
+@csrf_exempt
+def github_webhook(request):
+    if request.method == 'POST':
+        repo = git.Repo('/home/ecotrackrw/EcoTrack-Rwanda') 
+        origin = repo.remotes.origin
+        repo.create_head('main', origin.refs.main).set_tracking_branch(origin.refs.main).checkout()
+        origin.pull()
+        os.system('touch /var/www/ecotrackrw_pythonanywhere_com_wsgi.py')
+        return HttpResponse(status=200)
+    else:

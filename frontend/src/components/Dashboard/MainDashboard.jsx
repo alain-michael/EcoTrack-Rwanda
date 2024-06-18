@@ -5,10 +5,13 @@ import { DashItems } from "./DashItems";
 import { useSelector } from "react-redux";
 import { WasteCollector } from "./WasteCollector";
 import { Admin } from "./Admin";
+import { Notifications } from "./Notifications";
+import { setNotificationOpen } from "../../features/SharedDataSlice/SharedData";
 
 export const MainDashboard = () => {
   const userInfo = useSelector((state) => state.sharedData.usersLogin);
   const defaultUserType = useSelector((state) => state.sharedData.defaultUserType);
+  const notificationOpen = useSelector((state) => state.sharedData.notificationOpen);
 
   const [isOpen, setIsOpen] = useState(true);
   const isScreenWidth767 = () => {
@@ -57,6 +60,13 @@ export const MainDashboard = () => {
           {defaultUserType == "Waste Collector" && <WasteCollector />}
           {defaultUserType == "admin" && <Admin />}
         </main>
+      </div>
+      <div
+        className={`shadow-sm  bg-white text-primary flex-shrink-0 overflow-y-auto  transition-all duration-200 ease-in-out ${notificationOpen ? 'translate-x-0 w-80' : '-translate-x-64 w-0'
+          }`}
+      >
+        {/** Sidebar Or Body Goes  */}
+        <Notifications />
       </div>
     </div>
   );

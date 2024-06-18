@@ -183,7 +183,7 @@ export const Schedule_form = () => {
             >
               <MenuItem value={'none'}>None</MenuItem>
               <MenuItem value={'weekly'}>Weekly</MenuItem>
-              <MenuItem value={'weekly'}>Once every 2 weeks</MenuItem>
+              <MenuItem value={'biweekly'}>Once every 2 weeks</MenuItem>
             </Select>
           </FormControl>
         </label>

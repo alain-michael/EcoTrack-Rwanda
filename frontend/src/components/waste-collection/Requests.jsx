@@ -47,6 +47,7 @@ function Requests() {
         console.log(error);
       });
   };
+
   const fetchAllMyCollections = async () => {
     instance
       .get('/jobs/my-jobs')
@@ -57,11 +58,16 @@ function Requests() {
         console.log(error);
       });
   };
+  useEffect(()=>{
+    fetchAllCollections()
+    fetchAllMyCollections()
+
+  },[])
   const acceptJob = async (id) => {
     const body = {
       id: parseInt(id),
     };
-    instance.post('/jobs/accept-job', body).then((response) => {
+    instance.post('/jobs/manage-job', body).then((response) => {
       dispatch(updateTable(parseInt(id)));
       toast.success('Job taken successfully');
     });
