@@ -2,6 +2,7 @@ import axios, { AxiosError } from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { resetStateToDefault } from "../features/SharedDataSlice/SharedData";
 import { store } from "../app/store";
+import toast from "react-hot-toast";
 
 function createAxiosInstance() {
   const info = localStorage.getItem("persist:root");
