@@ -309,3 +309,20 @@ def achievement_data(request):
         response.append({'id': achievement.id, 'name': achievement.name, 'num_of_users': num_of_users, 'type': achievement.type})
 
     return Response(response, status=200)
+
+@api_view(['GET'])
+@authentication_classes([])
+
+def count_stats(request):
+    try:
+        total_users = User.objects.count()
+        total_collectors = User.objects.filter(user_role=UserRoleChoices.waste_collector).count()
+        total_schedules = ColSchedule.objects.count()
+
+        return Response({
+            'total_users': total_users,
+            'total_collectors': total_collectors,
+            'total_schedules': total_schedules
+        }, status=200)
+    except Exception as e:
+        return Response({'error': str(e)}, status=500)
