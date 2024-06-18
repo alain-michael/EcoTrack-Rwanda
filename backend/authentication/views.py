@@ -327,11 +327,11 @@ def achievement_data(request):
 @csrf_exempt
 def github_webhook(request):
     if request.method == 'POST':
-        repo = git.Repo('/home/yourusername/yourprojectdir') 
+        repo = git.Repo('/home/ecotrackrw/EcoTrack-Rwanda') 
         origin = repo.remotes.origin
         repo.create_head('main', origin.refs.main).set_tracking_branch(origin.refs.main).checkout()
         origin.pull()
-        os.system('touch /var/www/yourusername_pythonanywhere_com_wsgi.py')
+        os.system('touch /var/www/ecotrackrw_pythonanywhere_com_wsgi.py')
         return HttpResponse(status=200)
     else:
         return HttpResponse(status=400)
