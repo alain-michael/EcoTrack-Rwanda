@@ -110,8 +110,8 @@ export const Messages = () => {
       instance
         .post("http://localhost:8000/api/rooms/create", values)
         .then((res) => {
-          console.log(res);
-          goto(`/chat/${res.data.chatroom_id}`);
+          dispatch(setSelectedItem("Chatroom")),
+          dispatch(setCurrentChat(res.data.chatroom_id));
         });
     },
   });

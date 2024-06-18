@@ -3,8 +3,12 @@ import createAxiosInstance from '../../features/AxiosInstance';
 import SendIcon from '@mui/icons-material/Send';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSelectedItem } from '../../features/SharedDataSlice/SharedData';
-
+import AddReactionIcon from '@mui/icons-material/AddReaction';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import data from '@emoji-mart/data'
+import Picker from '@emoji-mart/react'
 export const ChatRoom = () => {
+    const [showEmoji, setShowEmoji] = useState(false)
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [roomInfo, setRoomInfo] = useState(null);
@@ -85,35 +89,62 @@ export const ChatRoom = () => {
     if (loading) {
         return <div>Loading...</div>; // Loading indicator
     }
+    const addEmoji = (emoji) =>{
+        setNewMessage(newMessage+emoji.native)
+        setShowEmoji(false)
+        document.getElementById("msg").focus()
+    }
 
     return (
         <>
-            <div className="top-bar fixed w-full bg-white border-b-2 border-gray-200 p-4 relative text-xl">
-                <span>{roomInfo.user1.id === user.user_id ? roomInfo.user2.first_name + " " + roomInfo.user2.last_name : roomInfo.user1.first_name + " " + roomInfo.user1.last_name}</span>
+            <div className="top-bar  w-full bg-white border-b-2 border-gray-200 p-4 relative text-xl">
+                <span title='Back' onClick={() => dispatch(setSelectedItem("Messages"))} className='text-[black] cursor-pointer p-2'>
+                    <ArrowBackIcon></ArrowBackIcon>
+                </span>
+                <span>{roomInfo.user1.id === user.user_id ? roomInfo.user2.first_name + " " + roomInfo.user2.last_name : roomInfo.user1.first_name + " " + roomInfo.user1.user_role}</span>
             </div>
-            <div className="messages relative flex flex-col gap-1 h-[68vh] overflow-y-scroll" onScroll={handleScroll}>
+            <div  onClick={() => setShowEmoji(false)} className="messages relative flex flex-col gap-1 p-2 h-[60vh] overflow-y-scroll" onScroll={handleScroll}>
                 {messages.map((message, index) => (
-                    <div key={index} className={`message w-1/2 p-2 rounded-lg ${message.isMine ? 'bg-green-200 ml-auto' : 'bg-gray-200'}`}>
-                        {message.content}
-                        <sub className='text-xs'>{message.created}</sub>
+                    <div key={index} className={`message w-fit p-2 rounded-full rounded-br-md ${message.isMine ? 'bg-green-100 ml-auto' : 'bg-gray-200'}`}>
+                        <span>
+                            {message.content}
+                        </span>
+                        <sub className='text-xs float-right p-2 text-primary'>{message.created ? message.created.split('T')[0] : "now"}</sub>
                     </div>
                 ))}
                 <div ref={messagesEndRef}></div>
             </div>
-            <div className="new-message w-full sticky bottom-0 bg-white px-4 border-t-2 border-gray-200 flex justify-between items-center">
-                <input 
-                    type="text" 
-                    className='w-full border-none outline-none py-3' 
-                    value={newMessage} 
+
+            <div className="new-message w-full gap-2 sticky bottom-0 px-4 border-t-2 border-gray-200 flex justify-between items-center">
+                <div onClick={() => setShowEmoji(true)} className="mt-3 flex justify-center items-center bg-green-100 hover:bg-green-200 cursor-pointer p-4 rounded-full">
+                    <AddReactionIcon
+                        className='cursor-pointer text-green-500 '
+                    />
+                </div>
+
+                <input
+                    type="text"
+                    id="msg"
+                    className='w-full border-none outline-none py-3 rounded-full pl-4 mt-3 bg-gray-200'
+                    value={newMessage}
+                    onClick={() => setShowEmoji(false)}
                     onChange={handleInputChange}
                     onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                     placeholder="Type a message..."
                 />
-                <SendIcon 
-                    className='cursor-pointer text-blue-500' 
-                    onClick={handleSendMessage}
-                />
+                <div className="mt-3 flex justify-center items-center bg-blue-100 hover:bg-blue-200 cursor-pointer p-4 rounded-full">
+                    <SendIcon
+                        className='cursor-pointer text-blue-500 '
+                        onClick={handleSendMessage}
+                    />
+                </div>
+
             </div>
+            {showEmoji &&
+                <div className="absolute">
+                    <Picker data={data}  onEmojiSelect={(emoji)=>addEmoji(emoji)} />
+                </div>
+            }
         </>
     );
 };
