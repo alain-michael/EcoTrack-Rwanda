@@ -166,12 +166,16 @@ def manage_job(request):
         schedule.collector = user
         schedule.status = True
         schedule.save()
+        notification = Notification(user=schedule.user, message=f'{user.first_name} {user.last_name} has accepted your collection request.')
+        notification.save()
         return Response({'message': 'Job accepted successfully'}, status=200)
 
     if request.method == 'PATCH' and not schedule.completed and schedule.collector == request.user: 
         schedule.completed = True
         schedule.save()
         time_to_next = {RepeatScheduleChoices.weekly: timedelta(days=7), RepeatScheduleChoices.two_weeks: timedelta(days=14)}
+        notification = Notification(user=schedule.user, message=f'{user.first_name} {user.last_name} has completed your collection request.')
+        notification.save()
         if schedule.repeat != RepeatScheduleChoices.none:
             new_schedule = ColSchedule(
                 user=schedule.user,
@@ -179,6 +183,7 @@ def manage_job(request):
                 date=schedule.date_time + time_to_next[schedule.repeat],
             )
             new_schedule.save()
+            notification = Notification(user=schedule.user, message=f'New collection has been set to the {datetime.strftime(new_schedule.date_time, "%d-%m-%Y")}.')
             return Response({'message': 'Job marked as completed and new schedule created'}, status=200)
         return Response({'message': 'Job completed'}, status=200)
     else:
@@ -305,7 +310,7 @@ def achievement_data(request):
     response = []
 
     for achievement in achievements:
-        num_of_users = achievement.userachievement_set.count()
+        num_of_users = achievement.userachievement_set.filter(completedDate__isnull=False).count()
         response.append({'id': achievement.id, 'name': achievement.name, 'num_of_users': num_of_users, 'type': achievement.type})
 
     return Response(response, status=200)

@@ -6,6 +6,7 @@ const initialState = {
   selectedItem: "Dashboard",
   defaultUserType: "Household User",
   currentChat: null,
+  notificationOpen: false,
 };
 
 const sharedDataSlice = createSlice({
@@ -46,6 +47,10 @@ const sharedDataSlice = createSlice({
       state.defaultUserType = action.payload;
     },
 
+    setNotificationOpen: (state, action) => {
+      state.notificationOpen = action.payload;
+    },
+
     resetStateToDefault: (state, action) => {
       // Reset state to initial values
       // Object.assign(state, initialState);
@@ -65,6 +70,7 @@ export const {
   updateTable,
   setMyCollectionsData,
   setCurrentChat,
+  setNotificationOpen,
 } = sharedDataSlice.actions;
 
 export default sharedDataSlice.reducer;
