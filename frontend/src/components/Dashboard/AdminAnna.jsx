@@ -3,6 +3,7 @@ import Combining from './charts/BarsChart'
 import PieActiveArc from './charts/PieChart'
 import toast from "react-hot-toast";
 import createAxiosInstance from '../../features/AxiosInstance';
+import { Messages } from './Messages';
 const AdminAnna = () => {
     const instance = createAxiosInstance();
     const [data, setData] = useState([]);
@@ -87,6 +88,10 @@ const AdminAnna = () => {
                     <PieActiveArc data={Newdata} palette={primaryPalette} title={"Today Eco-Track Users Analysis"}></PieActiveArc>
                     <PieActiveArc data={Olddata} palette={secondaryPalette} title={"All Eco-Track Users Analysis"}></PieActiveArc>
                 </div>
+            </div>
+            <h2 className="text-xl text-primary">New chats</h2>
+            <div className="flex gap-2 max-xl:flex-wrap max-xl:text-xs">
+                <Messages/>
             </div>
         </>
     )
