@@ -29,9 +29,6 @@ def send(request):
         room.save()
     message = Message(room=room, sender=sender, receiver=receiver, content=data['content'])
     message.save()
-    notification = Notification(user=receiver, message=message)
-    notification.save()
-    print(room, message, sender.email)
     return Response({'message': 'Message sent successfully'}, status=200)
 
 class MessagePagination(PageNumberPagination):
@@ -130,3 +127,25 @@ def get_messages(request, chatroom_id):
         return Response({'error': 'User not found'}, status=404)
     messages = Message.objects.filter(room__id=chatroom_id).order_by('-created')
     return Response(MessageSerializer(messages, many=True).data)
+
+@api_view(['GET', 'OPTIONS'])
+@permission_classes([IsAuthenticated])
+def get_notifications(request):
+    user = request.user
+    if not user:
+        return Response({'error': 'User not found'}, status=404)
+    if request.GET.get('type') == 'count':
+        return Response({'notifications_count': user.notifications.filter(seen=False).count()}, status=200)
+    notifications = Notification.objects.filter(user=user, seen=False).order_by('-created')
+    data = NotificationSerializer(notifications, many=True).data
+    notifications.update(seen=True)
+    return Response({'notifications': data, 'notifications_count': len(data)}, status=200)
+
+@api_view(['GET', 'OPTIONS'])
+@permission_classes([IsAuthenticated])
+def get_unread_count(request):
+    user = request.user
+    if not user:
+        return Response({'error': 'User not found'}, status=404)
+    unread_count = Message.objects.filter(receiver=user, read=False).count()
+    return Response(unread_count, status=200)

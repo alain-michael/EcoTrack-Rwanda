@@ -113,8 +113,9 @@ class Notification(models.Model):
         message (String): The message of the notification.
         seen (Boolean): The status of the notification (seen or not).
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notification_user')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
     message = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
     seen = models.BooleanField(default=False)
 
 class Address(models.Model):
