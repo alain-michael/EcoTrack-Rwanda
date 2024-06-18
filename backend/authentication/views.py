@@ -225,7 +225,7 @@ def get_job(request, id):
     
     schedule = ColSchedule.objects.filter(id=id)
     if not schedule:
-        return Response({'error': 'Schedule not found'}, status=404)
+        return Response({'error': 'Schedule not found.'}, status=404)
     return Response(ScheduleSerializer(schedule[0]).data, status=200)
 
 
