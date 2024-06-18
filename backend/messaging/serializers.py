@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Message, ChatRoom
+from authentication.models import *
 from authentication.serializers import UserSerializer
 
 
@@ -35,3 +36,9 @@ class ChatRoomSerializer(serializers.ModelSerializer):
     def get_latest_message_read(self, obj):
         if obj.messages.exists():
             return obj.messages.order_by('-created').first().read
+        
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = '__all__'

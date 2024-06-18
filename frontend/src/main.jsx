@@ -10,13 +10,12 @@ const RootComponent = () => {
 
 
   return (
-    <React.StrictMode>
+    // <React.StrictMode>
       <Provider store={store}>
         <PersistGate loading={"loading"} persistor={persistor}>
           <App />
         </PersistGate>
       </Provider>
-    </React.StrictMode>
   );
 };
 

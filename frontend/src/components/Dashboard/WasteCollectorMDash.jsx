@@ -10,10 +10,34 @@ import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import Redeem from "@mui/icons-material/Redeem";
 import QuestionAnswer from "@mui/icons-material/QuestionAnswer";
 import Checklist from "@mui/icons-material/Checklist";
-import { setSelectedItem } from "../../features/SharedDataSlice/SharedData";
+import { setNotificationOpen, setSelectedItem } from "../../features/SharedDataSlice/SharedData";
+import api from "../../features/axios";
 
 const WasteCollectorMDash = () => {
   const dispatch = useDispatch();
+  const [notifications, setNotifications] = useState([]);
+  const [unreadMessages, setUnreadMessages] = useState(0);
+
+  const getNotifications = () => {
+    api().get("/notifications?type=count").then((res) => {
+      console.log(res.data);
+      setNotifications(res.data);
+    })
+  }
+
+  useEffect(() => {
+    getNotifications();
+  }, []);
+
+  const getUnreadMessages = () => {
+    api().get("/messages/unread-count").then((res) => {
+      setUnreadMessages(res.data);
+    })
+  }
+
+  useEffect(() => {
+    getUnreadMessages();
+  }, []);
 
   const changeView = (item) => {
     dispatch(setSelectedItem(item));
@@ -116,19 +140,19 @@ const WasteCollectorMDash = () => {
                 </div>
               </div>
 
-              <div className="p-4 bg-orange-100  cursor-pointer hover:bg-orange-200 bg-opacity-50 rounded-lg flex gap-4 items-center">
+              <div onClick={() => dispatch(setNotificationOpen(true))} className="p-4 bg-orange-100  cursor-pointer hover:bg-orange-200 bg-opacity-50 rounded-lg flex gap-4 items-center">
                 <div>
                   <Checklist style={{ color: "orange", fontSize: "45px" }} />
                 </div>{" "}
                 <div>
                   <h2 className="text-xl font-semibold text-orange-800">
-                    Tasks
+                    {defaultUserType === "Waste Collector" ? "Tasks" : "Notifications"}
                   </h2>
-                  <p className="text-orange-800 text-sm">3 pending tasks</p>
+                  <p className="text-orange-800 text-sm">{notifications.notifications_count} {defaultUserType === "Waste Collector" ? "Pending Tasks" : "Unread Notifications" }</p>
                 </div>
               </div>
 
-              <div className="p-4 bg-blue-100  cursor-pointer hover:bg-blue-200 bg-opacity-50 rounded-lg flex gap-4 items-center">
+              <div onClick={() => changeView("Messages")} className="p-4 bg-blue-100  cursor-pointer hover:bg-blue-200 bg-opacity-50 rounded-lg flex gap-4 items-center">
                 <div>
                   <QuestionAnswer style={{ color: "blue", fontSize: "45px" }} />
                 </div>{" "}
@@ -136,7 +160,7 @@ const WasteCollectorMDash = () => {
                   <h2 className="text-xl font-semibold text-blue-800">
                     Messages
                   </h2>
-                  <p className="text-blue-800 text-sm">3 new messages</p>
+                  <p className="text-blue-800 text-sm">{unreadMessages} new messages</p>
                 </div>
               </div>
             </div>
