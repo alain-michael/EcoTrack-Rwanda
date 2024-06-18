@@ -165,7 +165,7 @@ def manage_job(request):
     schedule_id = request.data['id']
     schedule = ColSchedule.objects.get(id=schedule_id)
     if not schedule:
-        return Response({'error': 'Schedule not found'}, status=404)
+        return Response({'error': 'Schedule not found.'}, status=404)
     
     user = request.user
     if user.user_role != UserRoleChoices.waste_collector:
