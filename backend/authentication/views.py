@@ -35,7 +35,7 @@ def register(request):
         
         user = User.objects.filter(email=user_data['email']).first()
         if user:
-            return Response({'error': 'User already exists'}, status=409)
+            return Response({'error': 'User already exists.'}, status=409)
         
         if not user_data.get('userRole'):
             user_data['userRole'] = UserRoleChoices.house_user
