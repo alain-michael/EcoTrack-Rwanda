@@ -8,6 +8,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+import git
+import os
+
 from achievements.models import Achievement
 from achievements.serializers import AchievementSerializer
 from .models import *
@@ -318,3 +323,15 @@ def achievement_data(request):
         response.append({'id': achievement.id, 'name': achievement.name, 'num_of_users': num_of_users, 'type': achievement.type})
 
     return Response(response, status=200)
+
+@csrf_exempt
+def github_webhook(request):
+    if request.method == 'POST':
+        repo = git.Repo('/home/yourusername/yourprojectdir') 
+        origin = repo.remotes.origin
+        repo.create_head('main', origin.refs.main).set_tracking_branch(origin.refs.main).checkout()
+        origin.pull()
+        os.system('touch /var/www/yourusername_pythonanywhere_com_wsgi.py')
+        return HttpResponse(status=200)
+    else:
+        return HttpResponse(status=400)
