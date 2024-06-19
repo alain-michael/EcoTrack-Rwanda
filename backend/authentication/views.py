@@ -373,25 +373,27 @@ def github_webhook(request):
             return HttpResponse('Error during git operations', status=500)
         
         # Install dependencies
+        repo_path = '/home/ecotrackrw/EcoTrack-Rwanda/backend'
         try:
-            requirements_file = os.path.join(repo_path, 'backend/requirements.txt')
+            requirements_file = os.path.join(repo_path, 'requirements.txt')
             subprocess.check_call(['pip', 'install', '-r', requirements_file])
         except subprocess.CalledProcessError as e:
-            logging.error(f'Error installing dependencies: {e.output.decode()}')
+            logging.error(f'Error installing dependencies: {e}')
             return HttpResponse('Error installing dependencies', status=500)
         
         # Run tests
         try:
-            subprocess.check_call(['python', 'manage.py', 'test'])
+            manage_py = os.path.join(repo_path, 'manage.py')
+            subprocess.check_call(['python', manage_py, 'test'])
         except subprocess.CalledProcessError as e:
-            logging.error(f'Test execution failed: {e.output.decode()}')
+            logging.error(f'Test execution failed: {e}')
             return HttpResponse('Tests failed', status=500)
         
         # Reload the WSGI application
         try:
             os.system('touch /var/www/ecotrackrw_pythonanywhere_com_wsgi.py')
         except OSError as e:
-            logging.error(f'Error reloading WSGI application: {e.output.decode()}')
+            logging.error(f'Error reloading WSGI application: {e}')
             return HttpResponse('Error reloading WSGI application', status=500)
         
         return HttpResponse(status=200)
