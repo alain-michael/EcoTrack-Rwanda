@@ -143,7 +143,7 @@ class RepeatScheduleChoices(models.TextChoices):
     """
     none = "None"
     weekly = "Weekly"
-    two_weeks = "Two weeks"
+    biweekly = "Biweekly"
 
 class ColSchedule(models.Model):
     """
