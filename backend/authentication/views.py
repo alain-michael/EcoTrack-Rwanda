@@ -15,6 +15,7 @@ from ecotrack import settings
 import git
 import os
 import logging
+from threading import Thread
 
 from achievements.models import Achievement
 from achievements.serializers import AchievementSerializer
@@ -358,7 +359,6 @@ def github_webhook(request):
         except git.exc.InvalidGitRepositoryError:
             logging.error(f'Invalid Git repository: {repo_path}')
             return HttpResponse('Invalid Git repository', status=400)
-        
         origin = repo.remotes.origin
         try:
             origin.fetch()
@@ -371,31 +371,30 @@ def github_webhook(request):
         except git.exc.GitCommandError as e:
             logging.error(f'Git command error: {e}')
             return HttpResponse('Error during git operations', status=500)
-        
-        # Install dependencies
-        repo_path = '/home/ecotrackrw/EcoTrack-Rwanda/backend'
-        try:
-            requirements_file = os.path.join(repo_path, 'requirements.txt')
-            subprocess.check_call(['pip', 'install', '-r', requirements_file])
-        except subprocess.CalledProcessError as e:
-            logging.error(f'Error installing dependencies: {e}')
-            return HttpResponse('Error installing dependencies', status=500)
-        
-        # Run tests
-        try:
-            manage_py = os.path.join(repo_path, 'manage.py')
-            subprocess.check_call(['python', manage_py, 'test'])
-        except subprocess.CalledProcessError as e:
-            logging.error(f'Test execution failed: {e}')
-            return HttpResponse('Tests failed', status=500)
-        
-        # Reload the WSGI application
-        try:
-            os.system('touch /var/www/ecotrackrw_pythonanywhere_com_wsgi.py')
-        except OSError as e:
-            logging.error(f'Error reloading WSGI application: {e}')
-            return HttpResponse('Error reloading WSGI application', status=500)
-        
-        return HttpResponse(status=200)
+    
+        Thread(target=background_tasks).start()
+        return HttpResponse('Webhook received', status=200)
     else:
         return HttpResponse(status=400)
+
+def background_tasks():
+    # Install dependencies
+    repo_path = '/home/ecotrackrw/EcoTrack-Rwanda/backend'
+    try:
+        requirements_file = os.path.join(repo_path, 'requirements.txt')
+        subprocess.check_call(['pip', 'install', '-r', requirements_file])
+    except subprocess.CalledProcessError as e:
+        logging.error(f'Error installing dependencies: {e}')
+
+    # Run tests
+    try:
+        manage_py = os.path.join(repo_path, 'manage.py')
+        subprocess.check_call(['python', manage_py, 'test'])
+    except subprocess.CalledProcessError as e:
+        logging.error(f'Test execution failed: {e}')
+
+    # Reload the WSGI application
+    try:
+        os.system('touch /var/www/ecotrackrw_pythonanywhere_com_wsgi.py')
+    except OSError as e:
+        logging.error(f'Error reloading WSGI application: {e}')
