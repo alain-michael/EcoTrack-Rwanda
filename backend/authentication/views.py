@@ -374,7 +374,7 @@ def github_webhook(request):
         
         # Install dependencies
         try:
-            requirements_file = os.path.join(repo_path, 'requirements.txt')
+            requirements_file = os.path.join(repo_path, 'backend/requirements.txt')
             subprocess.check_call(['pip', 'install', '-r', requirements_file])
         except subprocess.CalledProcessError as e:
             logging.error(f'Error installing dependencies: {e.output.decode()}')
