@@ -130,7 +130,7 @@ def schedule(request, schedule_id=None):
         if serializer.is_valid():
             schedule = serializer.save()
             save_achievement(request.user.id, 'SCHEDULE', frequency=1)
-            date = datetime.datetime.strftime(data['date_time'], "%d-%m-%Y")
+            date = datetime.datetime.strftime(serializer.data['date'], "%d-%m-%Y, %H:%M")
             notification = Notification(
                 user=request.user,
                 text=f"{request.user.first_name} {request.user.last_name} has scheduled a {data['repeat']} repeat waste collection to start on {date}."
