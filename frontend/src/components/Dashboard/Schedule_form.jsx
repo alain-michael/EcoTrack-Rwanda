@@ -91,7 +91,7 @@ export const Schedule_form = () => {
       .format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
 
     const values = {
-      date: formattedDateTime, // Ensure this matches the backend expectation
+      date_time: formattedDateTime, // Ensure this matches the backend expectation
       address: { latitude: lat, longitude: lng },
       lat,
       lng,
