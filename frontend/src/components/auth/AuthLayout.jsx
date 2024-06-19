@@ -13,7 +13,7 @@ const AuthLayout = () => {
       <div className="w-full h-[100vh]  hidden lg:flex items-center justify-center px-2">
         <Side hideLink="yes" />
       </div>
-      <div className="w-full flex h-[100vh] max-md:mt-5 bg-green-900">
+      <div className="w-full flex h-[100vh] bg-green-900">
         <div className="m-auto">
           {!viewType && <Login viewType={viewType} setviewType={setviewType} />}
           {viewType && (
