@@ -375,14 +375,14 @@ def github_webhook(request):
         # Install dependencies
         try:
             requirements_file = os.path.join(repo_path, 'requirements.txt')
-            subprocess.check_call([settings.PIP_EXECUTABLE, 'install', '-r', requirements_file])
+            subprocess.check_call(['pip', 'install', '-r', requirements_file])
         except subprocess.CalledProcessError as e:
             logging.error(f'Error installing dependencies: {e}')
             return HttpResponse('Error installing dependencies', status=500)
         
         # Run tests
         try:
-            subprocess.check_call([settings.PYTHON_EXECUTABLE, 'manage.py', 'test'])
+            subprocess.check_call(['python', 'manage.py', 'test'])
         except subprocess.CalledProcessError as e:
             logging.error(f'Test execution failed: {e}')
             return HttpResponse('Tests failed', status=500)
