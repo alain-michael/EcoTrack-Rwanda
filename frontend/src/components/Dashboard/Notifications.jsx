@@ -6,6 +6,7 @@ import { setNotificationOpen } from "../../features/SharedDataSlice/SharedData";
 
 export const Notifications = () => {
     const [notifications, setNotifications] = useState({'notifications':[]});
+    const notificationOpen = useSelector((state) => state.sharedData.notificationOpen);
 
     const dispatch = useDispatch();
 
@@ -18,8 +19,10 @@ export const Notifications = () => {
     };
 
     useEffect(() => {
+      if (notificationOpen){
         getNotifications();
-    }, []);
+      }
+    }, [notificationOpen]);
 
     function formatTimestamp(timestamp) {
         const date = new Date(timestamp);
