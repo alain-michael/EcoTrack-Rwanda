@@ -377,21 +377,21 @@ def github_webhook(request):
             requirements_file = os.path.join(repo_path, 'requirements.txt')
             subprocess.check_call(['pip', 'install', '-r', requirements_file])
         except subprocess.CalledProcessError as e:
-            logging.error(f'Error installing dependencies: {e}')
+            logging.error(f'Error installing dependencies: {e.output.decode()}')
             return HttpResponse('Error installing dependencies', status=500)
         
         # Run tests
         try:
             subprocess.check_call(['python', 'manage.py', 'test'])
         except subprocess.CalledProcessError as e:
-            logging.error(f'Test execution failed: {e}')
+            logging.error(f'Test execution failed: {e.output.decode()}')
             return HttpResponse('Tests failed', status=500)
         
         # Reload the WSGI application
         try:
             os.system('touch /var/www/ecotrackrw_pythonanywhere_com_wsgi.py')
         except OSError as e:
-            logging.error(f'Error reloading WSGI application: {e}')
+            logging.error(f'Error reloading WSGI application: {e.output.decode()}')
             return HttpResponse('Error reloading WSGI application', status=500)
         
         return HttpResponse(status=200)
