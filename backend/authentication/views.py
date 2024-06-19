@@ -1,4 +1,5 @@
 import json
+import subprocess
 from django.shortcuts import render
 from rest_framework import viewsets
 from datetime import datetime, timedelta
@@ -10,8 +11,10 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from ecotrack import settings
 import git
 import os
+import logging
 
 from achievements.models import Achievement
 from achievements.serializers import AchievementSerializer
@@ -341,13 +344,56 @@ def count_stats(request):
     except Exception as e:
         return Response({'error': str(e)}, status=500)
 
+logging.basicConfig(level=logging.DEBUG)
+
 @csrf_exempt
 def github_webhook(request):
     if request.method == 'POST':
-        repo = git.Repo('/home/ecotrackrw/EcoTrack-Rwanda') 
+        repo_path = '/home/ecotrackrw/EcoTrack-Rwanda'
+        try:
+            repo = git.Repo(repo_path)
+        except git.exc.NoSuchPathError:
+            logging.error(f'No such path: {repo_path}')
+            return HttpResponse('Invalid repository path', status=400)
+        except git.exc.InvalidGitRepositoryError:
+            logging.error(f'Invalid Git repository: {repo_path}')
+            return HttpResponse('Invalid Git repository', status=400)
+        
         origin = repo.remotes.origin
-        repo.create_head('main', origin.refs.main).set_tracking_branch(origin.refs.main).checkout()
-        origin.pull()
-        os.system('touch /var/www/ecotrackrw_pythonanywhere_com_wsgi.py')
+        try:
+            origin.fetch()
+            # Checkout the 'main' branch and pull the latest changes
+            if 'main' in repo.heads:
+                repo.heads['main'].checkout()
+            else:
+                repo.create_head('main', origin.refs.main).set_tracking_branch(origin.refs.main).checkout()
+            origin.pull()
+        except git.exc.GitCommandError as e:
+            logging.error(f'Git command error: {e}')
+            return HttpResponse('Error during git operations', status=500)
+        
+        # Install dependencies
+        try:
+            requirements_file = os.path.join(repo_path, 'requirements.txt')
+            subprocess.check_call([settings.PIP_EXECUTABLE, 'install', '-r', requirements_file])
+        except subprocess.CalledProcessError as e:
+            logging.error(f'Error installing dependencies: {e}')
+            return HttpResponse('Error installing dependencies', status=500)
+        
+        # Run tests
+        try:
+            subprocess.check_call([settings.PYTHON_EXECUTABLE, 'manage.py', 'test'])
+        except subprocess.CalledProcessError as e:
+            logging.error(f'Test execution failed: {e}')
+            return HttpResponse('Tests failed', status=500)
+        
+        # Reload the WSGI application
+        try:
+            os.system('touch /var/www/ecotrackrw_pythonanywhere_com_wsgi.py')
+        except OSError as e:
+            logging.error(f'Error reloading WSGI application: {e}')
+            return HttpResponse('Error reloading WSGI application', status=500)
+        
         return HttpResponse(status=200)
     else:
+        return HttpResponse(status=400)
