@@ -132,8 +132,9 @@ def schedule(request, schedule_id=None):
             save_achievement(request.user.id, 'SCHEDULE', frequency=1)
             notification = Notification(
                 user=request.user,
-                text=f"{request.user.first_name} {request.user.last_name} has scheduled a {data['repeat']} repeat waste collection to start on {serializer.data['date']}."
+                text=f"{request.user.first_name} {request.user.last_name} has scheduled a {data['repeat']} repeat waste collection."
             )
+            notification.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
     
