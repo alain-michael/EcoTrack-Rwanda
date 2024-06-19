@@ -209,7 +209,7 @@ def my_jobs(request):
     if user.user_role != UserRoleChoices.waste_collector:
         return Response({'error': 'User is not a waste collector'}, status=403)
     
-    schedules = ColSchedule.objects.filter(collector=user)
+    schedules = ColSchedule.objects.filter(collector=user,completed = False)
     return Response(ScheduleSerializer(schedules, many=True).data, status=200)
 
 @api_view(['GET', 'OPTIONS'])
