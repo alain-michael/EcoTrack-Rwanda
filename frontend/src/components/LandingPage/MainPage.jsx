@@ -43,12 +43,12 @@ const MainPage = () => {
   return (
     <>
       {/* <Navbar isSticky={navBackground} /> */}
-      <div className="landing-page h-full w-full flex justify-center relative   md:px-12 xl:px-0">
+      <div className="landing-page h-full w-full flex justify-center relative  py-12  lg:py-0 md:px-12 xl:px-0">
         {/* Single Slider for hero section */}
         <div className="bg"></div>
-        <div className="flex min-h-full h-full w-full  flex-col justify-between md:flex-row gap-12 lg:gap-24 items-center max-w-[1200px] landing-section">
+        <div className="flex min-h-full h-full w-full  flex-col justify-between lg:flex-row gap-12 lg:gap-24 items-center max-w-[1200px] landing-section">
           <Side />
-          <div className="md:hidden xl:block">
+          <div className="hidden xl:block">
             <Recycling sx={{ fontSize: 60, color: " darkgreen" }} />
           </div>
           <div className="w-full min-w-96 max-w-[450px]">
@@ -67,7 +67,7 @@ const MainPage = () => {
                   />
                 </div>
               </div>
-              <div className="h-full w-full  aspect-rectangle pt-12 relative">
+              <div className="h-full w-full  aspect-rectangle pt-12 mb-12 lg:mb-0 relative">
                 <div className="rotate-90 absolute -top-2 -left-4">
                   <TurnSlightRight sx={{ fontSize: 60, color: " darkgreen" }} />
                 </div>
@@ -77,6 +77,7 @@ const MainPage = () => {
                   alt="Recycle Bin"
                 />
               </div>
+              <div className="mt-12 lg:hidden invisible">hh</div>
             </div>
           </div>
         </div>

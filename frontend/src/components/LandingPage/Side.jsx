@@ -19,9 +19,9 @@ const Side = (props) => {
       <div>
         <div className="flex gap-8">
           <a href="/">
-            <img src="/logo.png" className="w-28 h-auto" />
+            <img src="/logo.png" className="w-28 min-w-18 h-auto" />
           </a>{" "}
-          <div className="font-extrabold text-gray-900 text-3xl">
+          <div className="font-extrabold text-gray-900  text-2xl lg:text-3xl">
             Empowering a{" "}
             <span className="text-green-900 block">Greener Future</span>{" "}
           </div>
@@ -39,34 +39,36 @@ const Side = (props) => {
 
       {!props.hideLink && (
         <>
-          <div className="grid grid-cols-3 gap-6">
-            <div className="shadow-md border border-gray-100 p-8 rounded-xl bg-white">
-              <div className="font-bold text-gray-900 text-3xl">
-                {data?.total_users}+
+          <div className="flex gap-12 flex-col-reverse lg:flex-col">
+            <div className="grid grid-cols-3 gap-6">
+              <div className="shadow-md border border-gray-100 p-8 rounded-xl bg-white">
+                <div className="font-bold text-gray-900 text-3xl">
+                  {data?.total_users}+
+                </div>
+                <div className="text-sm text-w-500">Users</div>
               </div>
-              <div className="text-sm text-w-500">Users</div>
-            </div>
-            <div className="shadow-md border border-gray-100 p-8 rounded-xl bg-white">
-              <div className="font-bold text-gray-900 text-3xl">
-                {data?.total_collectors}+
+              <div className="shadow-md border border-gray-100 p-8 rounded-xl bg-white">
+                <div className="font-bold text-gray-900 text-3xl">
+                  {data?.total_collectors}+
+                </div>
+                <div className="text-sm text-w-500">Collectors</div>
               </div>
-              <div className="text-sm text-w-500">Collectors</div>
-            </div>
-            <div className="shadow-md border border-gray-100 p-8 rounded-xl bg-white">
-              <div className="font-bold text-gray-900 text-3xl">
-                {data?.total_schedules}+
+              <div className="shadow-md border border-gray-100 p-8 rounded-xl bg-white">
+                <div className="font-bold text-gray-900 text-3xl">
+                  {data?.total_schedules}+
+                </div>
+                <div className="text-sm text-w-500">Schedules</div>
               </div>
-              <div className="text-sm text-w-500">Schedules</div>
             </div>
-          </div>
-          <div className="mt-5">
-            <a
-              href="/auth"
-              className="p-3 px-4 rounded-md bg-green-900 text-white shadow-4xl"
-              rel="noopener noreferrer"
-            >
-              Get Started
-            </a>
+            <div className="mt-5 text-center lg:text-left">
+              <a
+                href="/auth"
+                className="p-3 px-4 rounded-md bg-green-900 text-white shadow-4xl"
+                rel="noopener noreferrer"
+              >
+                Get Started
+              </a>
+            </div>
           </div>
         </>
       )}

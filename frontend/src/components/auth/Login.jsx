@@ -63,13 +63,13 @@ function Login({ viewType, setviewType }) {
     "flex w-full rounded-md outline-none p-4 text-white px-5 bg-gray-50 bg-opacity-10 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent ";
   return (
     <div className="w-full">
-      <div className="grid gap-6 w-[400px] w-full ">
+      <div className="grid gap-6 max-w-full">
         <h2 className="text-2xl font-bold text-center text-white">Sign In</h2>
         <p className="mb-12 text-gray-200 text-center"></p>
 
-        <form className="w-full" onSubmit={formik.handleSubmit}>
+        <form className="max-w-full" onSubmit={formik.handleSubmit}>
           <div className="grid gap-2 w-full">
-            <div className="flex flex-col max-w-[400px] w-full">
+            <div className="flex flex-col md:max-w-[400px] w-full ">
               <input
                 className={inputStyle}
                 placeholder="Email Address"
@@ -78,7 +78,7 @@ function Login({ viewType, setviewType }) {
                 onChange={formik.handleChange}
               />
               {formik.errors.email && formik.touched.email ? (
-                <div className="text-red-500">{formik.errors.email}</div>
+                <div className="text-orange-500">{formik.errors.email}</div>
               ) : null}
               <div className="mt-5"></div>
               <input
@@ -94,7 +94,7 @@ function Login({ viewType, setviewType }) {
               {!load && (
                 <button
                   type="submit"
-                  className="w-full  bg-green-200 text-green-900 font-bold  flex justify-center items-center p-4 px-5 rounded-md mt-4 outline-none"
+                  className="w-full  max-w-full sm:w-[400px]  bg-green-200 text-green-900 font-bold  flex justify-center items-center p-4 px-5 rounded-md mt-4 outline-none"
                 >
                   Sign In
                 </button>
@@ -117,6 +117,11 @@ function Login({ viewType, setviewType }) {
             <span>Don't have an account?&nbsp;</span>
             <a onClick={() => setviewType(!viewType)} className="text-white">
               Sign Up
+            </a>
+          </p>
+          <p className="text-center cursor-pointer pt-2">
+            <a href="/" className="text-gray-300">
+              Homepage
             </a>
           </p>
         </div>

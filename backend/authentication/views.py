@@ -351,3 +351,4 @@ def github_webhook(request):
         os.system('touch /var/www/ecotrackrw_pythonanywhere_com_wsgi.py')
         return HttpResponse(status=200)
     else:
+        return HttpResponse(status=400)

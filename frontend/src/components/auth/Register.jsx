@@ -89,7 +89,7 @@ function Register({ viewType, setviewType }) {
                 <div className="text-orange-500">{formik.errors.email}</div>
               ) : null}
               <div className="mt-5"></div>
-              <div className="grid grid-cols-2 gap-3 w-full ">
+              <div className="grid sm:grid-cols-2 gap-3 w-full ">
                 <div>
                   <input
                     className={inputStyle}
@@ -153,6 +153,11 @@ function Register({ viewType, setviewType }) {
             <span>Already have an account? </span>
             <a onClick={() => setviewType(!viewType)} className="text-white">
               Log in
+            </a>
+          </p>
+          <p className="text-center cursor-pointer pt-2">
+            <a href="/" className="text-gray-300">
+              Homepage
             </a>
           </p>
         </div>
