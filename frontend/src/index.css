@@ -165,6 +165,7 @@ html,
   opacity: 0.05;
   max-width: 1000px;
   max-height: 700px;
+  z-index: -1;
 }
 
 .splide__arrows {
