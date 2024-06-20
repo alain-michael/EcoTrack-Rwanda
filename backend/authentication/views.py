@@ -464,9 +464,10 @@ def completed_jobs(request):
     Returns a list of completed job schedules serialized as JSON.
     """
     user = request.user
-    schedules = ColSchedule.objects.filter(collector=user, completed=True)
+    taken = ColSchedule.objects.filter(collector=user, completed=False)
+    completed = ColSchedule.objects.filter(collector=user, completed=True)
 
-    return Response(ScheduleSerializer(schedules, many=True).data, status=200)
+    return Response({'taken': ScheduleSerializer(taken, many=True).data, 'completed': ScheduleSerializer(completed, many=True).data}, status=200)
 
 @api_view(['GET'])
 @authentication_classes([])
