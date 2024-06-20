@@ -5,7 +5,7 @@
 This project is the final assignment for the Enterprise Web Development course, aimed at developing an innovative web application to solve real-world problems. Our project is a Smart Waste Management System designed to enhance waste collection, recycling, and resource management through intelligent technologies. The system supports three primary user roles: Household Users, Waste Collection Services, and Administrators.
 
 ## Technologies Used
-- **Frontend**: React, HTML, CSS, JavaScript, Bootstrap
+- **Frontend**: React vite, HTML, CSS, JavaScript
 - **Backend**: Django
 - **Database**: SQLite
 - **Deployment**: Netlify/Pythonanywhere
@@ -33,7 +33,7 @@ This project is the final assignment for the Enterprise Web Development course, 
 
 ### Prerequisites
 - Python 3.x
-- React
+- React vite
 - SQLite
 - Git
 - Pythonanywhere
@@ -74,11 +74,11 @@ This project is the final assignment for the Enterprise Web Development course, 
      ```
    - Install React.js packages:
      ```bash
-     npm install
+     pnpm install
      ```
    - Start the React development server:
      ```bash
-     npm start
+     pnpm run dev
      ```
 
 ### Database
@@ -91,10 +91,6 @@ This project is the final assignment for the Enterprise Web Development course, 
 
 ### CI/CD Pipeline
 - Configure GitHub Actions to run tests and deploy the application automatically.
-
-## Data Structures and Algorithms
-- Use appropriate data structures such as arrays, linked lists, trees, and graphs.
-- Implement algorithms for scheduling, route optimization, and data analytics.
 
 ## Testing
 - Write unit tests using the Unittest module.
@@ -126,9 +122,9 @@ This project is the final assignment for the Enterprise Web Development course, 
 
 ## Team Members
 - Alain Muhirwa Micheal
-- Loue christian souver
+- Loue christian sauveur 
 - Dean Daryl Murenzi
-- Reponse Ashima
+- Reponse Ashimwe
 - Patrick Nayituriki 
 
 ## License
