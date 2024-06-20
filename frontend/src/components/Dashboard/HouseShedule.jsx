@@ -27,7 +27,7 @@ export const HouseShedule = () => {
     return (
         <>
             <div className="min-h-screen p-4 ">
-                <h1 className="text-2xl font-bold mb-4">User {userInfo.full_name} Info and Summary</h1>
+                <h1 className="text-2xl font-bold mb-4">Viewing Your Schedule Summary</h1>
                 <DataTable data={data} />
                 <SummaryGrid data={data} />
             </div>
