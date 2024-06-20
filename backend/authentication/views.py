@@ -257,7 +257,7 @@ def manage_job(request):
             new_schedule = ColSchedule(
                 user=schedule.user,
                 repeat=schedule.repeat,
-                date=schedule.date_time + time_to_next[schedule.repeat],
+                date_time=schedule.date_time + time_to_next[schedule.repeat],
             )
             new_schedule.save()
             notification = Notification(user=schedule.user, message=f'New collection has been set to the {datetime.strftime(new_schedule.date_time, "%d-%m-%Y")}.')
