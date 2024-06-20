@@ -58,6 +58,30 @@ export const ChatRoom = () => {
         }
     };
 
+    function formatTimestamp(timestamp) {
+        const date = new Date(timestamp);
+        const now = new Date();
+        if (timestamp == null) {
+          return "--:--";
+        }
+    
+        const isToday = date.toDateString() === now.toDateString();
+    
+        if (isToday) {
+          return date.toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          });
+        } else {
+          return date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+        }
+      }
+
 
     useEffect(() => {
         scrollToBottom();
@@ -109,7 +133,7 @@ export const ChatRoom = () => {
                         <span>
                             {message.content}
                         </span>
-                        <sub className='text-xs float-right p-2 text-primary'>{message.created ? message.created.split('T')[0] : "now"}</sub>
+                        <sub className='text-xs float-right p-2 text-primary'>{message.created ? formatTimestamp(message.created) : "now"}</sub>
                     </div>
                 ))}
                 <div ref={messagesEndRef}></div>
