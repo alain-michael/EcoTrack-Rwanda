@@ -4,10 +4,12 @@ import axios from "axios";
 import * as Yup from "yup";
 import createAxiosInstance from "../../features/AxiosInstance";
 import toast from "react-hot-toast";
+import DataProgressLoad from "../Loads/DataProgressLoad";
 
 function Register({ viewType, setviewType }) {
   const instance = createAxiosInstance();
   const [ServerError, SetServerError] = useState(null);
+  const [load, setLoad] = useState(false);
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -30,6 +32,7 @@ function Register({ viewType, setviewType }) {
         .required("Required"),
     }),
     onSubmit: (values) => {
+      setLoad(true)
       instance
         .post(`/register`, values)
         .then((res) => {
@@ -40,6 +43,7 @@ function Register({ viewType, setviewType }) {
 
             SetServerError("Error While Registerating please again");
           }
+          setLoad(false)
         })
         .catch((error) => {
           if (error.response) {
@@ -49,6 +53,7 @@ function Register({ viewType, setviewType }) {
           } else {
             SetServerError("Unexpected error occured. Try Again Later");
           }
+          setLoad(false)
         });
     },
   });
@@ -115,7 +120,7 @@ function Register({ viewType, setviewType }) {
                     onChange={formik.handleChange}
                   />
                   {formik.errors.confirmPassword &&
-                  formik.touched.confirmPassword ? (
+                    formik.touched.confirmPassword ? (
                     <div className="text-orange-500">
                       {formik.errors.confirmPassword}
                     </div>
@@ -136,12 +141,23 @@ function Register({ viewType, setviewType }) {
               />
 
               <div className="w-full mt-4">
-                <button
-                  type="submit"
-                  className="w-full  bg-green-200 text-green-900 font-bold  flex justify-center items-center p-4 px-5 rounded-md mt-4 outline-none"
-                >
-                  Get started
-                </button>
+                {!load && (
+                  <button
+                    type="submit"
+                    className="w-full  bg-green-200 text-green-900 font-bold  flex justify-center items-center p-4 px-5 rounded-md mt-4 outline-none"
+                  >
+                    Get started
+                  </button>
+                )}
+                {load && (
+                  <button
+                    type="button"
+                    className="w-full  bg-white text-green-900 font-bold  flex justify-center items-center p-4 px-5 rounded-md mt-4 outline-none"
+                  >
+                    <DataProgressLoad />
+                    Creating Account....
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -155,8 +171,10 @@ function Register({ viewType, setviewType }) {
               Log in
             </a>
           </p>
-          <p className="text-center cursor-pointer pt-2">
+
+          <p className="text-center md:text-left  cursor-pointer pt-2">
             <a href="/" className="text-gray-300">
+
               Homepage
             </a>
           </p>

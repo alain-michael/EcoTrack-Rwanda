@@ -6,7 +6,7 @@ const initialState = {
   selectedItem: "Dashboard",
   defaultUserType: "Household User",
   currentChat: null,
-  notificationOpen: false,
+  notificationOpen: true,
 };
 
 const sharedDataSlice = createSlice({

@@ -108,7 +108,7 @@ export const Messages = () => {
     },
     onSubmit: (values) => {
       instance
-        .post("http://localhost:8000/api/rooms/create", values)
+        .post("/rooms/create", values)
         .then((res) => {
           dispatch(setSelectedItem("Chatroom")),
           dispatch(setCurrentChat(res.data.chatroom_id));

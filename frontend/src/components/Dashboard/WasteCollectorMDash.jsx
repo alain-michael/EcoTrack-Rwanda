@@ -49,6 +49,7 @@ const WasteCollectorMDash = () => {
   const userInfo = useSelector((state) => state.sharedData.usersLogin);
 
   const [data, setData] = useState();
+  const notificationOpen = useSelector((state) => state.sharedData.notificationOpen);
   const [loading, setLoading] = useState(true);
 
   const getDetails = async () => {
@@ -92,9 +93,9 @@ const WasteCollectorMDash = () => {
         {loading && <DataProgressLoad />}
         {data && (
           <>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className={`${!notificationOpen? 'lg:grid-cols-3 xl:grid-cols-4':''} grid sm:grid-cols-2  gap-6`}>
               <div className="bg-gray-100 hover:bg-gray-200 flex justify-between h-24 rounded-lg items-center">
-                <div className=" pl-4 ">
+                <div className=" p-4 ">
                   <div
                     className="text-leftfont-medium text-sm text-gray-500 uppercase"
                     onClick={() => handleCopy(data.sharecode)}
@@ -109,7 +110,7 @@ const WasteCollectorMDash = () => {
                   </div>
                 </div>
 
-                <div className=" pr-4">
+                <div className=" p-4">
                   <div className="text-right font-medium text-sm text-gray-500 uppercase">
                     Points
                   </div>

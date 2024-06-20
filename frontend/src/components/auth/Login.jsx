@@ -119,7 +119,7 @@ function Login({ viewType, setviewType }) {
               Sign Up
             </a>
           </p>
-          <p className="text-center cursor-pointer pt-2">
+          <p className="text-center md:text-left  cursor-pointer pt-2">
             <a href="/" className="text-gray-300">
               Homepage
             </a>

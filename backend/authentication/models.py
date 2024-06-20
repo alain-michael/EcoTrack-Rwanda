@@ -51,7 +51,8 @@ class UserRoleChoices(models.TextChoices):
 
     Choices:
         waste_collector (String): The name of the Waste Collector role.
-        user (String): The name of the user role.
+        house_user (String): The name of the Household User role.
+        admin_user (String): The name of the Admin User role.
     """
     waste_collector = "Waste Collector"
     house_user = "Household User"
@@ -66,9 +67,14 @@ class User(AbstractUser):
         id (Integer): The primary key and unique identifier of the user.
         email (String): The email of the user.
         phone_number (String): The phone number of the user.
-        name (String): The name of the user.
+        first_name (String): The first name of the user.
+        last_name (String): The last name of the user.
         password (String): The password of the user.
         user_role (String): The role of the user.
+        sharecode (String): A code the user can share with others to get rewards.
+        totalPoints (Integer): The total achievement points of the user.
+        canShare (Boolean): Whether the user can share his sharecode or not.
+        created_at (DateTime): The date and time when the user was created.
     """
     username = None
     USERNAME_FIELD = 'email'
@@ -112,6 +118,7 @@ class Notification(models.Model):
         user (Relationship): Foreign key referencing the User.
         message (String): The message of the notification.
         seen (Boolean): The status of the notification (seen or not).
+        created (DateTime): When the notification was created.
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
     message = models.TextField()
@@ -125,7 +132,8 @@ class Address(models.Model):
     Attributes:
         id (Integer): The primary key and unique identifier of the address.
         household_user (Integer): Foreign key referencing the HouseholdUser.
-        address (String): The actual address.
+        latitude (Decimal): The latitude of the address.
+        longitude (Decimal): The longitude of the address.
     """
     household_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='addresses', default=None, null=True, blank=True)
     latitude = models.DecimalField(max_digits=10, decimal_places=6)
@@ -139,11 +147,11 @@ class RepeatScheduleChoices(models.TextChoices):
         none (String): The name of the none repeat schedule.
         twice (String): The name of the twice repeat schedule.
         weekly (String): The name of the weekly repeat schedule.
-        two_weeks (String): The name of the two_weeks repeat schedule.
+        biweekly (String): The name of the biweekly repeat schedule.
     """
     none = "None"
     weekly = "Weekly"
-    two_weeks = "Two weeks"
+    biweekly = "Biweekly"
 
 class ColSchedule(models.Model):
     """
@@ -153,10 +161,11 @@ class ColSchedule(models.Model):
         id (Integer): The primary key and unique identifier of the collection schedule.
         user (Relationship): Foreign key referencing the User.
         collector (Relationship): Foreign key referencing the WasteCollector.
-        date (DateTime): The date of the collection.
+        date_time (DateTime): The date and time of the collection.
         address (String): The address for the collection.
-        status (Boolean): The status of the collection (completed or not).
+        status (Boolean): The status of the collection (if it has been accepted or not).
         repeat (String): The repeat schedule of the collection.
+        completed (Boolean): The status of the collection (completed or not).
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='schedule_user')
     collector = models.ForeignKey(User, on_delete=models.CASCADE, related_name='schedule_collector', default=None, null=True, blank=True)

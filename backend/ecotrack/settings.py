@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from datetime import timedelta
+import logging.config
+import os
 from pathlib import Path
 import cloudinary
 import cloudinary.uploader
@@ -180,4 +182,3 @@ LOGGING = {
         },
     },
 }
-
