@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from datetime import timedelta
+import logging.config
+import os
 from pathlib import Path
 import cloudinary
 import cloudinary.uploader
@@ -163,6 +165,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'authentication.User'
 
+LOG_FILE_PATH = '/home/ecotrackrw/EcoTrack-Rwanda/backend/logs/debug.log'
+LOG_DIR = os.path.dirname(LOG_FILE_PATH)
+
+# Create the directory if it does not exist
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
+
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -186,3 +196,4 @@ LOGGING = {
     },
 }
 
+logging.config.dictConfig(LOGGING)

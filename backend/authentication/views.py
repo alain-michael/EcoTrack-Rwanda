@@ -409,6 +409,13 @@ def background_tasks():
     except subprocess.CalledProcessError as e:
         logging.error(f'Test execution failed: {e}')
 
+    try:
+        manage_py = os.path.join(repo_path, 'manage.py')
+        subprocess.check_call(['python', manage_py, 'makemigrations'])
+        subprocess.check_call(['python', manage_py, 'migrate'])
+    except subprocess.CalledProcessError as e:
+        logging.error(f'Migration execution failed: {e}')
+
     # Reload the WSGI application
     try:
         os.system('touch /var/www/ecotrackrw_pythonanywhere_com_wsgi.py')
