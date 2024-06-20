@@ -158,7 +158,7 @@ export const Schedule_form = () => {
         <hr />
         <label className="">
           Address :
-          <Combobox onSelect={()=>handleSelect()}>
+          <Combobox onSelect={handleSelect}>
             <ComboboxInput
               value={value}
               onChange={(e) => setValue(e.target.value)}
