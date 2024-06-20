@@ -257,6 +257,7 @@ def manage_job(request):
             new_schedule = ColSchedule(
                 user=schedule.user,
                 repeat=schedule.repeat,
+                address=schedule.address,
                 date_time=schedule.date_time + time_to_next[schedule.repeat],
             )
             new_schedule.save()
