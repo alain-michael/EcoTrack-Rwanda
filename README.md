@@ -7,8 +7,8 @@ This project is the final assignment for the Enterprise Web Development course, 
 ## Technologies Used
 - **Frontend**: React, HTML, CSS, JavaScript, Bootstrap
 - **Backend**: Django
-- **Database**: PostgreSQL
-- **Deployment**: Heroku/AWS
+- **Database**: SQLite
+- **Deployment**: Netlify/Pythonanywhere
 - **CI/CD**: GitHub Actions
 - **Authentication**: Django-Auth
 
