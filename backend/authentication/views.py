@@ -250,7 +250,7 @@ def manage_job(request):
     if request.method == 'PATCH' and not schedule.completed and schedule.collector == request.user: 
         schedule.completed = True
         schedule.save()
-        time_to_next = {RepeatScheduleChoices.weekly: timedelta(days=7), RepeatScheduleChoices.two_weeks: timedelta(days=14)}
+        time_to_next = {RepeatScheduleChoices.weekly: timedelta(days=7), RepeatScheduleChoices.biweekly: timedelta(days=14)}
         notification = Notification(user=schedule.user, message=f'{user.first_name} {user.last_name} has completed your collection request.')
         notification.save()
         if schedule.repeat != RepeatScheduleChoices.none:
@@ -464,9 +464,10 @@ def completed_jobs(request):
     Returns a list of completed job schedules serialized as JSON.
     """
     user = request.user
-    schedules = ColSchedule.objects.filter(collector=user, completed=True)
+    taken = ColSchedule.objects.filter(collector=user, completed=False)
+    completed = ColSchedule.objects.filter(collector=user, completed=True)
 
-    return Response(ScheduleSerializer(schedules, many=True).data, status=200)
+    return Response({'taken': ScheduleSerializer(taken, many=True).data, 'completed': ScheduleSerializer(completed, many=True).data}, status=200)
 
 @api_view(['GET'])
 @authentication_classes([])
