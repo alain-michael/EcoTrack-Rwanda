@@ -4,12 +4,12 @@ import PieActiveArc from './charts/PieChart';
 function SummaryGrid({ data }) {
     const totalItems = data.length;
     const completedItems = data.filter(item => item.completed).length;
-    const activeItems = data.filter(item => item.status).length;
+    const activeItems = data.filter(item => !item.completed).length;
 
     const pieData = [
         { id: 0, value: totalItems, label: 'Total Schedules' },
         { id: 1, value: completedItems, label: 'Completed Schedules' },
-        { id: 2, value: activeItems, label: 'Active Schedules' }
+        { id: 2, value: activeItems, label: 'Not Done Schedules' }
     ];
 
     const palette = ['#FF6384', '#36A2EB', '#FFCE56']; // Example colors
@@ -26,7 +26,7 @@ function SummaryGrid({ data }) {
                     <p className="text-3xl">{completedItems}</p>
                 </div>
                 <div className="p-4 bg-white border border-gray-100 rounded-lg">
-                    <h2 className="font-bold text-sm">Active Schedules</h2>
+                    <h2 className="font-bold text-sm">Not Done Schedules</h2>
                     <p className="text-3xl">{activeItems}</p>
                 </div>
             </div>
