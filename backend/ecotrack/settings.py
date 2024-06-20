@@ -173,11 +173,6 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',  # Output to console
         },
-        # 'file': {
-        #     'level': 'DEBUG',
-        #     'class': 'logging.FileHandler',
-        #     'filename': '/home/ecotrackrw/EcoTrack-Rwanda/backend/logs/debug.log',
-        # },
     },
     'loggers': {
         '': {  # Root logger configuration
