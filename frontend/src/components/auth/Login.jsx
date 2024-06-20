@@ -49,11 +49,7 @@ function Login({ viewType, setviewType }) {
         .catch((error) => {
           setLoad(false);
           if (error.response) {
-            toast.error(`Error: ${error.response.data.error}`);
-            SetServerError(`Error: ${error.response.data.error}`);
-          } else {
-            console.log(error);
-            SetServerError("Unexpected error occured. Try Again Later");
+            toast.error("Incorrect credentials");
           }
         });
     },

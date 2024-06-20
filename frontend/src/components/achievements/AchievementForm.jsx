@@ -47,19 +47,21 @@ const AchievementForm = (props) => {
       console.log(formData.get("image"));
 
       setLoading(true);
-      if (achievement) {
-        await updateAchievement(achievement.id, formData).then((res) => {
-          toast.success("Updated");
-          onSuccess();
-          close();
-        });
-      } else {
-        await createAchievement(formData).then((res) => {
-          toast.success("Created");
-          onSuccess();
-          close();
-        });
-      }
+      try {
+        if (achievement) {
+          await updateAchievement(achievement.id, formData).then((res) => {
+            toast.success("Updated");
+            onSuccess();
+            close();
+          });
+        } else {
+          await createAchievement(formData).then((res) => {
+            toast.success("Created");
+            onSuccess();
+            close();
+          });
+        }
+      } catch (error) {}
       setLoading(false);
     },
   });

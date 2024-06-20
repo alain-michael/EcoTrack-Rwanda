@@ -5,10 +5,10 @@
 This project is the final assignment for the Enterprise Web Development course, aimed at developing an innovative web application to solve real-world problems. Our project is a Smart Waste Management System designed to enhance waste collection, recycling, and resource management through intelligent technologies. The system supports three primary user roles: Household Users, Waste Collection Services, and Administrators.
 
 ## Technologies Used
-- **Frontend**: React, HTML, CSS, JavaScript, Bootstrap
+- **Frontend**: React vite, HTML, CSS, JavaScript
 - **Backend**: Django
-- **Database**: PostgreSQL
-- **Deployment**: Heroku/AWS
+- **Database**: SQLite
+- **Deployment**: Netlify/Pythonanywhere
 - **CI/CD**: GitHub Actions
 - **Authentication**: Django-Auth
 
@@ -33,9 +33,11 @@ This project is the final assignment for the Enterprise Web Development course, 
 
 ### Prerequisites
 - Python 3.x
-- Node.js
-- PostgreSQL
+- React vite
+- SQLite
 - Git
+- Pythonanywhere
+- Netlify
 
 ### Installation
 
@@ -55,7 +57,7 @@ This project is the final assignment for the Enterprise Web Development course, 
      ```bash
      pip install -r requirements.txt
      ```
-   - Configure PostgreSQL database settings in `settings.py`.
+   - Configure SQLite database settings in `settings.py`.
    - Run migrations:
      ```bash
      python manage.py migrate
@@ -70,28 +72,25 @@ This project is the final assignment for the Enterprise Web Development course, 
      ```bash
      cd frontend
      ```
-   - Install Node.js packages:
+   - Install React.js packages:
      ```bash
-     npm install
+     pnpm install
      ```
    - Start the React development server:
      ```bash
-     npm start
+     pnpm run dev
      ```
 
 ### Database
-- Configure PostgreSQL database settings in the `settings.py` file.
+- Configure SQLite database settings in the `settings.py` file.
 
 ### Deployment
-- Use Heroku or AWS for deployment.
+- Deployed the frontend to netlify.
+- Deployed the backend to pythonanywhere. Webhook triggers deployment script which pulls latest code, applied migrations, amd restarts server.
 - Set up CI/CD pipeline with GitHub Actions to automatically run tests and deploy the application.
 
 ### CI/CD Pipeline
 - Configure GitHub Actions to run tests and deploy the application automatically.
-
-## Data Structures and Algorithms
-- Use appropriate data structures such as arrays, linked lists, trees, and graphs.
-- Implement algorithms for scheduling, route optimization, and data analytics.
 
 ## Testing
 - Write unit tests using the Unittest module.
@@ -119,22 +118,19 @@ This project is the final assignment for the Enterprise Web Development course, 
    ```
 
 5. **Create a Pull Request:**
-   - Go to the repository on GitHub and click on "New Pull Request".
+   - Go to the GitHub repository and click "New Pull Request."
 
 ## Team Members
-- Alain muhirwa micheal
-- Loue christian souver
-- Dean daryl murenzi
-- Reponse ashimwe
-- Patrick nayituriki 
+- Alain Muhirwa Micheal
+- Loue christian sauveur 
+- Dean Daryl Murenzi
+- Reponse Ashimwe
+- Patrick Nayituriki 
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgements
-- Instructor: [Deji]
+- Instructor: [Deji adebayo]
 - Course: Enterprise Web Development
-- University: [African leadership university]
-
-## Contact
-For any inquiries, please contact us at [your-email@example.com].
+- University: African Leadership University

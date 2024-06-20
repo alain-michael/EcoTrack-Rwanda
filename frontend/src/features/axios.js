@@ -24,17 +24,25 @@ function createAxiosInstance() {
     (response) => response,
     (error) => {
       const errorObj = error;
-      if (errorObj.response?.status == 401 && store.getState().sharedData.usersLogin != []) {
+      if (
+        errorObj.response?.status == 401 &&
+        store.getState().sharedData.usersLogin != []
+      ) {
         // store.dispatch(resetStateToDefault());
         window.location.href = "/auth";
-       /*  store.dispatch(resetStateToDefault());
+        /*  store.dispatch(resetStateToDefault());
         window.location.href = "/auth"; */
       } else {
         const errorData = errorObj.response?.data;
-        const errorMessage = errorData
-          ? errorData.message || errorData.error || errorObj.message
+        let errorMessage = errorData
+          ? errorData.error || errorObj.message
           : "Failed";
-        toast.error(errorMessage);
+        if (
+          errorMessage !== undefined &&
+          errorMessage.indexOf("Request failed with status code") < 0
+        ) {
+          toast.error(errorMessage);
+        }
       }
       return Promise.reject(error);
     }
