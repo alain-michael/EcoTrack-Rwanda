@@ -27,7 +27,8 @@ function createAxiosInstance() {
     (error) => {
       const errorObj = error;
       if (errorObj.response?.status == 401) {
-        window.location.href = '/auth';
+       /*  store.dispatch(resetStateToDefault());
+        window.location.href = '/auth'; */
       } else {
         const errorData = errorObj.response?.data;
         const errorMessage = errorData

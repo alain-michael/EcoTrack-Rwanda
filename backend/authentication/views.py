@@ -250,7 +250,7 @@ def manage_job(request):
     if request.method == 'PATCH' and not schedule.completed and schedule.collector == request.user: 
         schedule.completed = True
         schedule.save()
-        time_to_next = {RepeatScheduleChoices.weekly: timedelta(days=7), RepeatScheduleChoices.two_weeks: timedelta(days=14)}
+        time_to_next = {RepeatScheduleChoices.weekly: timedelta(days=7), RepeatScheduleChoices.biweekly: timedelta(days=14)}
         notification = Notification(user=schedule.user, message=f'{user.first_name} {user.last_name} has completed your collection request.')
         notification.save()
         if schedule.repeat != RepeatScheduleChoices.none:

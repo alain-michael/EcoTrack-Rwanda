@@ -9,6 +9,7 @@ import Job from "../waste-collection/Job";
 import WasteCollectorMDash from "./WasteCollectorMDash";
 import { Messages } from "./Messages";
 import { ChatRoom } from "./ChatRoom";
+import { HouseShedule } from "./HouseShedule";
 
 export const DashItems = () => {
   const [serverError, setServerError] = useState("");
@@ -22,6 +23,7 @@ export const DashItems = () => {
       </div> */}
       {selectedItem == "Dashboard" && <WasteCollectorMDash />}
       {selectedItem == "Schedule" && <Schedule_form />}
+      {selectedItem == "All Schedule" && <HouseShedule />}
       {selectedItem == "Achievements" && <Achievements />}
       {selectedItem == "Messages" && <Messages />}
       {selectedItem == "Chatroom" && <ChatRoom />}
