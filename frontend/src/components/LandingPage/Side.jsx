@@ -30,7 +30,7 @@ const Side = (props) => {
       {/* <div className="uppercase text-gray-500 font-medium">
               Welcome to EcoTrack Rwanda!
             </div> */}
-      <div className="text-sm text-gray-700">
+      <div className=" text-gray-700">
         At EcoTrack, we are dedicated to fostering sustainable practices and
         empowering communities to make environmentally conscious decisions. Our
         platform connects households and waste collectors, enabling efficient
