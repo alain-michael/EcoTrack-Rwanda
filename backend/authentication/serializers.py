@@ -7,10 +7,25 @@ from .models import *
 from achievements.models import UserAchievement, Logging
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    """
+    Custom serializer for obtaining JWT tokens.
+
+    Attributes:
+        username_field (str): The field used for authentication (email).
+    """
     username_field = 'email'
 
     @classmethod
     def get_token(cls, user):
+        """
+        Customize the token to include additional user information.
+
+        Args:
+            user (User): The user for whom the token is generated.
+
+        Returns:
+            token (Token): The customized JWT token.
+        """
         token = super().get_token(user)
 
         token['email'] = user.email
@@ -28,6 +43,15 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
     def validate(self, attrs):
+        """
+        Validate user credentials and authenticate the user.
+
+        Args:
+            attrs (dict): The attributes containing the email and password.
+
+        Returns:
+            attrs (dict): The validated attributes.
+        """
         # Take email from the input data
         email = attrs.get('email')
         password = attrs.get('password')
@@ -48,16 +72,47 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         return super().validate(attrs)
     
 class AddressSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Address model.
+
+    Meta:
+        model (Address): The Address model.
+        fields (list): The fields to include in the serialized data.
+    """
     class Meta:
         model = Address
         fields = ['longitude', 'latitude']
 
 class UserSerializer(serializers.ModelSerializer):
+    """
+    Serializer for User model.
+
+    Meta:
+        model (User): The User model.
+        fields (list): The fields to include in the serialized data.
+    """
     class Meta:
         model = User
         fields = ['id', 'first_name', 'last_name', 'phone_number', 'email', 'user_role', 'created_at']
 
 class ScheduleSerializer(serializers.ModelSerializer):
+    """
+    Serializer for ColSchedule model.
+
+    Attributes:
+        date (DateTimeField): The formatted date field.
+        address (AddressSerializer): The nested address serializer.
+        longitude (SerializerMethodField): The longitude field derived from address.
+        latitude (SerializerMethodField): The latitude field derived from address.
+        user (UserSerializer): The nested user serializer.
+        collector (UserSerializer): The nested collector serializer.
+        collector_name (SerializerMethodField): The collector name derived from collector.
+    
+    Meta:
+        model (ColSchedule): The ColSchedule model.
+        fields (list): The fields to include in the serialized data.
+        read_only_fields (list): The fields that are read-only.
+    """
     date = serializers.DateTimeField(source='date_time', format='%Y-%m-%dT%H:%M:%S.%fZ')
     address = AddressSerializer(write_only=True)
     longitude = serializers.SerializerMethodField()
@@ -121,6 +176,19 @@ class ScheduleSerializer(serializers.ModelSerializer):
         return schedule
 
 class UserAchievementSerializer(serializers.ModelSerializer):
+    """
+    Serializer for UserAchievement model.
+
+    Attributes:
+        achievement_name (CharField): The name of the achievement.
+        achievement_img (CharField): The image URL of the achievement.
+        achievement_frequency (CharField): The frequency required for the achievement.
+    
+    Meta:
+        model (UserAchievement): The UserAchievement model.
+        fields (list): The fields to include in the serialized data.
+    """
+
     achievement_name = serializers.CharField(source='achievement.name')
     achievement_img = serializers.CharField(source='achievement.image')
     achievement_frequency = serializers.CharField(source='achievement.frequency')
@@ -130,11 +198,29 @@ class UserAchievementSerializer(serializers.ModelSerializer):
         fields = ['achievement_name', 'achievement_img', 'achievement_frequency', 'frequency', 'startDate', 'completedDate', 'lastActionDate']
 
 class LoggingSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Logging model.
+
+    Meta:
+        model (Logging): The Logging model.
+        fields (list): The fields to include in the serialized data.
+    """
     class Meta:
         model = Logging
         fields = ['text', 'earned', 'date']
 
 class UserDetailSerializer(serializers.ModelSerializer):
+    """
+    Serializer for detailed user information including achievements and logs.
+
+    Attributes:
+        achievements (SerializerMethodField): The user's achievements.
+        logs (SerializerMethodField): The user's logs.
+    
+    Meta:
+        model (User): The User model.
+        fields (list): The fields to include in the serialized data.
+    """
     achievements = serializers.SerializerMethodField()
     logs = serializers.SerializerMethodField()
 
