@@ -171,8 +171,10 @@ function Register({ viewType, setviewType }) {
               Log in
             </a>
           </p>
-          <p className="text-center cursor-pointer pt-2">
-            <a href="/" className="text-gray-300 hidden max-lg:block">
+
+          <p className="text-center md:text-left  cursor-pointer pt-2">
+            <a href="/" className="text-gray-300">
+
               Homepage
             </a>
           </p>

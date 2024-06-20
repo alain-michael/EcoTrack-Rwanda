@@ -108,7 +108,7 @@ export const Messages = () => {
     },
     onSubmit: (values) => {
       instance
-        .post(values)
+        .post("/rooms/create", values)
         .then((res) => {
           dispatch(setSelectedItem("Chatroom")),
           dispatch(setCurrentChat(res.data.chatroom_id));
