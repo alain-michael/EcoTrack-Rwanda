@@ -115,9 +115,6 @@ function Requests() {
                   EMAIL
                 </th>
                 <th className="text-left text-gray-500 font-medium px-10 py-2">
-                  PHONE
-                </th>
-                <th className="text-left text-gray-500 font-medium px-10 py-2">
                   ADDRESS
                 </th>
                 <th className="text-left text-gray-500 font-medium px-10 py-2">
@@ -137,7 +134,7 @@ function Requests() {
                   </td>
                   <td className="px-10 py-2">{request.user.email}</td>
                   <td className="px-10 py-2">1234567890</td>
-                  <td className="px-10 py-2">123, Main Street, Lagos</td>
+                  <td className="px-10 py-2">{request.address}</td>
                   <td className="px-10 py-2">
                     {new Date(request.date).toLocaleString()}
                   </td>
@@ -169,9 +166,6 @@ function Requests() {
                   EMAIL
                 </th>
                 <th className="text-left text-gray-500 font-medium px-10 py-2">
-                  PHONE
-                </th>
-                <th className="text-left text-gray-500 font-medium px-10 py-2">
                   ADDRESS
                 </th>
                 <th className="text-left text-gray-500 font-medium px-10 py-2">
@@ -191,7 +185,7 @@ function Requests() {
                   </td>
                   <td className="px-10 py-2">{request.user.email}</td>
                   <td className="px-10 py-2">1234567890</td>
-                  <td className="px-10 py-2">123, Main Street, Lagos</td>
+                  <td className="px-10 py-2">{request.address}</td>
                   <td className="px-10 py-2">
                     {new Date(request.date).toLocaleString()}
                   </td>

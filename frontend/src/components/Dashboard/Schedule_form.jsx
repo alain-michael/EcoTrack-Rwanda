@@ -26,13 +26,16 @@ import usePlacesAutocomplete, {
 import { useJsApiLoader } from '@react-google-maps/api';
 import createAxiosInstance from '../../features/AxiosInstance';
 import '@reach/combobox/styles.css';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { setSelectedItem } from '../../features/SharedDataSlice/SharedData';
 
 const libraries = ['places'];
 
 dayjs.extend(utc);
 
 export const Schedule_form = () => {
+  const dispatch = useDispatch();
   const instance = createAxiosInstance();
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: import.meta.env.VITE_API_KEY,
@@ -91,6 +94,7 @@ export const Schedule_form = () => {
       .format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
 
     const values = {
+      date,
       date_time: formattedDateTime, // Ensure this matches the backend expectation
       address: { latitude: lat, longitude: lng },
       lat,
@@ -106,7 +110,9 @@ export const Schedule_form = () => {
         },
       })
       .then((response) => {
+        toast.success('Scheduled successfully');
         console.log(response.data);
+        dispatch(setSelectedItem('Dashboard'));
       })
       .catch((error) => {
         console.log(error);

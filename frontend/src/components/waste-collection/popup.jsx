@@ -1,9 +1,22 @@
 import React from 'react';
-import { useState } from 'react';
 import { motion } from 'framer-motion';
+import createAxiosInstance from '../../features/AxiosInstance';
+import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { setSelectedItem } from '../../features/SharedDataSlice/SharedData';
 
-
-const PopUp = ({ time, distance}) => {
+const PopUp = ({ time, distance, id }) => {
+  const dispatch = useDispatch();
+  const instance = createAxiosInstance();
+  const markAsCompleted = async (id) => {
+    const body = {
+      id: parseInt(id),
+    };
+    instance.patch('/jobs/manage-job', body).then((response) => {
+      toast.success('Job completed successfully');
+      dispatch(setSelectedItem('Dashboard'));
+    });
+  };
   return (
     <motion.div
       initial="hidden"
@@ -15,18 +28,25 @@ const PopUp = ({ time, distance}) => {
         visible: { opacity: 1, x: 0, y: 0 },
       }}
     >
-      <div className="flex flex-col gap-1 bg-white rounded-sm px-3 py-2 text-slate-600">
+      <div className="popup-container">
         <div>
-          <p className="font-bold font-cursive text-[18px]">
-            Route Information
-          </p>
+          <p className="font-bold font-cursive text-18">Route Information</p>
         </div>
-        <div className="flex gap-4">
-          <p className="text-[15px]">Distance: {distance}</p>
-          <p className="text-[15px]"> Time: {time}</p>
+        <div className="flex items-center gap-5 mb-3">
+          <p className="text-15">Distance: {distance}</p>
+          <p className="text-15">Time: {time}</p>
+          <div className="center">
+            <button
+              className="px-3 py-2 bg-[#207855] text-white rounded-md  outline-none"
+              onClick={() => markAsCompleted(id)}
+            >
+              Mark as Completed
+            </button>
+          </div>
         </div>
       </div>
     </motion.div>
   );
 };
+
 export default PopUp;
