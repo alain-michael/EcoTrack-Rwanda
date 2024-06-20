@@ -3,10 +3,10 @@ import React from 'react';
 function DataTable({ data }) {
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full bg-white border border-gray-200">
+      <table className="min-w-full bg-white text-sm border border-gray-200">
         <thead>
           <tr>
-            <th className="px-4 py-2 border">ID</th>
+            <th className="px-4 py-2 border">#</th>
             <th className="px-4 py-2 border">Date</th>
             <th className="px-4 py-2 border">Status</th>
             <th className="px-4 py-2 border">Repeat</th>
@@ -17,9 +17,9 @@ function DataTable({ data }) {
           </tr>
         </thead>
         <tbody>
-          {data.map((item) => (
+          {data.map((item,index) => (
             <tr key={item.id}>
-              <td className="px-4 py-2 border">{item.id}</td>
+              <td className="px-4 py-2 border">{index+1}</td>
               <td className="px-4 py-2 border">{new Date(item.date).toLocaleString()}</td>
               <td className="px-4 py-2 border">{item.status ? 'Active' : 'Inactive'}</td>
               <td className="px-4 py-2 border">{item.repeat}</td>
