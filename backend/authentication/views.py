@@ -261,7 +261,7 @@ def manage_job(request):
                 date_time=schedule.date_time + time_to_next[schedule.repeat],
             )
             new_schedule.save()
-            notification = Notification(user=schedule.user, message=f'New collection has been set to the {datetime.strftime(new_schedule.date_time, "%d-%m-%Y")}.')
+            notification = Notification(user=schedule.user, message=f'New collection has been set because of your previous collection repeat({schedule.repeat}).')
             return Response({'message': 'Job marked as completed and new schedule created'}, status=200)
         return Response({'message': 'Job completed'}, status=200)
     else:
