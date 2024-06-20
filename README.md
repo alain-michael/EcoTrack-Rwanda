@@ -33,9 +33,11 @@ This project is the final assignment for the Enterprise Web Development course, 
 
 ### Prerequisites
 - Python 3.x
-- Node.js
-- PostgreSQL
+- React
+- SQLite
 - Git
+- Pythonanywhere
+- Netlify
 
 ### Installation
 
@@ -55,7 +57,7 @@ This project is the final assignment for the Enterprise Web Development course, 
      ```bash
      pip install -r requirements.txt
      ```
-   - Configure PostgreSQL database settings in `settings.py`.
+   - Configure SQLite database settings in `settings.py`.
    - Run migrations:
      ```bash
      python manage.py migrate
@@ -70,7 +72,7 @@ This project is the final assignment for the Enterprise Web Development course, 
      ```bash
      cd frontend
      ```
-   - Install Node.js packages:
+   - Install React.js packages:
      ```bash
      npm install
      ```
@@ -80,10 +82,11 @@ This project is the final assignment for the Enterprise Web Development course, 
      ```
 
 ### Database
-- Configure PostgreSQL database settings in the `settings.py` file.
+- Configure SQLite database settings in the `settings.py` file.
 
 ### Deployment
-- Use Heroku or AWS for deployment.
+- Deployed the frontend to netlify.
+- Deployed the backend to pythonanywhere. Webhook triggers deployment script which pulls latest code, applied migrations, amd restarts server.
 - Set up CI/CD pipeline with GitHub Actions to automatically run tests and deploy the application.
 
 ### CI/CD Pipeline
@@ -119,22 +122,19 @@ This project is the final assignment for the Enterprise Web Development course, 
    ```
 
 5. **Create a Pull Request:**
-   - Go to the repository on GitHub and click on "New Pull Request".
+   - Go to the GitHub repository and click "New Pull Request."
 
 ## Team Members
-- Alain muhirwa micheal
+- Alain Muhirwa Micheal
 - Loue christian souver
-- Dean daryl murenzi
-- Reponse ashimwe
-- Patrick nayituriki 
+- Dean Daryl Murenzi
+- Reponse Ashima
+- Patrick Nayituriki 
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgements
-- Instructor: [Deji]
+- Instructor: [Deji adebayo]
 - Course: Enterprise Web Development
-- University: [African leadership university]
-
-## Contact
-For any inquiries, please contact us at [your-email@example.com].
+- University: African Leadership University
