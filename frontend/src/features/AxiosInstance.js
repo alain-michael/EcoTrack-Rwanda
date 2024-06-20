@@ -36,7 +36,7 @@ function createAxiosInstance() {
           : "Failed";
         if (
           errorMessage !== undefined &&
-          errorMessage.indexOf("Request failed with status code 400") < 0
+          errorMessage.indexOf("Request failed with status code") < 0
         ) {
           toast.error(errorMessage);
         }
