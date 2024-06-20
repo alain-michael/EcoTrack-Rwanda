@@ -121,11 +121,11 @@ This project is the final assignment for the Enterprise Web Development course, 
    - Go to the repository on GitHub and click on "New Pull Request".
 
 ## Team Members
-- [Alain muhirwa micheal]
-- [Loue christian souver]
-- [Dean daryl murenzi]
-- [Reponse ashimwe]
-- [Patrick nayituriki ]
+- Alain muhirwa micheal
+- Loue christian souver
+- Dean daryl murenzi
+- Reponse ashimwe
+- Patrick nayituriki 
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
