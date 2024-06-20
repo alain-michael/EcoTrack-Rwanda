@@ -32,6 +32,15 @@ class MyTokenObtainPairView(TokenObtainPairView):
 @api_view(['POST', 'OPTIONS'])
 @authentication_classes([])
 def register(request):
+    """
+    Register a new user.
+
+    Args:
+        request (Request): The request object containing user data.
+
+    Returns:
+        Response: A response object with success or error message.
+    """
     if request.method == 'POST':
         user_data = request.data.copy()
         if 'name' not in user_data or 'email' not in user_data or 'password' not in user_data:
@@ -77,6 +86,15 @@ def register(request):
     
 @api_view(['POST', 'OPTIONS'])
 def login(request):
+    """
+    Log in a user and provide JWT tokens.
+
+    Args:
+        request (Request): The request object containing user credentials.
+
+    Returns:
+        Response: A response object with JWT tokens and user info, or an error message.
+    """    
     if request.method == 'POST':
         user_data = request.data
         if not all(k in user_data for k in ('email', 'password')):
@@ -104,6 +122,15 @@ def login(request):
 
 @api_view(['POST', 'OPTIONS'])
 def logout(request):
+    """
+    Log out a user by blacklisting their refresh token.
+
+    Args:
+        request (Request): The request object containing the refresh token.
+
+    Returns:
+        Response: A response object with success or error message.
+    """
     refresh_token = request.data.get('refresh_token')
 
     if not refresh_token:
@@ -120,6 +147,16 @@ def logout(request):
 @api_view(['POST', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def schedule(request, schedule_id=None):
+    """
+    Schedule a new waste collection.
+
+    Args:
+        request (Request): The request object containing schedule data.
+        schedule_id (int, optional): The ID of the schedule to update. Defaults to None.
+
+    Returns:
+        Response: A response object with schedule data or an error message.
+    """
     if request.method == 'POST':
         data = request.data.copy()
         if 'repeat' not in data:
@@ -143,6 +180,15 @@ def schedule(request, schedule_id=None):
 @api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def my_schedules(request):
+    """
+    Retrieve the schedules of the logged-in user.
+
+    Args:
+        request (Request): The request object.
+
+    Returns:
+        Response: A response object with the user's schedules.
+    """
     if request.method == 'GET':
         if request.user.user_role == UserRoleChoices.house_user:
             schedules = ColSchedule.objects.filter(user=request.user)
@@ -155,6 +201,15 @@ def my_schedules(request):
 @api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def available_jobs(request):
+    """
+    Retrieve available jobs for a waste collector.
+
+    Args:
+        request (Request): The request object.
+
+    Returns:
+        Response: A response object with available jobs or an error message.
+    """
     user = request.user
     if user.user_role != UserRoleChoices.waste_collector:
         return Response({'error': 'User is not a waste collector.'}, status=403)
@@ -166,6 +221,15 @@ def available_jobs(request):
 @api_view(['POST', 'PATCH', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def manage_job(request):
+    """
+    Accept or mark a job as completed.
+
+    Args:
+        request (Request): The request object containing job data.
+
+    Returns:
+        Response: A response object with success or error message.
+    """
     schedule_id = request.data['id']
     schedule = ColSchedule.objects.get(id=schedule_id)
     if not schedule:
@@ -206,6 +270,11 @@ def manage_job(request):
 @api_view(['Get', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def my_jobs(request):
+    """
+    Retrieve jobs assigned to the authenticated waste collector user.
+
+    Returns a list of ongoing job schedules serialized as JSON.
+    """
     user = request.user
     if user.user_role != UserRoleChoices.waste_collector:
         return Response({'error': 'User is not a waste collector'}, status=403)
@@ -216,6 +285,11 @@ def my_jobs(request):
 @api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def all_users(request):
+    """
+    Retrieve all users if the authenticated user is an admin.
+
+    Returns a list of users serialized as JSON.
+    """
     if not request.user.is_staff:
         return Response({'error': 'User is not an admin'}, status=403)
     
@@ -225,6 +299,11 @@ def all_users(request):
 @api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def get_job(request, id):
+    """
+    Retrieve details of a specific job schedule by its ID.
+
+    Returns the job schedule details serialized as JSON.
+    """
     user = request.user
     
     schedule = ColSchedule.objects.filter(id=id)
@@ -236,6 +315,13 @@ def get_job(request, id):
 @api_view(['DELETE', 'PATCH', 'GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def manage_all_users(request, id):
+    """
+    Perform operations (GET, PATCH, DELETE) on a specific user by ID,
+    if the authenticated user is an admin.
+
+    Returns user details on GET, updates user details on PATCH, and deletes
+    the user on DELETE. Returns appropriate HTTP status codes for each operation.
+    """
     if not request.user.is_staff:
         return Response({'error': 'User is not an admin'}, status=403)
     
@@ -264,6 +350,11 @@ def manage_all_users(request, id):
 @api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def all_schedules(request):
+    """
+    Retrieve all job schedules if the authenticated user is an admin.
+
+    Returns a list of all job schedules serialized as JSON.
+    """
     user = request.user
     if user.user_role != UserRoleChoices.admin_user:
         return Response({'error': 'User is not an admin'}, status=403)
@@ -273,7 +364,12 @@ def all_schedules(request):
 
 @api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
-def get_user(request, id):    
+def get_user(request, id):   
+    """
+    Retrieve details of a specific user by their ID.
+
+    Returns the user details serialized as JSON.
+    """ 
     try:
         user = User.objects.get(pk=id)
     except User.DoesNotExist:
@@ -285,6 +381,12 @@ def get_user(request, id):
 @api_view(['POST', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def change_password(request):
+    """
+    Change the password for the authenticated user.
+
+    Accepts old_password and new_password in the request data.
+    Returns a success message upon successful password change.
+    """
     user = request.user
     old_password = request.data.get('old_password')
     new_password = request.data.get('new_password')
@@ -300,6 +402,12 @@ def change_password(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_detail(request, id):
+    """
+    Retrieve detailed information about a specific user by ID.
+
+    Generates and assigns a share code to the user if it doesn't exist.
+    Returns the detailed user information serialized as JSON.
+    """
     try:
         user = User.objects.get(pk=id)
     except User.DoesNotExist:
@@ -315,6 +423,12 @@ def user_detail(request, id):
 @api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def achievement_data(request):
+    """
+    Retrieve data about achievements, including the number of users
+    who have completed each achievement, if the authenticated user is an admin.
+
+    Returns achievement data serialized as JSON.
+    """
     user = request.user
     if user.user_role != UserRoleChoices.admin_user:
         return Response({'error': 'User is not an admin'}, status=403)
@@ -331,6 +445,11 @@ def achievement_data(request):
 @api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def completed_user_schedules(request):
+    """
+    Retrieve completed job schedules for the authenticated user.
+
+    Returns a list of completed job schedules serialized as JSON.
+    """
     user = request.user
     schedules = ColSchedule.objects.filter(user=user, completed=True)
 
@@ -339,6 +458,11 @@ def completed_user_schedules(request):
 @api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def completed_jobs(request):
+    """
+    Retrieve completed job schedules assigned to the authenticated waste collector user.
+
+    Returns a list of completed job schedules serialized as JSON.
+    """
     user = request.user
     schedules = ColSchedule.objects.filter(collector=user, completed=True)
 
@@ -348,6 +472,11 @@ def completed_jobs(request):
 @authentication_classes([])
 
 def count_stats(request):
+    """
+    Retrieve counts of total users, waste collectors, and job schedules.
+
+    Returns counts as JSON data.
+    """
     try:
         total_users = User.objects.count()
         total_collectors = User.objects.filter(user_role=UserRoleChoices.waste_collector).count()
@@ -365,6 +494,15 @@ logging.basicConfig(level=logging.DEBUG)
 
 @csrf_exempt
 def github_webhook(request):
+    """
+    Handle GitHub webhook events for repository updates.
+
+    Automatically pulls updates from the main branch of the specified repository
+    and triggers background tasks including dependency installation, testing,
+    migrations, and WSGI application reload.
+
+    Returns HTTP responses based on webhook event outcomes.
+    """
     if request.method == 'POST':
         repo_path = '/home/ecotrackrw/EcoTrack-Rwanda'
         try:
@@ -394,6 +532,14 @@ def github_webhook(request):
         return HttpResponse(status=400)
 
 def background_tasks():
+    """
+    Perform background tasks triggered by GitHub webhook events.
+
+    Tasks include installing dependencies, running tests, executing migrations,
+    and reloading the WSGI application.
+
+    Logs errors encountered during these tasks.
+    """
     # Install dependencies
     repo_path = '/home/ecotrackrw/EcoTrack-Rwanda/backend'
     try:

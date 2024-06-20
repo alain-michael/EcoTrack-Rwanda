@@ -12,6 +12,12 @@ from .serializers import *
 @api_view(['POST', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def send(request):
+    """
+    Send a message from the authenticated user to another user.
+
+    Creates a chat room if it doesn't exist and saves the message to the room.
+    Returns a success message upon successful message sending.
+    """
     sender = request.user
     data = request.data
     receiver = User.objects.filter(id=data['receiver'])
@@ -32,6 +38,11 @@ def send(request):
     return Response({'message': 'Message sent successfully'}, status=200)
 
 class MessagePagination(PageNumberPagination):
+    """
+    Pagination class for messages.
+
+    Sets page size and handles pagination of message queryset.
+    """
     page_size = 20
     page_size_query_param = 'page_size'
     max_page_size = 100
@@ -39,6 +50,12 @@ class MessagePagination(PageNumberPagination):
 @api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def get_room(request, chatroom_id):
+    """
+    Retrieve messages and details of a chat room by its ID.
+
+    Returns paginated messages and chat room details.
+    Updates unread message statuses to 'read' for the authenticated user.
+    """
     user = request.user
     room = ChatRoom.objects.select_related('user1', 'user2').filter(id=chatroom_id).first()
 
@@ -61,31 +78,14 @@ def get_room(request, chatroom_id):
 
     return paginator.get_paginated_response({'messages': messages, 'room': room_data})
 
-
-# @api_view(['GET', 'OPTIONS'])
-# @permission_classes([IsAuthenticated])
-# def get_room(request, chatroom_id):
-#     room = ChatRoom.objects.select_related('user1', 'user2').filter(id=chatroom_id).first()
-#     if not room:
-#         return Response({'error': 'Chatroom not found'}, status=404)
-
-#     user = request.user
-#     if room.user1 != user and room.user2 != user:
-#         return Response({'error': 'User not in chatroom'}, status=404)
-#     other_user = room.user1 if room.user1 != user else room.user2
-#     page = int(request.GET.get('page', 1))
-#     if not user or not other_user:
-#         return Response({'error': 'User not found'}, status=404)
-#     messages = room.messages.all().order_by('created')[(page-1)*20:page*20]
-#     for message in messages:
-#         if message.receiver == user:
-#             message.read = True
-#             message.save()
-#     return Response({'messages': MessageSerializer(messages, many=True).data, 'room': ChatRoomSerializer(room).data})
-
 @api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def rooms(request):
+    """
+    Retrieve all chat rooms associated with the authenticated user.
+
+    Returns a list of chat rooms ordered by the latest message time.
+    """
     user = request.user
     rooms = ChatRoom.objects.filter(Q(user1=user) | Q(user2=user)).annotate(
         latest_message_time=Max('messages__created')
@@ -95,6 +95,12 @@ def rooms(request):
 @api_view(['POST', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def create_room(request):
+    """
+    Create a new chat room between the authenticated user and another user.
+
+    If the chat room already exists, returns an error response.
+    Returns a success message with the newly created chat room ID upon success.
+    """
     user = request.user
     print(request.data)
     if request.data['user_role'] == 'Admin':
@@ -122,6 +128,11 @@ def create_room(request):
 @api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def get_messages(request, chatroom_id):
+    """
+    Retrieve all messages from a specific chat room by its ID.
+
+    Returns a list of messages ordered by their creation time.
+    """
     user = request.user
     if not user:
         return Response({'error': 'User not found'}, status=404)
@@ -131,6 +142,12 @@ def get_messages(request, chatroom_id):
 @api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def get_notifications(request):
+    """
+    Retrieve notifications for the authenticated user.
+
+    Supports retrieving notification count or detailed notifications.
+    Marks retrieved notifications as seen upon retrieval.
+    """
     user = request.user
     if not user:
         return Response({'error': 'User not found'}, status=404)
@@ -144,6 +161,11 @@ def get_notifications(request):
 @api_view(['GET', 'OPTIONS'])
 @permission_classes([IsAuthenticated])
 def get_unread_count(request):
+    """
+    Retrieve the count of unread messages for the authenticated user.
+
+    Returns the count of unread messages.
+    """
     user = request.user
     if not user:
         return Response({'error': 'User not found'}, status=404)
