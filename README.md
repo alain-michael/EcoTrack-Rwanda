@@ -1,5 +1,5 @@
 # Smart Waste Management System:
-##<a href="https://main--eco-track-rw.netlify.app/">Eco-track RWANDA </a>
+<a href="https://main--eco-track-rw.netlify.app/">Eco-track RWANDA </a>
 
 ## Project Overview
 This project is the final assignment for the Enterprise Web Development course, aimed at developing an innovative web application to solve real-world problems. Our project is a Smart Waste Management System designed to enhance waste collection, recycling, and resource management through intelligent technologies. The system supports three primary user roles: Household Users, Waste Collection Services, and Administrators.
@@ -24,7 +24,7 @@ This project is the final assignment for the Enterprise Web Development course, 
 - Users can track their recycling efforts and view their environmental impact metrics.
 
 ### 4. Waste Collection Services Management
-- Waste collection services can manage routes, schedules, and track performance.
+- Waste collection services can manage routes and schedules and track performance.
 
 ### 5. Admin Dashboard
 - Administrators can monitor overall system performance and manage users.
@@ -138,5 +138,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact
 For any inquiries, please contact us at [your-email@example.com].
-
----
