@@ -11,8 +11,8 @@ function DataTable({ data }) {
             <th className="px-4 py-2 border">Status</th>
             <th className="px-4 py-2 border">Repeat</th>
             <th className="px-4 py-2 border">Collector</th>
-            <th className="px-4 py-2 border">Latitude</th>
-            <th className="px-4 py-2 border">Longitude</th>
+{/*             <th className="px-4 py-2 border">Latitude</th>
+            <th className="px-4 py-2 border">Longitude</th> */}
             <th className="px-4 py-2 border">Completed</th>
           </tr>
         </thead>
@@ -24,8 +24,8 @@ function DataTable({ data }) {
               <td className="px-4 py-2 border">{item.status ? 'Active' : 'Inactive'}</td>
               <td className="px-4 py-2 border">{item.repeat}</td>
               <td className="px-4 py-2 border">{item.collector_name}</td>
-              <td className="px-4 py-2 border">{item.latitude}</td>
-              <td className="px-4 py-2 border">{item.longitude}</td>
+{/*               <td className="px-4 py-2 border">{item.latitude}</td>
+              <td className="px-4 py-2 border">{item.longitude}</td> */}
               <td className="px-4 py-2 border">{item.completed ? 'Yes' : 'No'}</td>
             </tr>
           ))}

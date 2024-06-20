@@ -118,9 +118,6 @@ function Requests() {
                   PHONE
                 </th>
                 <th className="text-left text-gray-500 font-medium px-10 py-2">
-                  ADDRESS
-                </th>
-                <th className="text-left text-gray-500 font-medium px-10 py-2">
                   TIME
                 </th>
                 <th className="text-left text-gray-500 font-medium px-10 py-2">
@@ -136,8 +133,7 @@ function Requests() {
                     {request.user.first_name} {request.user.last_name}
                   </td>
                   <td className="px-10 py-2">{request.user.email}</td>
-                  <td className="px-10 py-2">1234567890</td>
-                  <td className="px-10 py-2">123, Main Street, Lagos</td>
+                  <td className="px-10 py-2">{request.user.phone_number}</td>
                   <td className="px-10 py-2">
                     {new Date(request.date).toLocaleString()}
                   </td>
@@ -155,7 +151,7 @@ function Requests() {
           </table>
         </div>
       ) : (
-        <div className="flex">
+        <div className="flex w-full overflow-x-auto">
           <table className="mt-2 border border-gray-100 shadow-md text-sm">
             <thead className="shadow-lg mb-2">
               <tr className="">
@@ -170,9 +166,6 @@ function Requests() {
                 </th>
                 <th className="text-left text-gray-500 font-medium px-10 py-2">
                   PHONE
-                </th>
-                <th className="text-left text-gray-500 font-medium px-10 py-2">
-                  ADDRESS
                 </th>
                 <th className="text-left text-gray-500 font-medium px-10 py-2">
                   TIME
@@ -190,8 +183,7 @@ function Requests() {
                     {request.user.first_name} {request.user.last_name}
                   </td>
                   <td className="px-10 py-2">{request.user.email}</td>
-                  <td className="px-10 py-2">1234567890</td>
-                  <td className="px-10 py-2">123, Main Street, Lagos</td>
+                  <td className="px-10 py-2">{request.user.phone_number}</td>
                   <td className="px-10 py-2">
                     {new Date(request.date).toLocaleString()}
                   </td>

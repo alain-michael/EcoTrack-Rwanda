@@ -9,6 +9,7 @@ import PopUp from './popup';
 import { useParams } from 'react-router-dom';
 import createAxiosInstance from '../../features/AxiosInstance';
 
+const libraries = ['places'];
 
 const Job = () => {
   const instance = createAxiosInstance();
@@ -57,6 +58,7 @@ const Job = () => {
   const onLoad = useCallback((map) => (mapRef.current = map), []);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: import.meta.env.VITE_API_KEY,
+    libraries,
   });
 
   if (isLoaded) {
@@ -76,7 +78,7 @@ const Job = () => {
 
     return (
       <>
-        <PopUp time={time} distance={distance} />
+        <PopUp time={time} distance={distance} id={id} />
         <GoogleMap
           zoom={8}
           center={center}
