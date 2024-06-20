@@ -328,6 +328,22 @@ def achievement_data(request):
 
     return Response(response, status=200)
 
+@api_view(['GET', 'OPTIONS'])
+@permission_classes([IsAuthenticated])
+def completed_user_schedules(request):
+    user = request.user
+    schedules = ColSchedule.objects.filter(user=user, completed=True)
+
+    return Response(ScheduleSerializer(schedules, many=True).data, status=200)
+
+@api_view(['GET', 'OPTIONS'])
+@permission_classes([IsAuthenticated])
+def completed_jobs(request):
+    user = request.user
+    schedules = ColSchedule.objects.filter(collector=user, completed=True)
+
+    return Response(ScheduleSerializer(schedules, many=True).data, status=200)
+
 @api_view(['GET'])
 @authentication_classes([])
 
