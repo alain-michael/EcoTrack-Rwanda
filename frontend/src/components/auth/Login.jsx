@@ -120,7 +120,7 @@ function Login({ viewType, setviewType }) {
             </a>
           </p>
           <p className="text-center cursor-pointer pt-2">
-            <a href="/" className="text-gray-300">
+            <a href="/" className="text-gray-300 hidden max-lg:block">
               Homepage
             </a>
           </p>
