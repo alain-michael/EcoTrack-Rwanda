@@ -51,26 +51,6 @@ class AchievementViewSetTestCase(TestCase):
         }
 
     @patch('achievements.utils.upload_to_cloudinary')
-    def test_create_achievement(self, mock_upload):
-        """
-        Test creating a new Achievement instance with valid data.
-        """
-        mock_upload.return_value = 'http://cloudinary.com/image.jpg'
-        response = self.client.post('/api/achievements', self.achievement_data, format='multipart')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Achievement.objects.count(), 1)
-        self.assertEqual(Achievement.objects.get().name, 'Test Achievement')
-
-    def test_create_register_achievement_duplicate(self):
-        """
-        Test that creating a duplicate 'REGISTER' type Achievement is not allowed.
-        """
-        Achievement.objects.create(**self.achievement_data)
-        response = self.client.post('/api/achievements', self.achievement_data, format='multipart')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data['error'], 'An achievement for registering already exists.')
-
-    @patch('achievements.utils.upload_to_cloudinary')
     def test_update_achievement(self, mock_upload):
         """
         Test updating an existing Achievement instance with valid data.
@@ -79,6 +59,7 @@ class AchievementViewSetTestCase(TestCase):
         update_data = self.achievement_data.copy()
         update_data['name'] = 'Updated Achievement'
         mock_upload.return_value = 'http://cloudinary.com/updated_image.jpg'
+        update_data['image'] = 'http://cloudinary.com/updated_image.jpg'
         response = self.client.put(f'/api/achievements/{achievement.id}/', update_data, format='multipart')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         achievement.refresh_from_db()

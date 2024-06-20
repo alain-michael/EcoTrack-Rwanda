@@ -27,6 +27,8 @@ function createAxiosInstance() {
       if (errorObj.response?.status == 401 && store.getState().sharedData.usersLogin != []) {
         // store.dispatch(resetStateToDefault());
         window.location.href = "/auth";
+       /*  store.dispatch(resetStateToDefault());
+        window.location.href = "/auth"; */
       } else {
         const errorData = errorObj.response?.data;
         const errorMessage = errorData

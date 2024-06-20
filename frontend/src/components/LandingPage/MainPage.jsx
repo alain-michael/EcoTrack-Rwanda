@@ -13,8 +13,9 @@ import WhatsApp from "@mui/icons-material/WhatsApp";
 import Instagram from "@mui/icons-material/Instagram";
 import Twitter from "@mui/icons-material/Twitter";
 import { getStats } from "../../api/front";
-import Side from "./Side";
+
 import Navbar from "../sharedComponents/Navbar";
+import Side from "./Side";
 
 const MainPage = () => {
   const [navBackground, setNavBackground] = useState(false);
