@@ -14,6 +14,7 @@ function SiderBar() {
             "General": [
                 { goto: "Dashboard", action: "Dashboard", icon: <GridViewIcon sx={{ marginRight: 1 }} /> },
                 { goto: "Schedule", action: "Schedule", icon: <TodayIcon sx={{ marginRight: 1 }} /> },
+                { goto: "All Schedule", action: "All My Schedule", icon: <TodayIcon sx={{ marginRight: 1 }} /> },
                 { goto: "Achievements", action: "Achievements", icon: <EmojiEventsIcon sx={{ marginRight: 1 }} /> },
                 { goto: "Messages", action: "Messages", icon: <ForumIcon sx={{ marginRight: 1 }} /> },
             ],
