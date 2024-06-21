@@ -5,17 +5,17 @@
 This project is the final assignment for the Enterprise Web Development course, aimed at developing an innovative web application to solve real-world problems. Our project is a Smart Waste Management System designed to enhance waste collection, recycling, and resource management through intelligent technologies. The system supports three primary user roles: Household Users, Waste Collection Services, and Administrators.
 
 ## Technologies Used
-- **Frontend**: React vite, HTML, CSS, JavaScript
+- **Frontend**: React vite, HTML, CSS, JavaScript, Tailwind CSS, Material UI
 - **Backend**: Django
 - **Database**: SQLite
 - **Deployment**: Netlify/Pythonanywhere
 - **CI/CD**: GitHub Actions
-- **Authentication**: Django-Auth
+- **Authentication**: Django-Auth/ JWT
 
 ## Features and Functionalities
 ### 1. User Registration and Login
 - Users can register and log in to the system.
-- Authentication managed with Django-Auth.
+- Authentication managed with Django-Auth and JWT.
 
 ### 2. Waste Collection Schedule
 - Household users can schedule waste collection and receive notifications.
@@ -121,8 +121,8 @@ This project is the final assignment for the Enterprise Web Development course, 
    - Go to the GitHub repository and click "New Pull Request."
 
 ## Team Members
-- Alain Muhirwa Micheal
-- Loue christian sauveur 
+- Alain Muhirwa Michael
+- Loue Christian Sauveur 
 - Dean Daryl Murenzi
 - Reponse Ashimwe
 - Patrick Nayituriki 
@@ -131,6 +131,6 @@ This project is the final assignment for the Enterprise Web Development course, 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgements
-- Instructor: [Deji adebayo]
+- Instructor: [Deji Adebayo]
 - Course: Enterprise Web Development
 - University: African Leadership University

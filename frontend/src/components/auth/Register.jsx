@@ -14,6 +14,7 @@ function Register({ viewType, setviewType }) {
     initialValues: {
       name: "",
       email: "",
+      phoneNumber: "",
       password: "",
       confirmPassword: "",
       sharecode: "",
@@ -24,6 +25,7 @@ function Register({ viewType, setviewType }) {
         .max(40, "Must be 40 characters or less")
         .required("Required"),
       email: Yup.string().email("Invalid email address").required("Required"),
+      phoneNumber: Yup.string().required("Phone Number Required"),
       password: Yup.string()
         .min(6, "Must be 6 characters or more")
         .required("Required"),
@@ -88,6 +90,17 @@ function Register({ viewType, setviewType }) {
                 name="email"
                 placeholder="Enter your email"
                 value={formik.values.email}
+                onChange={formik.handleChange}
+              />
+              {formik.errors.email && formik.touched.email ? (
+                <div className="text-orange-500">{formik.errors.email}</div>
+              ) : null}
+              <p className="mt-4"></p>
+              <input
+                className={inputStyle}
+                name="phoneNumber"
+                placeholder="Enter your Phone"
+                value={formik.values.phoneNumber}
                 onChange={formik.handleChange}
               />
               {formik.errors.email && formik.touched.email ? (

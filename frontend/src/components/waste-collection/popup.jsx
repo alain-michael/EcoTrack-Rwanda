@@ -14,7 +14,7 @@ const PopUp = ({ time, distance, id }) => {
     };
     instance.patch('/jobs/manage-job', body).then((response) => {
       toast.success('Job completed successfully');
-      window.location.href = '/dashboard';  
+      dispatch(setSelectedItem("Dashboard"));
     });
   };
   return (
