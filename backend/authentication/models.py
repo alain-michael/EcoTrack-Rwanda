@@ -176,4 +176,4 @@ class ColSchedule(models.Model):
     completed = models.BooleanField(default=False)
 
     def __str__(self): 
-        return str(self.address)
+        return self.address
