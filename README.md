@@ -5,7 +5,7 @@
 This project is the final assignment for the Enterprise Web Development course, aimed at developing an innovative web application to solve real-world problems. Our project is a Smart Waste Management System designed to enhance waste collection, recycling, and resource management through intelligent technologies. The system supports three primary user roles: Household Users, Waste Collection Services, and Administrators.
 
 ## Technologies Used
-- **Frontend**: React vite, HTML, CSS, JavaScript
+- **Frontend**: React vite, HTML, CSS, JavaScript, Tailwind CSS, Material UI
 - **Backend**: Django
 - **Database**: SQLite
 - **Deployment**: Netlify/Pythonanywhere
