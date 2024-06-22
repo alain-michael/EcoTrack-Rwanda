@@ -131,6 +131,6 @@ This project is the final assignment for the Enterprise Web Development course, 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgements
-- Instructor: [Deji Adebayo]
+- Instructor: Deji Adebayo
 - Course: Enterprise Web Development
 - University: African Leadership University
