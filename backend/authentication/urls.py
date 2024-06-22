@@ -20,4 +20,5 @@ urlpatterns = [
     path('api/jobs/completed', views.completed_jobs, name="completed_jobs"),
     path('api/count-stats/', views.count_stats, name='count-stats'),
     path('api/github-webhook', views.github_webhook, name="github_webhook"),
+    path('activate/<uidb64>/<token>/', views.activate, name="activate"),
 ]

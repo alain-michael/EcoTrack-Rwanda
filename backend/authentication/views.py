@@ -11,6 +11,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.core.mail import send_mail, EmailMultiAlternatives
 from ecotrack import settings
 import git
 import os
@@ -25,8 +26,40 @@ from .serializers import *
 from rest_framework import status
 from achievements.utils import save_achievement
 
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.contrib.auth import get_user_model
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from six import text_type
+from django.contrib.sites.shortcuts import get_current_site  
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode  
+class TokenGenerator(PasswordResetTokenGenerator):  
+    def _make_hash_value(self, user, timestamp):  
+        return (  
+            text_type(user.pk) + text_type(timestamp)
+        )  
+generate_token = TokenGenerator()
+
+
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+@api_view(['GET', 'OPTIONS'])
+def activate(request, uidb64, token):  
+    User = get_user_model()  
+    try:  
+        uid = force_str(urlsafe_base64_decode(uidb64))  
+        user = User.objects.get(pk=uid)  
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):  
+        user = None
+    if user is not None and generate_token.check_token(user, token):  
+        user.is_active = True  
+        user.save()  
+        return Response({'success': 'Account activated successfully.'}, status=200)
+    else:  
+        return Response({'error': 'Invalid activation link.'}, status=400)
+
 
 # Create your views here.
 @api_view(['POST', 'OPTIONS'])
@@ -60,7 +93,8 @@ def register(request):
             last_name=names[-1],
             email=user_data['email'],
             user_role=user_data['userRole'],
-            phone_number=user_data.get('phoneNumber')
+            phone_number=user_data.get('phoneNumber'),
+            is_active=False
         )
         new_user.set_password(user_data['password'])
 
@@ -79,6 +113,25 @@ def register(request):
                 return Response({'error': 'Invalid sharecode'}, status=400)
 
         new_user.save()
+
+        current_site = get_current_site(request)
+        subject = "Welcome to Ecotrack"
+        html_message = render_to_string('new-email.html', {  
+        'user': new_user,  
+        'domain': current_site.domain,  
+        'uid':urlsafe_base64_encode(force_bytes(new_user.pk)),  
+        'token':generate_token.make_token(new_user),  
+        })
+        plain_message = strip_tags(html_message)
+        email = EmailMultiAlternatives(
+            from_email=settings.EMAIL_HOST_USER,
+            to=[new_user.email],
+            body=plain_message,
+            subject=subject,
+        )
+        email.attach_alternative(html_message, 'text/html')
+        email.send()
+
 
         save_achievement(new_user.id, 'REGISTER', frequency=1)
 
