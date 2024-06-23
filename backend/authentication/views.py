@@ -94,7 +94,6 @@ def register(request):
             email=user_data['email'],
             user_role=user_data['userRole'],
             phone_number=user_data.get('phoneNumber'),
-            is_active=False
         )
         new_user.set_password(user_data['password'])
 
