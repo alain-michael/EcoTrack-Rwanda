@@ -595,23 +595,28 @@ def background_tasks():
     """
     # Install dependencies
     repo_path = '/home/ecotrackrw/EcoTrack-Rwanda/backend'
+    venv_path = '/home/ecotrackrw/.virtualenvs/venv/bin'
+
+    pip_executable = os.path.join(venv_path, 'pip')
+    python_executable = os.path.join(venv_path, 'python')
+
     try:
         requirements_file = os.path.join(repo_path, 'requirements.txt')
-        subprocess.check_call(['pip', 'install', '-r', requirements_file])
+        subprocess.check_call([pip_executable, 'install', '-r', requirements_file])
     except subprocess.CalledProcessError as e:
         logging.error(f'Error installing dependencies: {e}')
 
     # Run tests
     try:
         manage_py = os.path.join(repo_path, 'manage.py')
-        subprocess.check_call(['python', manage_py, 'test'])
+        subprocess.check_call([python_executable, manage_py, 'test'])
     except subprocess.CalledProcessError as e:
         logging.error(f'Test execution failed: {e}')
 
     try:
         manage_py = os.path.join(repo_path, 'manage.py')
-        subprocess.check_call(['python', manage_py, 'makemigrations'])
-        subprocess.check_call(['python', manage_py, 'migrate'])
+        subprocess.check_call([python_executable, manage_py, 'makemigrations'])
+        subprocess.check_call([python_executable, manage_py, 'migrate'])
     except subprocess.CalledProcessError as e:
         logging.error(f'Migration execution failed: {e}')
 
