@@ -121,7 +121,7 @@ This project is the final assignment for the Enterprise Web Development course, 
    - Go to the GitHub repository and click "New Pull Request."
 
 ## Team Members
-- Alain Muhirwa Michael
+- Alain Michael Muhirwa
 - Loue Christian Sauveur 
 - Dean Daryl Murenzi
 - Reponse Ashimwe
